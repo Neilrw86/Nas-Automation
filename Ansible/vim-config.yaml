@@ -1,0 +1,21 @@
+---
+- name: Config Vim pluugins
+  hosts: nas
+  gather_facts: yes
+  become: no
+
+  vars:
+    vim_dir: "{{ { ansible_env.HOME }}/.vim"
+    vimrc: "{{ ansible_env.HOME }}/.vimrc"
+
+  tasks:
+    - name:  Install required packages
+      package:
+        name:
+          - vim-enhanced
+          - powerline-fonts
+          - fzf
+          - vim-fugitive
+          - vim-ansible-yaml
+        state: installed
+      become: yes
