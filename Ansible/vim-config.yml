@@ -2,6 +2,10 @@
 - name: Config Vim pluugins
   hosts: nas
   gather_facts: yes
+  vars:
+    vim_dir: "{{ansible_env.HOME}}/.vim"
+    vimrc: "{{ ansible_env.HOME }}/.vimrc"
+
   tasks:
     - name:  Install required packages
       package:
@@ -11,7 +15,7 @@
       become: yes
 
     - name: Ensure .vim/{autoload,bundle} directory exists
-        file:
+      file:
         path: "{{ item }}"
         state: directory
         recurse: no
