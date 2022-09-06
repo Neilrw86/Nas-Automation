@@ -1,4 +1,5 @@
 ---
+
 - name: Config Vim pluugins
   hosts: nas
   gather_facts: yes
@@ -9,6 +10,7 @@
     vimrc: "{{ ansible_env.HOME }}/.vimrc"
 
   tasks:
+
     - name:  Install required packages
       package:
         name:
