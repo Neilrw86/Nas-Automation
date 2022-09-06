@@ -1,13 +1,18 @@
 all:
-  hosts:
-    sabretooth
-  nas:
-    nas
-    nas2
-    nas3
-    nas4
-  Pi:
-    node1
-    node2
-    node3
-
+  children:
+    workstations:
+      hosts:
+        sabretooth:
+        thinkpad:
+    nas:
+      hosts:
+        nas2:
+        nas3:
+        nas4:
+    Pi:
+      hosts:
+        node1:
+        node2:
+        node3:
+  vars:
+    ansible_user: neil
