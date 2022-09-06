@@ -1,14 +1,8 @@
 ---
-
 - name: Config Vim pluugins
   hosts: nas
   gather_facts: yes
-  become: no
-
-
-
   tasks:
-
     - name:  Install required packages
       package:
         name:
@@ -17,7 +11,7 @@
       become: yes
 
     - name: Ensure .vim/{autoload,bundle} directory exists
-      file:
+        file:
         path: "{{ item }}"
         state: directory
         recurse: no
