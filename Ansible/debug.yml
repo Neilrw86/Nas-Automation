@@ -6,4 +6,6 @@
       debug: var=ansible_env.HOME
     - name: debug vim dir
       debug: var=vim_dir
+    - name: debug iface
+      debug: var=iface
 
