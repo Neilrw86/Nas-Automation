@@ -1,6 +1,8 @@
 ---
-  vars:
+    iface: '{{ ansible_default_ipv4.interface }}'
     local_home: "{{ lookup('env','HOME') }}"
+
     vim_dir: "{{ { ansible_env.HOME }}/.vim"
     vimrc: "{{ ansible_env.HOME }}/.vimrc"
+
     ansible_user: neil
