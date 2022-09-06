@@ -15,7 +15,7 @@
       package:
         name:
           - vim-enhanced
-        state: installed
+        state: present
       become: yes
 
     - name: Ensure .vim/{autoload,bundle} directory exists
@@ -29,6 +29,11 @@
         - "{{ vim_dir }}/autoload"
         - "{{ vim_dir }}/bundle"
 
+    - name: Ensure Pathogen is in place
+      get_url:
+        dest: "{{ vim_dir }}/autoload/pathogen.vim"
+        url: https://tpo.pe/pathogen.vim
+          
     - name: Deploy plugins
       git:
         dest: "{{ vim_dir }}/bundle/{{ item.name }}"
@@ -49,3 +54,9 @@
         url: https://github.com/tpope/vim-fugitive
       - name: vim-floaterm
         url: https://github.com/voldikss/vim-floaterm
+      - name: vim-yaml
+        url: https://https://github.com/stephpy/vim-yaml
+      - name: indent-line
+        url: https://github.com/yggdroot/indentline
+
+
