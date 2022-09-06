@@ -14,5 +14,3 @@ all:
         node1:
         node2:
         node3:
-  vars:
-    ansible_user: neil

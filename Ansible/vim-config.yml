@@ -1,23 +1,58 @@
 ---
-
 - name: Config Vim pluugins
   hosts: nas
   gather_facts: yes
-  become: no
-
   vars:
-    vim_dir: "{{ { ansible_env.HOME }}/.vim"
+    vim_dir: "{{ansible_env.HOME}}/.vim"
     vimrc: "{{ ansible_env.HOME }}/.vimrc"
 
   tasks:
-
     - name:  Install required packages
       package:
         name:
-          - vim-enhanced
-          - powerline-fonts
-          - fzf
-          - vim-fugitive
-          - vim-ansible-yaml
-        state: installed
+          - vim
+        state: present
       become: yes
+
+    - name: Ensure .vim/{autoload,bundle} directory exists
+      file:
+        path: "{{ item }}"
+        state: directory
+        recurse: no
+        mode: 0750
+      loop:
+        - "{{ vim_dir }}"
+        - "{{ vim_dir }}/autoload"
+        - "{{ vim_dir }}/bundle"
+
+    - name: Ensure Pathogen is in place
+      get_url:
+        dest: "{{ vim_dir }}/autoload/pathogen.vim"
+        url: https://tpo.pe/pathogen.vim
+          
+    - name: Deploy plugins
+      git:
+        dest: "{{ vim_dir }}/bundle/{{ item.name }}"
+        repo: "{{ item.url }}"
+        clone: yes
+        update: yes
+        recursive: no
+      loop:
+      - name: vim-airline
+        url: https://github.com/vim-airline/vim-airline
+      - name: nerdtree
+        url: https://github.com/preservim/nerdtree
+      - name: fzf-vim
+        url: https://github.com/junegunn/fzf.vim
+      - name: vim-gitgutter
+        url: https://github.com/airblade/vim-gitgutter
+      - name: vim-fugitive
+        url: https://github.com/tpope/vim-fugitive
+      - name: vim-floaterm
+        url: https://github.com/voldikss/vim-floaterm
+      - name: vim-yaml
+        url: https://github.com/stephpy/vim-yaml
+      - name: indent-line
+        url: https://github.com/yggdroot/indentline
+
+
