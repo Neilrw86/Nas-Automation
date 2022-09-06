@@ -51,7 +51,7 @@
       - name: vim-floaterm
         url: https://github.com/voldikss/vim-floaterm
       - name: vim-yaml
-        url: https://https://github.com/stephpy/vim-yaml
+        url: https://github.com/stephpy/vim-yaml
       - name: indent-line
         url: https://github.com/yggdroot/indentline
 

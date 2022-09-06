@@ -1,7 +1,9 @@
-- hosts: all
+- hosts: nas
+  vars:
+    vim_dir: "{{ ansible_env.HOME}}/.vim"
   tasks:
     - name: debug through ansible.env
       debug: var=ansible_env.HOME
+    - name: debug vim dir
+      debug: var=vim_dir
 
-    - name: debug vimrc
-      debug: var=ansible_env.vim_dir
