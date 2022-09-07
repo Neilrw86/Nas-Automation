@@ -1,4 +1,5 @@
 127.0.0.1 localhost
+
 {% for host in groups['nas'] %}
-{{ hostvars[item]['ansible_ssh_host'] }} {{ item }}
-{% endfor %}
+{{ hostvars[host].ansible_default_ipv4.address }} {{ host  }}   {{ hostvars[host].ansible_fqdn }}
+{% endfor  %}
