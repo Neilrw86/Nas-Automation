@@ -3,14 +3,19 @@ all:
     workstations:
       hosts:
         sabretooth:
-        thinkpad:
+          ansible_host: 192.168.1.81
+        ThinkPad:
+          ansible_host: 192.168.1.68
     nas:
       hosts:
         nas2:
+          ansible_host: 192.168.1.8 
+ #       nas:
+ #         ansible_host: 192.168.1.24
         nas3:
+          ansible_host: 192.168.1.9
         nas4:
-    Pi:
-      hosts:
-        node1:
-        node2:
-        node3:
+          ansible_host: 192.168.1.10
+
+    
+
