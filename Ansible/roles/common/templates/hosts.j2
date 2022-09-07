@@ -1,12 +1,4 @@
 127.0.0.1 localhost
-#{% for host in groups['all'] %}
-#{{ hostvars[host]['ansible_' + iface].ipv4.address }}  {{ host }}
-#{% endfor %}
-
-#nas
-192.168.1.8	nas2
-192.168.1.24	nas
-192.168.1.9	nas3
-192.168.1.10	nas4
-
-
+{% for host in groups['nas'] %}
+{{ hostvars[item]['ansible_ssh_host'] }} {{ item }}
+{% endfor %}

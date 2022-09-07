@@ -8,4 +8,10 @@
       debug: var=vim_dir
     - name: debug iface
       debug: var=iface
+    - name: Print the ip for each host when defined
+      ansible.builtin.debug:
+        msg: System {{ inventory_hostname }} has {{ ansible_default_ipv4.address }}
+      when: ansible_default_ipv4.gateway is defined
+
+
 
