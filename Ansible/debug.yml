@@ -12,6 +12,3 @@
       ansible.builtin.debug:
         msg: System {{ inventory_hostname }} has {{ ansible_default_ipv4.address }}
       when: ansible_default_ipv4.gateway is defined
-
-
-
