@@ -1,6 +1,6 @@
 ---
 - name: Config Vim pluugins
-  hosts: nas
+  hosts: all
   gather_facts: yes
   vars:
     vim_dir: "{{ansible_env.HOME}}/.vim"
