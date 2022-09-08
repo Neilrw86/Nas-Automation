@@ -6,3 +6,9 @@
     vimrc: "{{ ansible_env.HOME }}/.vimrc"
 
     ansible_user: neil
+
+    
+    packages:
+      - curl
+      - net-tools
+      - lsof
