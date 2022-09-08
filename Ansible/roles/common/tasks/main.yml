@@ -1,9 +1,11 @@
 ---
 # shared role for establishing base-config and packages
 - name:  Install required packages
-  package:
+  anisble.builtin.package:
     name:
       - curl
+      - jwhois
+      - net-tools
     state: present
     become: yes
 
