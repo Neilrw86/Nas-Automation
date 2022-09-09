@@ -1,9 +1,9 @@
 all:
   children:
-    workstations:
-      hosts:
-        sabretooth:
-          ansible_host: 192.168.1.81
+#    workstations:
+#      hosts:
+#        sabretooth:
+#          ansible_host: 192.168.1.81
 #        ThinkPad:
 #          ansible_host: 192.168.1.68
     nas:
@@ -17,6 +17,3 @@ all:
         nas4:
           ansible_host: 192.168.1.10
 
-    
-vars: 
-ansible_become_pass='{{ my_become_pass ]}'

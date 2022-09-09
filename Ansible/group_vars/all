@@ -12,3 +12,6 @@
       - curl
       - net-tools
       - lsof
+      - nmap
+      - syslog-ng
+
