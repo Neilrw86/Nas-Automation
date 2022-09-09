@@ -1,9 +1,9 @@
 ---
 # shared role for establishing base-config and packages
 
-- name: Create the hosts file for all machines
-  template: src=hosts.j2 dest=/etc/hosts
-  become: yes
+#- name: Create the hosts file for all machines
+#  template: src=hosts.j2 dest=/etc/hosts
+#  become: yes
 
 - name: Load OS packages
   package:
