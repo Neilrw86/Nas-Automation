@@ -3,7 +3,7 @@
 dnsmasq_service_state: "{{ service_default_state | default('started') }}"
 dnsmasq_service_enabled: "{{ service_default_enabled | default(true) }}"
 
-dnsmasq_service_resolved_disabled: false
+dnsmasq_service_resolved_disabled: true
 
 dnsmasq_etc_default_config_dir: '/etc/dnsmasq.d,.dpkg-dist,.dpkg-old,.dpkg-new'
 
@@ -29,7 +29,7 @@ dnsmasq_etc_default:
     {% if dnsmasq_etc_default_domain_suffix is defined %}
     DOMAIN_SUFFIX=`{{ dnsmasq_etc_default_domain_suffix }}`
     {% else %}
-    #DOMAIN_SUFFIX=`dnsdomainname`
+    DOMAIN_SUFFIX=`neilrwylie.com`
     {% endif %}
     {% if dnsmasq_etc_default_dnsmasq_opts is defined %}
     DNSMASQ_OPTS="{{ dnsmasq_etc_default_dnsmasq_opts }}"
@@ -61,7 +61,7 @@ dnsmasq_etc_default:
     {% if dnsmasq_etc_default_ignore_resolvconf is defined %}
     IGNORE_RESOLVCONF={{ dnsmasq_etc_default_ignore_resolvconf | bool | ternary('yes', 'no') }}
     {% else %}
-    #IGNORE_RESOLVCONF=yes
+    IGNORE_RESOLVCONF=yes
     {% endif %}
 
     {% for line in dnsmasq_etc_default_options | default([]) %}
