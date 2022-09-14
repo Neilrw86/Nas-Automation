@@ -64,7 +64,7 @@
   ansible.builtin.service:
     name: systemd-resolved
     state: stopped
-    enabled: false
+    enabled: true
   when: dnsmasq_service_resolved_disabled | bool
   tags:
     - configuration
