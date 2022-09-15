@@ -8,7 +8,6 @@
 - hosts: nas
   roles:
   - role: nas
-
-- hosts: nas3
-  roles:
-  - role: dnsmasq
+    
+- import_playbook: dhcp.yml
+- import_playbook: bind.yml
