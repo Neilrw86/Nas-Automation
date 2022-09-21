@@ -1,8 +1,19 @@
 ---
-- name: OS update
-  hosts: dev
+- name: OS rhel update
+  hosts: nas2
   gather_facts: yes
   tasks:
-    - name: OS update - all packages or security fixes only
-      include_role:
-        name: os_update
+  - name: yum patching
+    yum:
+      name: '*'
+      state: latest
+      exclude: kernel*
+  become: yes
+
+
+- name: OS debian patches
+  hosts: nas3,nas4,vim4,hass,ThinkPad
+  tasks:
+  - name: apply patches
+    apt: upgrade=dist force_apt_get=yes
+  become: yes

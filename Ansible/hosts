@@ -1,11 +1,11 @@
 all:
   children:
-#    workstations:
-#      hosts:
+    workstations:
+      hosts:
 #        sabretooth:
 #          ansible_host: 192.168.1.81
-#        ThinkPad:
-#          ansible_host: 192.168.1.68
+          ThinkPad:
+            ansible_host: 192.168.1.68
     nas:
       hosts:
         nas2:
@@ -16,4 +16,5 @@ all:
           ansible_host: 192.168.1.9
         nas4:
           ansible_host: 192.168.1.10
-
+        vim4:
+          ansible_host: 192.168.1.228
