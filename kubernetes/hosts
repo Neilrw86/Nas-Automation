@@ -1,10 +1,9 @@
-
- #       nas:
- #         ansible_host: 192.168.1.24
-[masters] 
-master ansible_host=192.168.1.9 ansible_user=root
-        
+[masters]
+master    ansible_host=192.168.1.9
+      
 [workers]
-worker1 ansible_host=192.168.1.10 ansible_user=root
-worker2 ansible_host=192.168.1.228 ansible_user=root
+#removed nas, moved nas3 to master 
+#worker1   ansible_host=192.168.1.9
 
+worker2   ansible_host=192.168.1.10
+worker3   ansible_host=192.168.1.228
