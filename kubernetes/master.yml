@@ -35,8 +35,9 @@
       shell: kubeadm token create  --print-join-command
       register: kubernetes_join_command
 
-    - debug:
-      msg: "{{ kubernetes_join_command.stdout }}"
+    - name: print kubeadm join 
+      ansible.builtin.debug:
+        msg: "{{ kubernetes_join_command.stdout }}"
 
     - name: Copy join command to local file.
       become: yes
