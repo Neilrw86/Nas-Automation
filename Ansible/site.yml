@@ -9,5 +9,3 @@
   roles:
   - role: nas
     
-- import_playbook: dhcp.yml
-- import_playbook: bind.yml

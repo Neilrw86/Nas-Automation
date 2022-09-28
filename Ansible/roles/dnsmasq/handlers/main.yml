@@ -1,7 +1,0 @@
-# handlers file
----
-- name: restart dnsmasq
-  ansible.builtin.service:
-    name: dnsmasq
-    state: restarted
-  when: service_default_state | default('started') == 'started'
