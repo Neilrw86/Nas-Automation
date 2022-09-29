@@ -7,9 +7,7 @@
 **pre-req**
 - base package playbook - should prep for all tools and packages
 - base user setup - create users and enforce policy
-
 - DNS & DHCP
-  - - Define a host with dnsmasq & pi-hole
 
 - create runner
 
