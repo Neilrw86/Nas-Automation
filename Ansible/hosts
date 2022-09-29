@@ -16,5 +16,7 @@ all:
           ansible_host: 192.168.1.9
         nas4:
           ansible_host: 192.168.1.10
+        nas5:
+          ansible_host: 192.168.1.11
         vim4:
           ansible_host: 192.168.1.228
