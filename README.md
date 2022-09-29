@@ -1,6 +1,6 @@
 # HomeLab Automation Repository
 
-**Goal is to be a self-contained repo for convering NAS hosts into a k3s cluster w/ services**
+**Goal is to be a self-contained repository for convering NAS hosts into a k3s cluster w/ services**
 
 ## TODO
 
