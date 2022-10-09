@@ -1,0 +1,8 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: reset
+      become: yes
+      become_user: kube
+      shell: kubeadm reset -f
+
