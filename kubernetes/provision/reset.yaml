@@ -3,6 +3,6 @@
   tasks:
     - name: reset
       become: yes
-      become_user: kube
+      become_user: root
       shell: kubeadm reset -f
 

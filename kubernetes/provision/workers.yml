@@ -1,4 +1,4 @@
-- hosts: worker4
+- hosts: workers
   become: yes
   gather_facts: yes
 
