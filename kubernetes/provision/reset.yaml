@@ -4,11 +4,14 @@
     - name: reset
       become: yes
       become_user: root
-      shell: kubeadm reset -f
+      shell:  |
+             kubeadm reset -f
+             iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X
+
 
     - name: install kubernetes
       shell: |
             sudo apt-mark unhold kubelet kubeadm kubectl
             sudo apt-get purge -y kubelet kubeadm kubectl
             sudo apt-mark hold kubelet kubeadm kubectl
-
+            rm -rf ~/.kube/* 
