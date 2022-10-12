@@ -5,9 +5,8 @@
 ## TODO
 
 **pre-req**
-- base package playbook - should prep for all tools and packages
-- base user setup - create users and enforce policy
-- DNS & DHCP
+- create baseline k8s deployment (use homer)
+- plan storage for the cluster
 
 - create runner
 
