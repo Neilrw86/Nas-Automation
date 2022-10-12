@@ -6,3 +6,9 @@
       become_user: root
       shell: kubeadm reset -f
 
+    - name: install kubernetes
+      shell: |
+            sudo apt-mark unhold kubelet kubeadm kubectl
+            sudo apt-get purge -y kubelet kubeadm kubectl
+            sudo apt-mark hold kubelet kubeadm kubectl
+
