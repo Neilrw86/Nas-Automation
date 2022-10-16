@@ -14,8 +14,3 @@
 [![GitHub Super-Linter](https://github.com/Neilrw86/Nas-Automation/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
 
-# Tia's awesome repo
-
-## welcome
-
-stuff goes here 
