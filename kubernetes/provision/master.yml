@@ -2,7 +2,7 @@
   become: yes
   tasks:
     - name: initialize the cluster
-      shell: kubeadm init
+      shell: kubeadm init --pod-network-cidr=10.1.0.0/16
       args:
         chdir: $HOME
         creates: cluster_initialized.txt
@@ -22,12 +22,17 @@
         remote_src: yes
         owner: kube
 
-    - name: install Pod network
+    - name: install Calico Operator
       become: yes
       become_user: kube
-      shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+      shell: kubectl create -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
       args:
         chdir: $HOME
+
+    - name: install Calico Resources- end point range
+      become: yes
+      become_user: kube
+      shell: kubectl create -f https://docs.projectcalico.org/manifests/custom-resources.yaml
         
     - name: Get the token for joining the worker nodes
       become: yes
