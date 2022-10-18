@@ -15,3 +15,6 @@
             sudo apt-get purge -y kubelet kubeadm kubectl
             sudo apt-mark hold kubelet kubeadm kubectl
             rm -rf ~/.kube/* 
+            rm -rf /etc/kubernetes/
+            rm -rf /etc/cni/
+            rm -rf /opt/cni/
