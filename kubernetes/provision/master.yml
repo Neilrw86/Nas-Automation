@@ -25,14 +25,19 @@
     - name: install Calico Operator
       become: yes
       become_user: kube
-      shell: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.24.1/manifests/tigera-operator.yaml
+      shell: kubectl apply -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml
       args:
         chdir: $HOME
 
-    - name: install Calico Resources- end point range
+          #    - name: install Calico Resources- end point range
+          #become: yes
+          #become_user: kube
+          #shell: kubectl create -f ~/Nas-Automation/kubernetes/provision/custom-resources.yml
+          #
+    - name: tag worker nodes
       become: yes
       become_user: kube
-      shell: kubectl create -f ~/Nas-Automation/kubernetes/provision/custom-resources.yml
+      shell: for i in {3..5}; do kubectl label node nas$i  node-role.kubernetes.io/worker=worker;done
         
     - name: Get the token for joining the worker nodes
       become: yes
