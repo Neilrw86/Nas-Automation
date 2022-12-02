@@ -1,0 +1,15 @@
+---
+- name: install tools for workstations [ubuntu]
+  copy:
+    name:
+      - nmap
+      - neovim
+      - nc
+      - curl
+      - net-tools
+      - lsof
+      - syslog-ng
+      - vim
+
+
+

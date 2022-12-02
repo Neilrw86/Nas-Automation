@@ -1,9 +1,7 @@
 ---
-- hosts: "{{ target }}"
+- hosts: workstations
   remote_user: root
   roles:
   - upgrade
-  - ssh
   - aliases
   - tools
-

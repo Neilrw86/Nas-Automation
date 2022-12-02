@@ -4,8 +4,11 @@ all:
       hosts:
         sabretooth:
           ansible_host: 192.168.1.81
-          ThinkPad:
-            ansible_host: 192.168.1.68
+        ThinkPad:
+          ansible_host: 192.168.1.68
+        khadas:
+          ansible_host: 192.168.1.228
+          ansible_user: kube
     nas:
       hosts:
         nas2:

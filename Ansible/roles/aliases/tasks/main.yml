@@ -1,8 +1,8 @@
 ---
 - name: Copy .bash_aliases
   copy:
-    src: .bash_aliases
-    dest: /home/neil/
+    src: bash_aliases
+    dest: ~/.bash_aliases
     owner: neil
     group: neil
     mode: 0644
