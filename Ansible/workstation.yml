@@ -2,6 +2,5 @@
 - hosts: workstations
   remote_user: root
   roles:
-  - tools
-  - aliases
-  - upgrade
+  - common 
+  - workstations

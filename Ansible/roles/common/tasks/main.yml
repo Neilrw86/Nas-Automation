@@ -15,11 +15,11 @@
       state: present
 
       
-- include_tasks: redhat.yml
-  when: ansible_os_family == "RedHat"
+  - include_tasks: redhat.yml
+    when: ansible_os_family == "RedHat"
 
-- include_tasks: ubuntu.yml
-  when: ansible_os_family == "debian"
+  - include_tasks: ubuntu.yml
+    when: ansible_os_family == "debian"
 
   - name: Copy .bash_aliases
     become:yes 
