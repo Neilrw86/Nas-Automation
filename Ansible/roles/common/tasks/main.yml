@@ -1,12 +1,32 @@
 ---
-# shared role for establishing base-config and packages
+  - name: shared base packages 
+    become: yes
+    apt:
+      update_cache: yes
+      name:
+        - nmap
+        - neovim
+        - netcat-openbsd
+        - curl
+        - net-tools
+        - lsof
+        - syslog-ng
+        - vim
+      state: present
 
-#- name: Create the hosts file for all machines
-#  template: src=hosts.j2 dest=/etc/hosts
-#  become: yes
+      
+- include_tasks: redhat.yml
+  when: ansible_os_family == "RedHat"
 
-- name: Load OS packages
-  package:
-    name: "{{ packages }}"
-    state: present
-  become: yes
+- include_tasks: ubuntu.yml
+  when: ansible_os_family == "debian"
+
+  - name: Copy .bash_aliases
+    become:yes 
+    copy:
+      src: bash_aliases
+      dest: /etc/profile.d/00-bash_aliases.sh
+      owner: neil
+      group: neil
+      mode: 0644
+
