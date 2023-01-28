@@ -15,14 +15,14 @@
       state: present
 
       
-  - include_tasks: redhat.yml
-    when: ansible_os_family == "RedHat"
-
-  - include_tasks: ubuntu.yml
-    when: ansible_os_family == "debian"
+  - name: patching
+    include_tasks: redhat.yml
+      when: ansible_os_family == "RedHat"
+    include_tasks: ubuntu.yml
+      when: ansible_os_family == "debian"
 
   - name: Copy .bash_aliases
-    become:yes 
+    become: yes 
     copy:
       src: bash_aliases
       dest: /etc/profile.d/00-bash_aliases.sh
