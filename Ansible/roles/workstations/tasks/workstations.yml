@@ -12,5 +12,8 @@
       name:
         - terminator
         - ansible
+        - google-chrome-stable
+        - net-base
+        - tcpdump
       state: present
 
