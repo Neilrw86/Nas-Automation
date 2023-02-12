@@ -7,4 +7,7 @@
 - hosts: nas
   roles:
   - role: nas
-    
+
+- hosts: nas3
+  roles:
+  - role: hypervisor  

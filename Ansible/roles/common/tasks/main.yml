@@ -14,7 +14,21 @@
         - vim
       state: present
 
-      
+  - name: create the ansible user account
+    user: name=ansible append=yes state=present createhome=yes shell=/bin/bash
+
+  - name: allow 'ansible' to use sudo without needing a password
+    lineinfile:
+        dest: /etc/sudoers
+        line: 'ansible ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+
+
+  - name: Set authorized key taken from file
+    authorized_key:
+      user: ansible
+      state: present
+      key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
 
   - name: Copy .bash_aliases
     become: yes 

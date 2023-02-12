@@ -1,0 +1,17 @@
+---
+  - name: base hypervisor packages
+    become: yes
+    apt:
+      update_cache: yes
+      name:
+        - libvirtd
+      state: present
+
+  - name: enable libvirtd on boot
+    become: yes
+    service:
+        name: libvirtd
+        enabled: true
+        state: started
+
+
