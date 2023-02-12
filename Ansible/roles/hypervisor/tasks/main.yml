@@ -4,7 +4,15 @@
     apt:
       update_cache: yes
       name:
-        - libvirtd
+        - libvirt-daemon
+        - virtinst
+        - libvirt-deamon-system
+        - virt-top
+        - qemu
+        - qemu-kvm
+        - bridge-utils
+        - libvirt-clients
+
       state: present
 
   - name: enable libvirtd on boot

@@ -1,5 +1,36 @@
 ---
+- name: create the ansible user account
+  become: yes
+  user: name=ansible append=yes state=present createhome=yes shell=/bin/bash
+
+- name: allow 'ansible' to use sudo without needing a password
+  become: yes
+  lineinfile:
+      dest: /etc/sudoers
+      line: 'ansible ALL=(ALL) NOPASSWD: ALL'
+      validate: 'visudo -cf %s'
+
+
+- name: Set Authorized key taken from file
+  become: yes
+  authorized_key:
+    user: ansible
+    state: present
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+
+- name: Update Timezone to Chicago
+  become: yes
+  copy: content="America/Chicago\n" dest=/etc/timezone owner=root group=root mode=0644
+  register: timezone
+
+- name: Reconfigure Timezone Data (if changed)
+  become: yes
+  shell: dpkg-reconfigure -f noninteractive tzdata
+  when: timezone.changed
+
 - name: dpkg --configure -a
+  become: yes
   shell: dpkg --configure -a
   tags:
     - packages
@@ -7,6 +38,7 @@
     - dpkg-reconf
 
 - name: install system utils, packages and stuff...
+  become: yes
   package:
     name:
       - apt-transport-https
@@ -45,15 +77,15 @@
     - common
 
 
-# @link http://bencane.com/2012/07/08/sar-sysstat-linux-performance-statistics-with-ease/
 - name: enable /etc/default/sysstat
+  become: yes
   lineinfile:
-    backup: yes
-    create: yes
-    dest: /etc/default/sysstat
-    regexp: '^ENABLED='
-    line: 'ENABLED="true"'
-    state: present
+     backup: yes
+     create: yes
+     dest: /etc/default/sysstat
+     regexp: '^ENABLED='
+     line: 'ENABLED="true"'
+     state: present
   tags:
     - common-config
     - packages
@@ -61,31 +93,12 @@
 
 
 
-  - name: create the ansible user account
-    become: yes
-    user: name=ansible append=yes state=present createhome=yes shell=/bin/bash
-
-  - name: allow 'ansible' to use sudo without needing a password
-    become: yes
-    lineinfile:
-        dest: /etc/sudoers
-        line: 'ansible ALL=(ALL) NOPASSWD: ALL'
-        validate: 'visudo -cf %s'
-
-
-  - name: Set Authorized key taken from file
-    become: yes
-    authorized_key:
-      user: ansible
-      state: present
-      key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
-
-  - name: Copy .bash_aliases
-    become: yes 
-    copy:
-      src: bash_aliases
-      dest: /etc/profile.d/00-bash_aliases.sh
-      owner: neil
-      group: neil
-      mode: 0644
+- name: Copy .bash_aliases
+  become: yes 
+  copy:
+    src: bash_aliases
+    dest: /etc/profile.d/00-bash_aliases.sh
+    owner: neil
+    group: neil
+    mode: 0644
 
