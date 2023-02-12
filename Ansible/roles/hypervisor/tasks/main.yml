@@ -1,0 +1,30 @@
+---
+  - name: base hypervisor packages
+    become: yes
+    apt:
+      name:
+      - qemu-kvm
+      - libvirt-daemon-system
+      - libvirt-clients
+      - python3-libvirt
+      - python3-lxml
+      - bridge-utils
+      - cloud-image-utils
+      - virtinst
+      state: present
+
+  - name: enable libvirtd on boot
+    become: yes
+    service:
+        name: libvirtd
+        enabled: true
+        state: started
+
+  - name: Virtual machine directory
+    become: yes
+    file:
+      path: /virt/vms
+      state: directory
+      owner: root
+      group: root
+      mode: 0755

@@ -1,27 +1,102 @@
 ---
-  - name: shared base packages 
-    become: yes
-    apt:
-      update_cache: yes
-      name:
-        - nmap
-        - neovim
-        - netcat-openbsd
-        - curl
-        - net-tools
-        - lsof
-        - syslog-ng
-        - vim
-      state: present
+- name: create the ansible user account
+  become: yes
+  user: name=ansible append=yes state=present createhome=yes shell=/bin/bash
 
-      
+- name: allow 'ansible' to use sudo without needing a password
+  become: yes
+  lineinfile:
+      dest: /etc/sudoers
+      line: 'ansible ALL=(ALL) NOPASSWD: ALL'
+      validate: 'visudo -cf %s'
 
-  - name: Copy .bash_aliases
-    become: yes 
-    copy:
-      src: bash_aliases
-      dest: /etc/profile.d/00-bash_aliases.sh
-      owner: neil
-      group: neil
-      mode: 0644
+
+- name: Set Authorized key taken from file
+  become: yes
+  authorized_key:
+    user: ansible
+    state: present
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+
+- name: Update Timezone to Chicago
+  become: yes
+  copy: content="America/Chicago\n" dest=/etc/timezone owner=root group=root mode=0644
+  register: timezone
+
+- name: Reconfigure Timezone Data (if changed)
+  become: yes
+  shell: dpkg-reconfigure -f noninteractive tzdata
+  when: timezone.changed
+
+- name: dpkg --configure -a
+  become: yes
+  shell: dpkg --configure -a
+  tags:
+    - packages
+    - common
+    - dpkg-reconf
+
+- name: install system utils, packages and stuff...
+  become: yes
+  package:
+    name:
+      - apt-transport-https
+      - curl
+      - figlet
+      - genisoimage
+      - git
+      - git-core
+      - goaccess
+      - htop
+      - libfontconfig
+      - libjson-xs-perl
+      - lsof
+      - multitail
+      - neovim
+      - netcat
+      - net-tools
+      - nmap
+      - ntp
+      - openssl
+      - python-pip
+      - rsync
+      - rsyslog
+      - software-properties-common
+      - sysstat
+      - vim
+      - vim-common
+      - wget
+      - zip
+    state: latest
+    allow_unauthenticated: yes
+  tags:
+    - packages
+    - common
+
+
+- name: enable /etc/default/sysstat
+  become: yes
+  lineinfile:
+     backup: yes
+     create: yes
+     dest: /etc/default/sysstat
+     regexp: '^ENABLED='
+     line: 'ENABLED="true"'
+     state: present
+  tags:
+    - common-config
+    - packages
+    - common
+
+
+
+- name: Copy .bash_aliases
+  become: yes 
+  copy:
+    src: bash_aliases
+    dest: /etc/profile.d/00-bash_aliases.sh
+    owner: neil
+    group: neil
+    mode: 0644
 
