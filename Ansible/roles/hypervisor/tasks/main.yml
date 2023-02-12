@@ -6,8 +6,8 @@
       - qemu-kvm
       - libvirt-daemon-system
       - libvirt-clients
-      - python-libvirt
-      - python-lxml
+      - python3-libvirt
+      - python3-lxml
       - bridge-utils
       - cloud-image-utils
       - virtinst
@@ -20,11 +20,11 @@
         enabled: true
         state: started
 
-
-- name: Virtual machine directory
-  file:
-    path: /virt/vms
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
+  - name: Virtual machine directory
+    become: yes
+    file:
+      path: /virt/vms
+      state: directory
+      owner: root
+      group: root
+      mode: 0755

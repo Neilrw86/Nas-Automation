@@ -69,8 +69,6 @@
       - wget
       - zip
     state: latest
-    update_cache: yes
-    cache_valid_time: 5400
     allow_unauthenticated: yes
   tags:
     - packages
