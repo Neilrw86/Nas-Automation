@@ -1,0 +1,7 @@
+#!/usr/bin/ansible-playbook
+---
+- hosts: nas3
+  gather_facts: yes
+  become: yes
+  roles:
+  - hypervisor

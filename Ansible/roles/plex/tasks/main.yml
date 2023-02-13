@@ -1,0 +1,28 @@
+---
+  - name: create the docker user account
+    become: yes
+    user: name=docker append=yes state=present createhome=yes shell=/bin/bash
+
+  - name: Plex packages
+    become: yes
+    apt:
+      name:
+      - docker.io
+      - docker-compose
+      state: present
+
+  - name: enable docker on boot
+    become: yes
+    service:
+        name: docker
+        enabled: true
+        state: started
+
+  - name: required media dirs
+    become: yes
+    file:
+      path: /share/
+      state: directory
+      owner: docker
+      group: docker
+      mode: 0755
