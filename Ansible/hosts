@@ -25,3 +25,16 @@ all:
           ansible_host: 192.168.1.11
         vim4:
           ansible_host: 192.168.1.228
+
+    pi: 
+      hosts:
+        Pi1:
+          ansible_host: 192.168.1.40
+          ansible_user: ubuntu
+        Pi2:
+          ansible_host: 192.168.1.31
+          ansible_user: ubuntu
+        Pi3:
+          ansible_host: 192.168.1.32
+          ansible_user: ubuntu
+
