@@ -5,6 +5,14 @@
       repo: deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
       state: present
 
+  - name: add nordvpn repo to workstations
+    become: yes
+    ansible.builtin.apt_repository:
+      repo: deb https://repo.nordvpn.com//deb/nordvpn/debian stable main
+      state: present
+
+
+
   - name: workstation base packages
     become: yes
     apt:
@@ -15,5 +23,8 @@
         - google-chrome-stable
         - net-base
         - tcpdump
+        - atop
+        - htop
+        - nordvpn
       state: present
 
