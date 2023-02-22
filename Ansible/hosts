@@ -3,11 +3,11 @@ all:
     workstations:
       hosts:
         sabretooth:
-          ansible_host: 192.168.1.81
+          ansible_host: 100.94.167.44
         ThinkPad:
           ansible_host: 192.168.1.68
         surface:
-          ansible_host: 192.168.1.204
+          ansible_host: 100.114.133.94
         khadas:
           ansible_host: 192.168.1.228
           ansible_user: kube
