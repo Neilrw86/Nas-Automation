@@ -15,3 +15,4 @@ alias kubemaster='ssh kube@khadas'
 alias kubemon='watch kubectl get all -o wide --all-namespaces'
 alias weave="kubectl port-forward svc/ww-gitops-weave-gitops -n flux-system 9001:9001&"
 alias prom="kubectl port-forward svc/kube-prometheus-stack-grafana -n monitoring 9090:80 &"
+alias ipwhois=" whois $(curl http://icanhazip.com)"
