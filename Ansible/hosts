@@ -2,8 +2,8 @@ all:
   children:
     workstations:
       hosts:
-        sabretooth:
-          ansible_host: 100.94.167.44
+#        sabretooth:
+#          ansible_host: 100.94.167.44
         ThinkPad:
           ansible_host: 192.168.1.68
         surface:
@@ -22,17 +22,17 @@ all:
         nas4:
           ansible_host: 192.168.1.10
         nas5:
-          ansible_host: 192.168.1.11
+          ansible_host: 100.109.84.102
         vim4:
           ansible_host: 192.168.1.228
 
     pi: 
       hosts:
         Pi1:
-          ansible_host: 192.168.1.40
+          ansible_host: 100.71.41.32
           ansible_user: ubuntu
         Pi2:
-          ansible_host: 192.168.1.31
+          ansible_host: 100.106.77.4
           ansible_user: ubuntu
         Pi3:
           ansible_host: 192.168.1.32

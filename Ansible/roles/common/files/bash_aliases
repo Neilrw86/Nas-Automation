@@ -18,3 +18,5 @@ alias prom="kubectl port-forward svc/kube-prometheus-stack-grafana -n monitoring
 alias tailscale-up="sudo tailscale up"
 alias tailscale-down="sudo tailscale down"
 alias ipwhois=" whois $(curl http://icanhazip.com)"
+alias tailscale-up="sudo tailscale up"
+alias tailscale-down="sudo tailscale down"
