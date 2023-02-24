@@ -100,3 +100,14 @@
     group: neil
     mode: 0644
 
+
+- name: Update /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    state: present
+    line: "{{ item.line }}"
+  loop:
+    - line: "127.0.0.1 localhost"
+    - line: "{{ hostvars[inventory_hostname]['ansible_' + ansible_default_ipv4.interface]['ipv4']['address'] }} {{ inventory_hostname }}"
+  become: true
+
