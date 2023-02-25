@@ -29,14 +29,6 @@
   shell: dpkg-reconfigure -f noninteractive tzdata
   when: timezone.changed
 
-- name: dpkg --configure -a
-  become: yes
-  shell: dpkg --configure -a
-  tags:
-    - packages
-    - common
-    - dpkg-reconf
-
 - name: install system utils, packages and stuff...
   become: yes
   package:
@@ -59,7 +51,6 @@
       - nmap
       - ntp
       - openssl
-      - python-pip
       - rsync
       - rsyslog
       - software-properties-common
@@ -100,14 +91,9 @@
     group: neil
     mode: 0644
 
-
-- name: Update /etc/hosts
+- name: Append hosts file to /etc/hosts
+  become: yes
   lineinfile:
     path: /etc/hosts
-    state: present
-    line: "{{ item.line }}"
-  loop:
-    - line: "127.0.0.1 localhost"
-    - line: "{{ hostvars[inventory_hostname]['ansible_' + ansible_default_ipv4.interface]['ipv4']['address'] }} {{ inventory_hostname }}"
-  become: true
+    line: "{{ lookup('file', '../files/hosts') }}"
 

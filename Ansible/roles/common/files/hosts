@@ -1,0 +1,13 @@
+
+
+#added by Ansible
+192.168.1.81 sabretooth   sabretooth
+192.168.1.8 nas2   nas2
+192.168.1.9 nas3   nas3
+192.168.1.10 nas4   nas4
+192.168.1.11 nas5   nas5
+192.168.1.228 khadas	khadas
+192.168.1.40 pi1  pi1
+192.168.1.31 pi2  pi2
+192.168.1.32 pi3  pi3
+
