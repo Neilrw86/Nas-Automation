@@ -91,9 +91,17 @@
     group: neil
     mode: 0644
 
-- name: Append hosts file to /etc/hosts
+- name: Make sure an entry in /etc/hosts exists
   become: yes
   lineinfile:
     path: /etc/hosts
-    line: "{{ lookup('file', '../files/hosts') }}"
+    regexp: "^{{ ansible_default_ipv4.address }}"
+    line: "{{ ansible_default_ipv4.address }} {{ inventory_hostname }} {{ ansible_hostname }}"
+    state: present
+    
+    #- name: Append hosts file to /etc/hosts
+    #  become: yes
+    #  lineinfile:
+    #    path: /etc/hosts
+    #    line: "{{ lookup('file', '../files/hosts') }}"
 
