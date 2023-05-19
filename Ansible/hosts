@@ -22,9 +22,7 @@ all:
         nas4:
           ansible_host: 192.168.1.10
         nas5:
-          ansible_host: 100.109.84.102
-        vim4:
-          ansible_host: 192.168.1.228
+          ansible_host: 192.168.1.11
 
     pi: 
       hosts:

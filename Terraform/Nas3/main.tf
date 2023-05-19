@@ -7,6 +7,10 @@ terraform {
   }
 }
 
+
 provider "libvirt" {
-  # Configuration options
+  ## Configuration options
+  #uri = "qemu:///system"
+  alias = "nas3"
+  uri   = "qemu+ssh://root@nas3/system"
 }
