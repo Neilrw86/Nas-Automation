@@ -4,13 +4,16 @@ terraform {
       source = "dmacvicar/libvirt"
       version = "0.7.1"
     }
+   azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~>3.0"
+    }
+
   }
 }
 
 
+
 provider "libvirt" {
-  ## Configuration options
-  #uri = "qemu:///system"
-  alias = "nas3"
   uri   = "qemu+ssh://root@nas3/system"
 }
