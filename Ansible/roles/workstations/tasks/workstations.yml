@@ -26,5 +26,6 @@
         - atop
         - htop
         - nordvpn
+        - vim.tiny
       state: present
 
