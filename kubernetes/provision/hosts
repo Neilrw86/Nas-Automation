@@ -5,12 +5,12 @@ ansible_become=yes
 Ansible_become_method=sudo
 
 [masters]
-master    ansible_host=192.168.1.228
+master    ansible_host=192.168.1.26
       
 [workers]
 #removed nas, moved nas3 to master 
-#worker1   ansible_host=192.168.1.9
+worker1   ansible_host=192.168.1.175
 
-worker2   ansible_host=192.168.1.9
-worker3   ansible_host=192.168.1.10
-worker4   ansible_host=192.168.1.11
+#worker2   ansible_host=192.168.1.9
+#worker3   ansible_host=192.168.1.10
+#worker4   ansible_host=192.168.1.11
