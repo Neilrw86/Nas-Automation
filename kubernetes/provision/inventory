@@ -1,8 +1,10 @@
 masters:
-  nuc:
+  hosts:
+    nuc:
       
 workers:
-  nas5:
-  khadas:
-  sabretooth:
+  hosts: 
+    nas5:
+    khadas:
+    sabretooth:
 
