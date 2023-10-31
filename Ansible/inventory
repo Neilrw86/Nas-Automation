@@ -1,0 +1,8 @@
+workstations:
+  hosts:
+    sabretooth:
+    khadas:
+nas:
+  hosts:
+    nuc:
+    nas5:

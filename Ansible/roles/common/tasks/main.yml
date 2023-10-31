@@ -19,9 +19,9 @@
     key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
 
 
-- name: Update Timezone to Chicago
+- name: Update Timezone to New York
   become: yes
-  copy: content="America/Chicago\n" dest=/etc/timezone owner=root group=root mode=0644
+  copy: content="America/New_York\n" dest=/etc/timezone owner=root group=root mode=0644
   register: timezone
 
 - name: Reconfigure Timezone Data (if changed)
