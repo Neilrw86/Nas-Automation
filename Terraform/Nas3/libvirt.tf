@@ -8,8 +8,8 @@ resource "libvirt_volume" "centos7-qcow2" {
 }
 
 # Define KVM domain to create
-resource "libvirt_domain" "centos7" {
-  name   = "centos7"
+resource "libvirt_domain" "centos7-test" {
+  name   = "centos7-test"
   memory = "2048"
   vcpu   = 2
 
@@ -36,5 +36,5 @@ resource "libvirt_domain" "centos7" {
 
 # Output Server IP
 output "ip" {
-  value = "${libvirt_domain.centos7.network_interface.0.addresses.0}"
+  value = "${libvirt_domain.centos7-test.network_interface.0.addresses.0}"
 }
