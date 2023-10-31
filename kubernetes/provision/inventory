@@ -6,5 +6,3 @@ workers:
   hosts: 
     nas5:
     khadas:
-    sabretooth:
-
