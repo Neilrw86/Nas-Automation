@@ -2,7 +2,7 @@
   become: yes
   tasks:
     - name: initialize the cluster
-      shell: kubeadm init --pod-network-cidr=10.1.0.0/16
+      shell: kubeadm init
       args:
         chdir: $HOME
         creates: cluster_initialized.txt
@@ -22,12 +22,12 @@
         remote_src: yes
         owner: kube
 
-    - name: install Calico Operator
-      become: yes
-      become_user: kube
-      shell: kubectl apply -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml
-      args:
-        chdir: $HOME
+          #    - name: install Calico Operator
+          #  become: yes
+          #become_user: kube
+          #shell: kubectl apply -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml
+          #args:
+          #chdir: $HOME
 
           #    - name: install Calico Resources- end point range
           #become: yes

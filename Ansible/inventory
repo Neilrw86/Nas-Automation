@@ -1,0 +1,11 @@
+workstations:
+  hosts:
+    sabretooth:
+    khadas:
+  laptops:
+    thinkpad:
+    surface:
+nas:
+  hosts:
+    nuc:
+    nas5:
