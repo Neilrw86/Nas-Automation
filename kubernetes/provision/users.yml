@@ -1,4 +1,4 @@
-- hosts: 'worker1'
+- hosts: 'nuc'
   become: yes
 
   tasks:
