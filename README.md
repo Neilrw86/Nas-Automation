@@ -25,12 +25,9 @@ That involves
 ## TODO
 
 **pre-req**
-- create baseline k8s deployment (use homer)
+- create baseline k8s deployment - complete - role based
 - plan storage for the cluster
 - map needed PV's for home media migration
 
 - create runner
-
-
-
-
+- add dconf file in workstation role
