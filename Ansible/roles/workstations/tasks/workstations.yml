@@ -10,8 +10,19 @@
     ansible.builtin.apt_repository:
       repo: deb https://repo.nordvpn.com//deb/nordvpn/debian stable main
       state: present
+  
+  
+  - name: Add signal apt key 
+    ansible.builtin.apt_key:
+      url: https://updates.signal.org/desktop/apt/keys.asc
+      state: present
+ 
 
-
+ - name: add signal to all workstations
+    become: yes
+    ansible.builtin.apt_repository:
+      repo: deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main'
+      state: present
 
   - name: workstation base packages
     become: yes
@@ -26,6 +37,7 @@
         - atop
         - htop
         - nordvpn
+        - signal-desktop
         - vim.tiny
       state: present
 
