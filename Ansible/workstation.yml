@@ -1,8 +1,7 @@
 ---
 - hosts: workstations
-  remote_user: root
+  remote_user: neil
   roles:
   - common 
   - workstations
-  - diodonfrost.terraform
 

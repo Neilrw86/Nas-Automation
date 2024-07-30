@@ -46,7 +46,7 @@
       - lsof
       - multitail
       - neovim
-      - netcat
+      - netcat-traditional
       - net-tools
       - nmap
       - ntp
