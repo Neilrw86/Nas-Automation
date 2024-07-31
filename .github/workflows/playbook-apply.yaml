@@ -1,0 +1,24 @@
+name: Ansible CD for Homelab (Self-Hosted Runner with Sudo)
+
+on:
+  push:
+    branches:
+      - main  # Or your preferred deployment branch
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  deploy:
+    runs-on: self-hosted # Make sure this runner has sudo access
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'  # Or the version Ansible needs
+
+      - name: Deploy with Ansible (using sudo and password)
+        run: |
+          cd Ansible/; echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S ansible-playbook -i inventory.yml site.yml
