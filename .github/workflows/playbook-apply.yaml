@@ -39,4 +39,4 @@ jobs:
 
       - name: Deploy with Ansible (using sudo and password)
         run: |
-          cd Ansible/; ansible-playbook -i inventory.yml site.yml -k "${{ secrets.SUDO_PASSWORD }}" 
+          cd Ansible/; echo ${{ secrets.SUDO_PASSWORD }}| ansible-playbook -i inventory.yml site.yml --askl-become-pass 
