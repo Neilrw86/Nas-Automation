@@ -4,7 +4,9 @@
   roles:
   - role: common
 
-- hosts: nas
+- hosts: workstations
   roles:
-  - role: nas
+  - role: workstation 
+
+
 
