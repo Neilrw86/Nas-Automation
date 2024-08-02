@@ -7,7 +7,6 @@ on:
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
-
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -38,7 +37,7 @@ jobs:
           python-version: '3.x'  # Or the version Ansible needs
 
       - name: Deploy with Ansible (using sudo and password)
-      env:
-          ANSIBLE_VAULT_PASSWORD: ${{ secrets.ANSIBLE_VAULT_PASSWORD }} 
-      run: |
-          cd Ansible/; ansible-playbook -i inventory.yml site.yml 
+        env:
+          ANSIBLE_VAULT_PASSWORD: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
+        run: |
+          cd Ansible/; ansible-playbook -i inventory.yml site.yml
