@@ -1,43 +1,26 @@
-name: Lint & apply
+name: Ansible Deployment
 
-on:
+on: 
   push:
     branches:
-      - main  # Or your preferred deployment branch
-  workflow_dispatch:  # Allows manual triggering
+      - main  # Or your preferred branch
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          # Full git history is needed to get a proper list of changed files within `super-linter`
-          fetch-depth: 0
-
-      - name: Lint Code Base
-        uses: github/super-linter/slim@v4
-        env:
-          VALIDATE_ALL_CODEBASE: false
-          DEFAULT_BRANCH: "main"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  deploy:
-    runs-on: self-hosted # Make sure this runner has sudo access
-    needs: lint
-
+  deploy_job:
+    runs-on: ubuntu-latest  # Or your preferred runner
+    
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-
+        
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'  # Or the version Ansible needs
+          python-version: '3.x'  # Or the version you need for Ansible
 
-      - name: Deploy with Ansible (using sudo and password)
+      - name: Deploy with Ansible
         env:
-          ANSIBLE_VAULT_PASSWORD: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
+          ANSIBLE_BECOME_PASS: ${{ secrets.ANSIBLE_BECOME_PASS }}  # Use the GitHub secret
         run: |
-          cd Ansible/; ansible-playbook -i inventory.yml site.yml
+          cd Ansible  # Navigate to your Ansible directory if needed
+          ansible-playbook -i inventory.yml site.yml
