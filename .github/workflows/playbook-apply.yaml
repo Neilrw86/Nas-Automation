@@ -22,5 +22,4 @@ jobs:
         env:
           ANSIBLE_BECOME_PASS: ${{ secrets.ANSIBLE_BECOME_PASS }}  # Use the GitHub secret
         run: |
-          cd Ansible  # Navigate to your Ansible directory if needed
-          ansible-playbook -i inventory.yml site.yml
+          cd Ansible; ansible-playbook -i inventory.yml site.yml
