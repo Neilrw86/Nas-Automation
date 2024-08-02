@@ -89,7 +89,7 @@
     dest: /etc/profile.d/00-bash_aliases.sh
     owner: neil
     group: neil
-    mode: 0644
+    mode: 0755
 
 - name: Make sure an entry in /etc/hosts exists
   become: yes
