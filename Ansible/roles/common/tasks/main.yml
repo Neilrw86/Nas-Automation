@@ -104,4 +104,3 @@
     #  lineinfile:
     #    path: /etc/hosts
     #    line: "{{ lookup('file', '../files/hosts') }}"
-
