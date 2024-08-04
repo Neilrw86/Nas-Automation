@@ -1,18 +1,14 @@
 ---
 # tasks file for update
-- name: Update and Upgrade Ubuntu
-  hosts: all
-  become: yes
 
-  tasks:
-    - name: Update package lists
-      apt:
-        update_cache: yes
+- name: Update package lists
+  apt:
+    update_cache: yes
 
-    - name: Upgrade all packages
-      apt:
-        upgrade: yes
+- name: Upgrade all packages
+  apt:
+    upgrade: yes
 
-    - name: Autoremove unused dependencies
-      apt:
-        autoremove: yes
+- name: Autoremove unused dependencies
+  apt:
+    autoremove: yes
