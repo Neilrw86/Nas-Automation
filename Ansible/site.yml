@@ -1,7 +1,7 @@
 ---
 
 - hosts: all
-  become: yes
+  become: true
   roles:
   - role: common
   - role: update
@@ -13,5 +13,3 @@
 - hosts: turing
   roles:
   - role: turing
-
-
