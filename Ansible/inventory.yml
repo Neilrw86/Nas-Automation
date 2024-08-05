@@ -11,3 +11,11 @@ cluster:
     nuc1:
     nuc2:
     nas5:
+turing:
+  hosts:
+    node1:
+    node2:
+    node3:
+    node4:
+  vars:
+    ansible_user: ubuntu
