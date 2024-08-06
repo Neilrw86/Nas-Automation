@@ -1,106 +1,129 @@
 ---
 - name: create the ansible user account
-  become: yes
-  user: name=ansible append=yes state=present createhome=yes shell=/bin/bash
-  
+  become: true
+  block:
+    - user: name=ansible append=true state=present createhome=true shell=/bin/bash
+
 - name: allow 'ansible' to use sudo without needing a password
-  become: yes
-  lineinfile:
-      dest: /etc/sudoers
-      line: 'ansible ALL=(ALL) NOPASSWD: ALL'
-      validate: 'visudo -cf %s'
+  become: true
+  block:
+    - lineinfile:
+        dest: /etc/sudoers
+        line: 'ansible ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+
+- name: create the neil user account
+  become: true
+  block:
+    - user:
+        name: neil
+        append: true
+        state: present
+        createhome: true
+        shell: /bin/bash
+  
+- name: allow 'neil' to use sudo without needing a password
+  become: true
+  block:
+    - lineinfile:
+        dest: /etc/sudoers
+        line: 'neil ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
 
 
 - name: Set Authorized key taken from file
-  become: yes
-  authorized_key:
-    user: ansible
-    state: present
-    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
-
+  become: true
+  block:
+    - authorized_key:
+        user: ansible
+        state: present
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
 
 - name: Update Timezone to New York
-  become: yes
-  copy: content="America/New_York\n" dest=/etc/timezone owner=root group=root mode=0644
-  register: timezone
+  become: true
+  block:
+    - copy:
+        content: "America/New_York\n"
+        dest: /etc/timezone
+        owner: root
+        group: root
+        mode: 0644
+      register: timezone
 
 - name: Reconfigure Timezone Data (if changed)
-  become: yes
-  shell: dpkg-reconfigure -f noninteractive tzdata
-  when: timezone.changed
+  become: true
+  block:
+    - shell: dpkg-reconfigure -f noninteractive tzdata
+      when: timezone.changed
 
 - name: install system utils, packages and stuff...
-  become: yes
-  package:
-    name:
-      - apt-transport-https
-      - curl
-      - figlet
-      - genisoimage
-      - git
-      - git-core
-      - goaccess
-      - htop
-      - libfontconfig
-      - libjson-xs-perl
-      - lsof
-      - multitail
-      - neovim
-      - netcat-traditional
-      - net-tools
-      - nmap
-      - ntp
-      - openssl
-      - rsync
-      - rsyslog
-      - software-properties-common
-      - sysstat
-      - vim
-      - vim-common
-      - wget
-      - zip
-    state: latest
-    allow_unauthenticated: yes
-  tags:
-    - packages
-    - common
+  become: true
+  block:
+    - package:
+        name:
+          - apt-transport-https
+          - curl
+          - figlet
+          - genisoimage
+          - git
+          - git-core
+          - goaccess
+          - htop
+          - libfontconfig
+          - libjson-xs-perl
+          - lsof
+          - multitail
+          - neovim
+          - netcat-traditional
+          - net-tools
+          - nmap
+          - ntp
+          - openssl
+          - rsync
+          - rsyslog
+          - software-properties-common
+          - sysstat
+          - vim
+          - vim-common
+          - wget
+          - zip
+        state: latest
+        allow_unauthenticated: true
+      tags:
+        - packages
+        - common
 
 
 - name: enable /etc/default/sysstat
-  become: yes
-  lineinfile:
-     backup: yes
-     create: yes
-     dest: /etc/default/sysstat
-     regexp: '^ENABLED='
-     line: 'ENABLED="true"'
-     state: present
-  tags:
-    - common-config
-    - packages
-    - common
-
-
-
+  become: true
+  block:
+    - lineinfile:
+        backup: true
+        create: true
+        dest: /etc/default/sysstat
+        regexp: '^ENABLED='
+        line: 'ENABLED="true"'
+        state: present
+      tags:
+        - common-config
+        - packages
+        - common
+        
 - name: Copy .bash_aliases
-  become: yes 
-  copy:
-    src: bash_aliases
-    dest: /etc/profile.d/00-bash_aliases.sh
-    owner: neil
-    group: neil
-    mode: 0755
+  become: true 
+  block:
+    - copy:
+        src: bash_aliases
+        dest: /etc/profile.d/00-bash_aliases.sh
+        owner: neil
+        group: neil
+        mode: 0755
 
 - name: Make sure an entry in /etc/hosts exists
-  become: yes
-  lineinfile:
-    path: /etc/hosts
-    regexp: "^{{ ansible_default_ipv4.address }}"
-    line: "{{ ansible_default_ipv4.address }} {{ inventory_hostname }} {{ ansible_hostname }}"
-    state: present
-    
-    #- name: Append hosts file to /etc/hosts
-    #  become: yes
-    #  lineinfile:
-    #    path: /etc/hosts
-    #    line: "{{ lookup('file', '../files/hosts') }}"
+  become: true
+  block:
+    - lineinfile:
+        path: /etc/hosts
+        regexp: "^{{ ansible_default_ipv4.address }}"
+        line: "{{ ansible_default_ipv4.address }} {{ inventory_hostname }} {{ ansible_hostname }}"
+        state: present

@@ -1,1 +1,33 @@
 ---
+- name: Install MicroK8s
+  ansible.builtin.apt:
+    name: 
+      - snap
+      - microk8s
+    update_cache: yes
+    state: present
+    classic: yes
+
+- name: Enable MicroK8s Services
+  ansible.builtin.command: 
+    cmd: microk8s enable dns
+
+- name: Determine if node is master
+  ansible.builtin.uri:
+    url: http://127.0.0.1:16420/ready
+    return_content: yes
+  register: result
+
+- name: Retrieve Join Command for Workers
+  ansible.builtin.shell: microk8s add-node
+  register: join_command
+  when: result.status == 200  # 200 OK indicates master node
+
+- name: Display Join Command (master only)
+  ansible.builtin.debug:
+    msg: "{{ join_command.stdout_lines[0] }}"
+  when: result.status == 200
+
+- name: Join worker to MicroK8s cluster
+  ansible.builtin.shell: "{{ hostvars[groups['master'][0]]['join_command']['stdout_lines'][0] }}"  # Get join command from master
+  when: result.status != 200   # Not the master node
