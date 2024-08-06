@@ -4,11 +4,14 @@
 - name: Update package lists
   apt:
     update_cache: yes
+  become: true
 
 - name: Upgrade all packages
   apt:
     upgrade: yes
+  become: true
 
 - name: Autoremove unused dependencies
   apt:
     autoremove: yes
+  become: true
