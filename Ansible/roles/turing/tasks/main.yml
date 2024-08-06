@@ -1,12 +1,13 @@
 ---
-- name: Install MicroK8s
+- name: Install Snapd
   ansible.builtin.apt:
-    name: 
-      - snap
-      - microk8s
+    name: snapd
     update_cache: yes
     state: present
-    classic: yes
+
+- name: Install MicroK8s
+  ansible.builtin.command:
+    cmd: snap install microk8s --classic
 
 - name: Enable MicroK8s Services
   ansible.builtin.command: 
