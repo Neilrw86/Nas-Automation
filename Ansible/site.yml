@@ -10,6 +10,6 @@
   roles:
   - role: workstations 
 
-- hosts: turing
-  roles:
-  - role: turing
+# - hosts: turing
+#   roles:
+#   - role: turing
