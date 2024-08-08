@@ -39,16 +39,5 @@ venv.bak/
 *.sln
 *.sw?
 
-# GitHub Actions
-/actions-runner/
-
-# Coverage reports
-coverage/
-*.lcov
-
-# Build directories
-dist/
-build/
-
-#runnerdir
+# GitHub Actions Runner
 actions-runner/
