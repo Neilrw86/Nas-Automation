@@ -49,3 +49,6 @@ coverage/
 # Build directories
 dist/
 build/
+
+#runnerdir
+actions-runner/
