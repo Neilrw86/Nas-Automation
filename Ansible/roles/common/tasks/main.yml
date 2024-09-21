@@ -76,6 +76,7 @@
           - neovim
           - netcat-traditional
           - net-tools
+          - nfs-common
           - nmap
           - ntp
           - openssl

@@ -1,21 +1,21 @@
 workstations:
   hosts:
-    desktop:
-    khadas:
+    desktop.neilwylie.com:
+    khadas.neilwylie.com:
   laptops:
     thinkpad:
     surface:
 cluster:
   hosts:
-    nuc:
-    nuc1:
-    nuc2:
-    nas5:
+    nuc.neilwylie.com:
+    nuc1.neilwylie.com:
+    nuc2.neilwylie.com:
+    nas5.neilwylie.com:
 turing:
   hosts:
-    node1:
-    node2:
-    node3:
-    node4:
+    node1.neilwylie.com:
+    node2.neilwylie.com:
+    node3.neilwylie.com:
+    node4.neilwylie.com:
   vars:
     ansible_user: ubuntu
