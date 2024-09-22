@@ -5,6 +5,7 @@ workstations:
   laptops:
     thinkpad:
     surface:
+    Neil-Macbook:
 cluster:
   hosts:
     nuc.neilwylie.com:

@@ -1,6 +1,0 @@
-users:
-  - default
-  - name: vmuser
-    sudo: ALL=(ALL) NOPASSWD:ALL
-    ssh_authorized_keys:
-    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDFWEO9l25CzU9Mop0GjO/ebn4AP5TtvZxOYKrGvLy/lvYiHlvHu5uH0AdbRXg54HTv9GYRnW4zZxpfbCGD0kAmdIbnYJiZABnOvJgBUO29ZB1MqHAd2FDoZrmnMF1A3mxZguPyhnmaIDobALditjNg6ZgMnCjA/gSu/vVy9pgTHcNn49xG7zdqF6CdrKg+aGUx5oFEgY/tF2d1rOaCsvYUDZvVuPlT6dwy2BB7unIetqhCjY+/s9OrOF4ctpR2Y8TcdM8kYjzFI9ovvW/tsm2m7mUPTT6CKsXTCueN2EzMJJGU/LBfLjapZ2MNb1IF7nNK6qFqvtE8G05hZ9IiCOy5ic8jdoXUIQFmxkAcr2pR+UC4YCnP38L+Vgc4eVACs4IVejVmq+mxG2pS7+2LIQyy8Ef6UI4tOyGndKS/t+DwKqbUstFwuOdgUg3lbRnUkrCqFLR+zz/dp+QwIMbCwQoao5Z8OEBg7N66tvHIKwpN75uS8XFglGTa3ULtGNz+y/0= neil@sabretooth
