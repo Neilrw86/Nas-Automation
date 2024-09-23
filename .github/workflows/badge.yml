@@ -1,0 +1,32 @@
+name: Generate Badge
+
+on:
+  push:
+    branches:
+      - main  # Or any branch you want to monitor
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get latest workflow run status
+        id: get_status
+        run: |
+          # Replace 'YOUR_WORKFLOW_NAME' with the actual name of your workflow
+          STATUS=$(gh run list -w 'YOUR_WORKFLOW_NAME' -L 1 --json status -q '.[0].status')
+          echo "status=$STATUS" >> $GITHUB_OUTPUT
+
+      - name: Generate badge
+        uses: schneegans/dynamic-badges-action@v1
+        with:
+          label: Last GitHub Actions Run
+          message: ${{ steps.get_status.outputs.status }}
+          color: ${{ steps.get_status.outputs.status == 'success' && 'green' || 'red' }}
+          named-logo: github
+
+      - name: Upload badge artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: badge
+          path: badge.svg
+          
