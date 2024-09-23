@@ -17,7 +17,7 @@ jobs:
           echo "status=$STATUS" >> $GITHUB_OUTPUT
 
       - name: Generate badge
-        uses: schneegans/dynamic-badges-action
+        uses: schneegans/dynamic-badges-action@v1.7.0
         with:
           label: Last GitHub Actions Run
           message: ${{ steps.get_status.outputs.status }}
