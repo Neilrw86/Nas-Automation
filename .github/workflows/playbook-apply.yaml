@@ -37,7 +37,7 @@ jobs:
         with:
           python-version: '3.x'  # Or the version Ansible needs
 
-      - name: Deploy with Ansible (using sudo and password)
+      - name: Deploy with Ansible , runs on desktop.neilwylie.com
         env:
           ANSIBLE_BECOME_PASS: ${{ secrets.ANSIBLE_BECOME_PASS }}
         run: |
