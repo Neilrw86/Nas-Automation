@@ -18,10 +18,11 @@ jobs:
       - name: Generate badge
         uses: schneegans/dynamic-badges-action@v1.7.0
         with:
+          auth: ${{ secrets.GITHUB_TOKEN }}
+          filename: badge.svg
           label: Last GitHub Actions Run
           message: ${{ steps.get_status.outputs.status }}
           color: ${{ steps.get_status.outputs.status == 'success' && 'green' || 'red' }}
-          named-logo: github
 
       - name: Upload badge artifact
         uses: actions/upload-artifact@v3
