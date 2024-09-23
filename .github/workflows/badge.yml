@@ -1,4 +1,4 @@
-name: Generate Badge
+name: Generate Badge - test
 
 on:
   workflow_run:
