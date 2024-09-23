@@ -12,8 +12,7 @@ jobs:
       - name: Get latest workflow run status
         id: get_status
         run: |
-          # Replace 'YOUR_WORKFLOW_NAME' with the actual name of your workflow
-          STATUS=$(gh run list -w 'YOUR_WORKFLOW_NAME' -L 1 --json status -q '.[0].status')
+          STATUS=$(gh run list -w 'playbook-apply' -L 1 --json status -q '.[0].status')
           echo "status=$STATUS" >> $GITHUB_OUTPUT
 
       - name: Generate badge
