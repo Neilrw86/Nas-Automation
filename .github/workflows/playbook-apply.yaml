@@ -1,5 +1,4 @@
-name: Lint & apply
-
+name: Lint & apply + Badge
 on:
   push:
     branches:
@@ -48,3 +47,21 @@ jobs:
           else
             exit 0
           fi
+
+  badge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate badge
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          gistID: ee109f3ae7277a150b455d37f14f6355
+          filename: test.json # Use test.svg if you want to use the SVG mode.
+          label: Last GitHub Actions Run
+          message: ${{ steps.get_status.outputs.status }}
+          color: ${{ steps.get_status.outputs.status == 'success' && 'green' || 'red' }}
+
+      - name: Upload badge artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: badge
+          path: badge.svg
