@@ -1,0 +1,21 @@
+workstations:
+  hosts:
+    desktop.neilwylie.com:
+    khadas.neilwylie.com:
+  laptops:
+    thinkpad:
+    surface:
+    Neil-Macbook:
+cluster:
+  hosts:
+    nuc.neilwylie.com:
+    nuc1.neilwylie.com:
+    nuc2.neilwylie.com:
+turing:
+  hosts:
+    node1.neilwylie.com:
+    node2.neilwylie.com:
+    node3.neilwylie.com:
+    node4.neilwylie.com:
+  vars:
+    ansible_user: ubuntu
