@@ -5,6 +5,7 @@
   roles:
   - role: update
   - role: common
+  - role: geerlingguy.node_exporter
 
 - hosts: workstations
   roles:
