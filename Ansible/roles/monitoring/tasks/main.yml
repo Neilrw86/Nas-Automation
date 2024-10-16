@@ -17,4 +17,4 @@
     name: prometheus
     state: started
     enabled: true
-  notify: Restart Prometheus---
+  notify: Restart Prometheus
