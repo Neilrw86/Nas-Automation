@@ -18,10 +18,6 @@
     state: started
     enabled: true
 
-- name: Kill existing node_exporter process
-  command: kill $(pgrep node_exporter)
-  ignore_errors: true  # In case node_exporter isn't running
-
 - name: Start prometheus-node-exporter service
   systemd:
     name: prometheus-node-exporter
