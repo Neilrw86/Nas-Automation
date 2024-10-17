@@ -17,7 +17,6 @@
     name: prometheus
     state: started
     enabled: true
-    notify: Restart Prometheus
 
 - name: Kill existing node_exporter process
   command: kill $(pgrep node_exporter)
@@ -27,3 +26,4 @@
   systemd:
     name: prometheus-node-exporter
     state: started
+    enabled: true
