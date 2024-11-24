@@ -1,0 +1,14 @@
+---
+- name: Stop and remove MicroK8s
+  hosts: nuc_cluster
+  become: yes
+  tasks:
+    - name: Stop MicroK8s
+      command: snap stop microk8s
+
+    - name: Remove MicroK8s
+      command: snap remove microk8s
+
+    - name: Remove MicroK8s snapshots
+      command: snap forget $(snap saved | grep microk8s | awk '{print $1}')
+      ignore_errors: yes

@@ -7,7 +7,7 @@ workstations:
     thinkpad:
     surface:
     Neil-Macbook:
-cluster:
+nuc_cluster:
   hosts:
     nuc.neilwylie.com:
     nuc1.neilwylie.com:
