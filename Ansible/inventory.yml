@@ -19,5 +19,7 @@ turing:
     node2.neilwylie.com:
     node3.neilwylie.com:
     node4.neilwylie.com:
+
+
   vars:
     ansible_user: ubuntu
