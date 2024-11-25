@@ -12,6 +12,7 @@ nuc_cluster:
     nuc.neilwylie.com:
     nuc1.neilwylie.com:
     nuc2.neilwylie.com:
+    nas5.neilwylie.com:
 turing:
   hosts:
     node1.neilwylie.com:

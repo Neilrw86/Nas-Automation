@@ -1,8 +1,14 @@
 masters:
   hosts:
-    nuc:
+    nuc.neilwylie.com:
+  vars:
+    ansible_ssh_user: neil
+
       
 workers:
   hosts: 
-    nas5:
-    khadas:
+    nuc1.neilwylie.com:
+    nuc2.neilwylie.com:
+  vars:
+    ansible_ssh_user: neil
+    
