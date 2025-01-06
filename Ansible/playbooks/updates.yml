@@ -1,19 +1,20 @@
 ---
-- name: OS rhel update
-  hosts: nas2
-  gather_facts: yes
-  tasks:
-  - name: yum patching
-    yum:
-      name: '*'
-      state: latest
-      exclude: kernel*
-  become: yes
+  - name: OS ubuntu update
+    hosts: all
+    gather_facts: yes
+    tasks:
+    - name: update and upgrade apt packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+    become: yes
 
-
-- name: OS debian patches
-  hosts: nas3,nas4,vim4,hass,ThinkPad
-  tasks:
-  - name: apply patches
-    apt: upgrade=dist force_apt_get=yes
-  become: yes
+  - name: OS centos update
+    hosts: nas5
+    gather_facts: yes
+    tasks:
+    - name: yum update all packages
+      yum:
+        name: '*'
+        state: latest
+    become: yes
