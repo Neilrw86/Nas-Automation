@@ -23,3 +23,31 @@
     name: prometheus-node-exporter
     state: started
     enabled: true
+
+- name: Install InfluxDB on nas5
+  become: true
+  apt:
+    name: influxdb
+    state: present
+  when: inventory_hostname == 'nas5'
+
+- name: Start and enable InfluxDB service on nas5
+  become: true
+  systemd:
+    name: influxdb
+    state: started
+    enabled: true
+  when: inventory_hostname == 'nas5'
+
+- name: Install Telegraf on all hosts
+  become: true
+  apt:
+    name: telegraf
+    state: present
+
+- name: Start and enable Telegraf service on all hosts
+  become: true
+  systemd:
+    name: telegraf
+    state: started
+    enabled: true
