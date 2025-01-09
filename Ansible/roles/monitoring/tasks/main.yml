@@ -35,7 +35,7 @@
 - name: Copy telegraf.conf to /etc/telegraf/telegraf.conf
   become: true
   copy:
-    src: /path/to/telegraf.conf
+    src: telegraf.conf
     dest: /etc/telegraf/telegraf.conf
     owner: root
     group: root
