@@ -40,6 +40,7 @@
     owner: root
     group: root
     mode: '0644'
+  notify: Reload Telegraf
 
 - name: Start and enable Telegraf service on all hosts
   become: true
@@ -47,3 +48,9 @@
     name: telegraf
     state: started
     enabled: true
+
+- name: Reload Telegraf
+  become: true
+  systemd:
+    name: telegraf
+    state: reloaded
