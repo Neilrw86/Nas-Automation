@@ -24,13 +24,11 @@
     state: started
     enabled: true
 
-
 - name: Install Telegraf on all hosts
   become: true
   apt:
     name: telegraf
     state: present
-
 
 - name: Copy telegraf.conf to /etc/telegraf/telegraf.conf
   become: true
@@ -40,7 +38,6 @@
     owner: root
     group: root
     mode: '0644'
-  notify: Reload Telegraf
 
 - name: Start and enable Telegraf service on all hosts
   become: true
@@ -49,7 +46,7 @@
     state: started
     enabled: true
 
-- name: Reload Telegraf
+- name: Reload Telegraf service
   become: true
   systemd:
     name: telegraf
