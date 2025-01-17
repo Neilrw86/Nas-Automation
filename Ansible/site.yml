@@ -12,6 +12,13 @@
   roles:
   - role: workstations 
 
+- hosts: nuc_cluster
+  become: true
+  vars:
+    ansible_user: neil
+  roles:
+    - microk8s
+
 # - hosts: turing
 #   roles:
 #   - role: turing
