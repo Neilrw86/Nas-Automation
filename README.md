@@ -3,6 +3,11 @@
 [![GitHub Super-Linter](https://github.com/Neilrw86/Nas-Automation/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Neilrw86/Nas-Automation)
 ![GitHub private repo](https://img.shields.io/badge/repo-private-green)
+![GitHub license](https://img.shields.io/github/license/Neilrw86/Nas-Automation)
+![GitHub last commit](https://img.shields.io/github/last-commit/Neilrw86/Nas-Automation)
+![GitHub issues](https://img.shields.io/github/issues/Neilrw86/Nas-Automation)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/Neilrw86/Nas-Automation)
+
 ## Goal
 
 The goal is to create a self-contained repository for configuring a home lab.
