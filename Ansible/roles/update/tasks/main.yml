@@ -2,21 +2,30 @@
 # tasks file for update
 
 - name: Update package lists
-  block:
-    - apt:
-        update_cache: yes
-      become: true
-      ignore_errors: true
+  apt:
+    update_cache: yes
+  become: true
+  ignore_errors: true
+  retries: 5
+  delay: 10
+  register: update_result
+  until: update_result is succeeded
 
 - name: Upgrade all packages
-  block:
-    - apt:
-        upgrade: yes
-      become: true
-      ignore_errors: true
+  apt:
+    upgrade: dist
+  become: true
+  ignore_errors: true
+  retries: 5
+  delay: 10
+  register: upgrade_result
+  until: upgrade_result is succeeded
 
 - name: Autoremove unused dependencies
-  block:
-    - apt:
-        autoremove: yes
-      become: true
+  apt:
+    autoremove: yes
+  become: true
+  retries: 5
+  delay: 10
+  register: autoremove_result
+  until: autoremove_result is succeeded
