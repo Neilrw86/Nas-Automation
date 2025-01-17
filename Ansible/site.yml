@@ -12,12 +12,32 @@
   roles:
   - role: workstations 
 
-- hosts: nuc_cluster
+- hosts: nuc_cluster[0]
   become: true
   vars:
     ansible_user: neil
   roles:
     - microk8s
+  tasks:
+    - name: Generate join token
+      shell: |
+        microk8s add-node | grep 'microk8s join' > /tmp/join_command.sh
+      register: join_command
+
+- hosts: nuc_cluster[1:3]
+  become: true
+  vars:
+    ansible_user: neil
+  tasks:
+    - name: Fetch join command from primary node
+      fetch:
+        src: /tmp/join_command.sh
+        dest: /tmp/join_command.sh
+        flat: yes
+
+    - name: Join node to MicroK8s cluster
+      shell: |
+        bash /tmp/join_command.sh
 
 # - hosts: turing
 #   roles:
