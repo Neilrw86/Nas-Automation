@@ -30,6 +30,17 @@ Ansible playbooks included in this repository:
 - **media server**: To combine the homelab docker repository.
 - **storage**: For storage arrays to be exported.
 
+## Continuous Integration
+
+This repository uses GitHub Actions for continuous integration. The CI pipeline includes the following workflows:
+
+- **Lint Code Base**: Uses [GitHub Super-Linter](https://github.com/marketplace/actions/super-linter) to ensure code quality and consistency.
+- **Run Ansible Playbooks**: Executes Ansible playbooks to validate configurations and roles.
+- **Test Roles**: Runs automated tests for each Ansible role to ensure they work as expected.
+
+These workflows are defined in the `.github/workflows` directory and are triggered on push and pull request events.
+
+The CI pipeline relies on **self-hosted** runners within the homelab to execute the workflows. This allows for testing and validation in an environment that closely mirrors the production setup.
 ## TODO
 
 - [ ] Define and implement media server role.
