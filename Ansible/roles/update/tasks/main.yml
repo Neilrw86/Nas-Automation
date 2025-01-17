@@ -2,16 +2,21 @@
 # tasks file for update
 
 - name: Update package lists
-  apt:
-    update_cache: yes
-  become: true
+  block:
+    - apt:
+        update_cache: yes
+      become: true
+      ignore_errors: true
 
 - name: Upgrade all packages
-  apt:
-    upgrade: yes
-  become: true
+  block:
+    - apt:
+        upgrade: yes
+      become: true
+      ignore_errors: true
 
 - name: Autoremove unused dependencies
-  apt:
-    autoremove: yes
-  become: true
+  block:
+    - apt:
+        autoremove: yes
+      become: true
