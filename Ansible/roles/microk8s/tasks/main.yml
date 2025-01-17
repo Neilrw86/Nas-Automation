@@ -1,0 +1,44 @@
+---
+- name: Ensure snapd is installed
+  apt:
+    name: snapd
+    state: present
+
+- name: Install MicroK8s
+  snap:
+    name: microk8s
+    state: latest
+    classic: yes
+
+- name: Add user to microk8s group
+  user:
+    name: "{{ ansible_user }}"
+    groups: microk8s
+    append: yes
+
+- name: Enable MicroK8s addons
+  shell: |
+    microk8s enable dns ingress
+
+- name: Ensure .kube directory exists
+  file:
+    path: /home/{{ ansible_user }}/.kube
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: Create kubeconfig file
+  shell: |
+    microk8s config > /home/{{ ansible_user }}/.kube/config
+  become: true
+  become_user: "{{ ansible_user }}"
+
+- name: Change ownership of kubeconfig file
+  file:
+    path: /home/{{ ansible_user }}/.kube/config
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0644'
+
+    
