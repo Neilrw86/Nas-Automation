@@ -1,5 +1,0 @@
----
-- hosts: workstations
-  become: true
-  roles:
-    - role: diodonfrost.terraform

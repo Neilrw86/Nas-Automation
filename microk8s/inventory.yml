@@ -1,7 +1,0 @@
-cluster:
-  hosts:
-    nuc.neilwylie.com: {}
-    nuc1.neilwylie.com: {}
-    nuc2.neilwylie.com: {}
-  vars:
-    user: neil
