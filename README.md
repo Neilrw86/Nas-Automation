@@ -2,8 +2,7 @@
 
 [![GitHub Super-Linter](https://github.com/Neilrw86/Nas-Automation/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
 ![GitHub private repo](https://img.shields.io/badge/repo-private-green)
-![CI](https://github.com/Neilrw86/Nas-Automation/actions/workflows/ci.yml/badge.svg)
-
+[![CI](https://github.com/Neilrw86/Nas-Automation/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Neilrw86/Nas-Automation/actions/workflows/ci.yml)
 
 ## Table of Contents
 - [Goal](#goal)
