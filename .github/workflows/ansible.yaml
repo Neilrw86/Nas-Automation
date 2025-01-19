@@ -23,7 +23,7 @@ jobs:
         pip install ansible ansible-lint yamllint
 
     - name: Lint Playbooks
-      run: ansible-lint ./ansible
+      run: ansible-lint ./Ansible
 
     - name: Validate YAML Syntax
-      run: yamllint ./ansible
+      run: yamllint ./Ansible
