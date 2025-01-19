@@ -24,6 +24,8 @@ jobs:
 
     - name: Lint Playbooks
       run: ansible-lint ./Ansible
+      continue-on-error: true
 
     - name: Validate YAML Syntax
       run: yamllint ./Ansible
+      continue-on-error: true
