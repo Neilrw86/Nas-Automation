@@ -2,8 +2,8 @@
 
 [![GitHub Super-Linter](https://github.com/Neilrw86/Nas-Automation/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
 ![GitHub private repo](https://img.shields.io/badge/repo-private-green)
-[![CI](https://github.com/Neilrw86/Nas-Automation/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Neilrw86/Nas-Automation/actions/workflows/ci.yml)
-[![Prettier](https://github.com/Neilrw86/Nas-Automation/actions/workflows/prettier.yaml/badge.svg)](https://github.com/Neilrw86/Nas-Automation/actions/workflows/prettier.yaml)
+[![DeepSource](https://app.deepsource.com/gh/Neilrw86/Nas-Automation.svg/?label=active+issues&show_trend=true&token=_uQfCr6BJozslReU1uOTPLO5)](https://app.deepsource.com/gh/Neilrw86/Nas-Automation/)
+[![DeepSource](https://app.deepsource.com/gh/Neilrw86/Nas-Automation.svg/?label=resolved+issues&show_trend=true&token=_uQfCr6BJozslReU1uOTPLO5)](https://app.deepsource.com/gh/Neilrw86/Nas-Automation/)
 
 ## Table of Contents
 - [Goal](#goal)
