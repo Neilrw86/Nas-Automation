@@ -4,6 +4,10 @@ on:
     branches:
       - main  # Or your preferred deployment branch
   workflow_dispatch:  # Allows manual triggering
+  workflow_run:
+    workflows: ["Ansible Lint"]
+    types:
+      - completed
 
 jobs:
 
@@ -25,6 +29,7 @@ jobs:
 
   deploy:
     runs-on: self-hosted # Make sure this runner has sudo access
+    needs: lint  # This ensures the deploy job runs only if the lint job passes
 
     steps:
       - name: Checkout Code
