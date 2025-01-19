@@ -1,5 +1,4 @@
-name: Lint and Fix
-
+name: prettier
 on:
   push:
     branches: [ main ]
