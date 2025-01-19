@@ -11,6 +11,7 @@
 - [Ansible Playbooks](#ansible-playbooks)
 - [Future Roles](#future-roles)
 - [Continuous Integration](#continuous-integration)
+- [Monitoring](#monitoring)
 - [Usage](#usage)
 - [Prerequisites](#prerequisites)
 - [Contribution Guidelines](#contribution-guidelines)
@@ -55,18 +56,25 @@ These workflows are defined in the `.github/workflows` directory and are trigger
 
 The CI pipeline relies on **self-hosted** runners within the homelab to execute the workflows. This allows for testing and validation in an environment that closely mirrors the production setup.
 
+## Monitoring
+
+The monitoring setup in the home lab includes the following components:
+
+- **Grafana**: Running on `desktop`.
+- **InfluxDB**: Running on `nas5`.
+
+All lab hosts have the following monitoring tools installed via the `monitoring` role:
+
+- **Telegraf**
+- **Prometheus**
+- **Node Exporter**
+- **Promtail**
+
+These tools are used to collect and visualize metrics and logs from all devices in the home lab.
+
 ## Usage
 
 To run the main playbook:
 ```sh
 ansible-playbook site.yml
 ```
-
-## TODO
-
-- [ ] Define and implement media server role.
-- [ ] remove telegraph key and place in actions
-- [ ] Define and implement storage role.
-- [ ] Document each role in detail.
-- [ ] Create automated tests for each role.
-- [ ] Set up continuous integration for the repository.
