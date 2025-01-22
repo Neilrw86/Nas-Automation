@@ -1,0 +1,51 @@
+name: prettier
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  lint-and-fix:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install Prettier
+        run: npm install --global prettier
+
+      - name: Run Prettier
+        run: prettier --write .
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b lint-fixes
+          git add .
+          git commit -m "Apply lint fixes"
+          git push origin lint-fixes
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: lint-fixes
+          base: main
+          title: "Automated PR: Apply lint fixes"
+          body: "This PR was created automatically by GitHub Actions to apply lint fixes."

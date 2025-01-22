@@ -1,4 +1,5 @@
-name: Lint & apply +
+name: Lint & Apply
+
 on:
   push:
     branches:
@@ -6,24 +7,7 @@ on:
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          # Full git history is needed to get a proper list of changed files within `super-linter`
-          fetch-depth: 0
-
-      - name: Lint Code Base
-        uses: github/super-linter/slim@v4
-        env:
-          VALIDATE_ALL_CODEBASE: false
-          DEFAULT_BRANCH: "main"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  deploy:
+  apply:
     runs-on: self-hosted # Make sure this runner has sudo access
 
     steps:
