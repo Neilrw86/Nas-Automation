@@ -11,6 +11,18 @@
     name: prometheus
     state: present
 
+- name: Install Prometail
+  become: true
+  apt:
+    name: promtail
+    state: present
+
+- name: Install Prometheus
+  become: true
+  apt:
+    name: prometheus
+    state: present
+
 - name: Start and enable Prometheus service
   become: true
   systemd:
@@ -51,3 +63,10 @@
   systemd:
     name: telegraf
     state: reloaded
+
+- name: Install Loki on nas5
+  become: true
+  apt:
+    name: loki
+    state: present
+  when: inventory_hostname == 'nas5'
