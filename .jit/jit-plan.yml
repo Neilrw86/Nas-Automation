@@ -33,4 +33,7 @@ items:
   - name: Generate a Software Bill of Materials (SBOM)
     uses: >-
       jitsecurity-controls/jit-plans/items/code/item-software-bill-of-materials.yml@latest
+  - name: Detect GitHub misconfigurations
+    uses: >-
+      jitsecurity-controls/jit-plans/items/third_party_app/item-github-misconfiguration.yml@latest
 
