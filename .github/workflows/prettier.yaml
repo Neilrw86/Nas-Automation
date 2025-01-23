@@ -10,6 +10,7 @@ permissions:
   contents: write
   pull-requests: write
   actions: write
+  workflows: write
 
 jobs:
   lint-and-fix:
@@ -33,6 +34,7 @@ jobs:
         run: prettier --write .
 
       - name: Commit changes
+        id: commit-changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
