@@ -10,7 +10,6 @@ permissions:
   contents: write
   pull-requests: write
   actions: write
-  workflows: write
 
 jobs:
   lint-and-fix:
