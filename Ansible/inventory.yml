@@ -4,9 +4,7 @@ workstations:
     khadas.neilwylie.com:
     nas5.neilwylie.com:
   laptops:
-    thinkpad:
-    surface:
-    Neil-Macbook:
+    Thinkpad.neilwylie.com:
 nuc_cluster:
   hosts:
     nuc.neilwylie.com:
