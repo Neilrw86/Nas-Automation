@@ -3,7 +3,7 @@
   become: yes
   ansible.builtin.yum:
     list: upgrades
-    state: latest
+    state: present
     update_cache: yes
   register: reg_yum_output_all
   when: ev_security_only == "no"
@@ -19,7 +19,7 @@
   ansible.builtin.yum:
     security: yes
     list: updates
-    state: latest
+    state: present
     update_cache: yes
   register: reg_yum_output_secu
   when: ev_security_only == "yes"
@@ -43,7 +43,7 @@
   become: yes
   ansible.builtin.yum:
     name: '*'
-    state: latest
+    state: present
     update_cache: yes
     update_only: no
   register: reg_upgrade_ok
@@ -54,7 +54,7 @@
   ansible.builtin.yum:
     name: '*'
     security: yes
-    state: latest
+    state: present
     update_cache: yes
     update_only: no
   register: reg_upgrade_ok
