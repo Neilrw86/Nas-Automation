@@ -30,6 +30,17 @@
         line: 'neil ALL=(ALL) NOPASSWD: ALL'
         validate: 'visudo -cf %s'
 
+- name: Configure Git user email
+  git_config:
+    name: user.email
+    value: "neilrwylie@gmail.com"
+    scope: global
+
+- name: Configure Git user name
+  git_config:
+    name: user.name
+    value: "Neilrw86"
+    scope: global
 
 - name: Set Authorized key taken from file
   become: true
