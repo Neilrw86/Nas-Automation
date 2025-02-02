@@ -32,9 +32,10 @@
       - google-chrome-stable
       - net-base
       - tcpdump
-      - atop
-      - htop
-      - nordvpn
-      - signal-desktop
-      - vim.tiny
+
+- name: Install kubectl using snap
+  become: yes
+  ansible.builtin.snap:
+    name: kubectl
+    classic: yes
     state: present
