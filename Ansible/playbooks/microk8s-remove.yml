@@ -7,7 +7,7 @@
       command: snap stop microk8s
 
     - name: Remove MicroK8s
-      command: snap remove microk8s
+      command: snap remove microk8s --purge
 
     - name: Remove MicroK8s snapshots
       command: snap forget $(snap saved | grep microk8s | awk '{print $1}')
