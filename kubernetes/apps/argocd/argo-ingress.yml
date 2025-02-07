@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argo-server-ingress
+  namespace: argocd
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/service-upstream: "true"
+spec:
+  rules:
+  - host: argo.neilwylie.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argo-cd-argocd-server
+            port:
+              number: 443
+  tls:
+  - hosts:
+    - argo.neilwylie.com
+    secretName: argo-server-tls
