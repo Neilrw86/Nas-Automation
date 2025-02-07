@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: openwebui-service
+spec:
+  selector:
+    app: openwebui
+  ports:
+  - protocol: TCP
+    port: 3030 # External port
+    targetPort: 8080 # Container port
+  type: ClusterIP
