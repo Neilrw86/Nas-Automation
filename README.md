@@ -7,23 +7,73 @@
 [![DeepSource](https://app.deepsource.com/gh/Neilrw86/Nas-Automation.svg/?label=active+issues&show_trend=true&token=_uQfCr6BJozslReU1uOTPLO5)](https://app.deepsource.com/gh/Neilrw86/Nas-Automation/)
 [![DeepSource](https://app.deepsource.com/gh/Neilrw86/Nas-Automation.svg/?label=resolved+issues&show_trend=true&token=_uQfCr6BJozslReU1uOTPLO5)](https://app.deepsource.com/gh/Neilrw86/Nas-Automation/)
 
+
 ## Table of Contents
 - [Goal](#goal)
 - [Folders](#folders)
     - [Ansible](#ansible)
     - [Kubernetes](#kubernetes)
+- [Order of Operations](#order-of-operations)
 - [Continuous Integration and Testing](#continuous-integration-and-testing)
 - [Monitoring](#monitoring)
 - [Usage](#usage)
+- [Branching Strategy](#branching-strategy)
+- [Release Process](#release-process)
 - [Future Plans](#future-plans)
 - [Contribution Guidelines](#contribution-guidelines)
 - [License](#license)
+
 
 ## Goal
 
 The goal is to create a self-contained repository for configuring a home lab.
 
-## Folders
+
+## Order of Operations
+
+To provision and configure the hosts in your home lab, follow these steps:
+
+1. **Prepare the Environment**:
+    - Ensure all necessary hardware is set up and connected.
+    - Install the required operating systems on all devices.
+
+2. **Set Up Ansible**:
+    - Clone the repository to your control node.
+    - Install Ansible on the control node.
+    - Configure SSH access to all hosts.
+
+3. **Run Initial Ansible Playbooks**:
+    - Execute the `site.yml` playbook to apply the common configurations and roles to all devices.
+    ```sh
+    ansible-playbook site.yml
+    ```
+
+4. **Deploy Kubernetes**:
+    - Navigate to the `kubernetes` folder.
+    - Apply the base configurations and common resources.
+    ```sh
+    kubectl apply -f base/
+    ```
+    - Deploy application-specific manifests.
+    ```sh
+    kubectl apply -f apps/
+    ```
+
+5. **Set Up Monitoring**:
+    - Ensure the monitoring tools (Telegraf, Prometheus, Node Exporter, Promtail) are installed on all hosts via the `monitoring` role.
+    - Configure Grafana and InfluxDB as per the provided configurations.
+
+6. **Validate the Setup**:
+    - Verify that all services are running correctly.
+    - Check the monitoring dashboards to ensure metrics and logs are being collected.
+
+7. **Continuous Integration and Testing**:
+    - Ensure the CI workflows are set up and running.
+    - Validate that the self-hosted runners are operational.
+
+By following this order of operations, you can ensure a smooth and efficient setup of your home lab environment.
+
+## Structure
 
 ### Ansible
 
@@ -45,7 +95,7 @@ Ansible playbooks included in this repository:
 
 The kubernetes folder contains configuration files and manifests for deploying and managing various applications and services within a Kubernetes cluster. This includes Ingress resources, service definitions, deployments, and other Kubernetes objects necessary for the operation of the home lab environment.
 
-#### Structure
+#### Repo Structure
 
 - **apps**: Contains application-specific Kubernetes manifests.
 - **argocd**: Configuration files for deploying Argo CD.
