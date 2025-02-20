@@ -162,6 +162,24 @@ At the end of each month, changes merged into the `main` branch undergo a thorou
 3. **Release Tagging**: After successful deployment, the changes are tagged with a release version in the repository. This versioning helps in tracking and managing releases over time.
 
 This process ensures that the `main` branch remains stable and that each release is reliable and well-documented.
+
+## Current Domains
+
+```sh
+kubectl get ingress --all-namespaces
+```
+
+| NAMESPACE     | NAME                              | CLASS  | HOSTS                        | ADDRESS   | PORTS   | AGE  |
+|---------------|-----------------------------------|--------|------------------------------|-----------|---------|------|
+| argocd        | argo-server-ingress               | public | argo.neilwylie.com           | 127.0.0.1 | 80, 443 | 13d  |
+| argocd        | kube-prom-stack-grafana-ingress   | <none> | grafana.neilwylie.com        |           | 80, 443 | 11d  |
+| default       | openwebui-ingress                 | <none> | ollama.neilwylie.com         |           | 80, 443 | 34h  |
+| observability | alertmanager-ingress              | public | alertmanager.neilwylie.com   | 127.0.0.1 | 80      | 11d  |
+| observability | grafana-ingress                   | public | grafana.neilwylie.com        | 127.0.0.1 | 80      | 11d  |
+| observability | loki-ingress                      | public | loki.neilwylie.com           | 127.0.0.1 | 80      | 11d  |
+| observability | prometheus-ingress                | public | prometheus.neilwylie.com     | 127.0.0.1 | 80      | 11d  |
+| uptime-kuma   | uptime-kuma-ingress               | public | uptime-kuma.neilwylie.com    | 127.0.0.1 | 80      | 7d9h |
+
 ## Future Plans
 
 In the future, this repository will be merged with the `homelab-configs` repository to consolidate automation and configuration tasks. This will streamline the management and deployment of configurations across the home lab environment.
