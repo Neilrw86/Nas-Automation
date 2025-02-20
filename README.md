@@ -172,7 +172,6 @@ kubectl get ingress --all-namespaces
 | NAMESPACE     | NAME                              | CLASS  | HOSTS                        | ADDRESS   | PORTS   | AGE  |
 |---------------|-----------------------------------|--------|------------------------------|-----------|---------|------|
 | argocd        | argo-server-ingress               | public | argo.neilwylie.com           | 127.0.0.1 | 80, 443 | 13d  |
-| argocd        | kube-prom-stack-grafana-ingress   | <none> | grafana.neilwylie.com        |           | 80, 443 | 11d  |
 | default       | openwebui-ingress                 | <none> | ollama.neilwylie.com         |           | 80, 443 | 34h  |
 | observability | alertmanager-ingress              | public | alertmanager.neilwylie.com   | 127.0.0.1 | 80      | 11d  |
 | observability | grafana-ingress                   | public | grafana.neilwylie.com        | 127.0.0.1 | 80      | 11d  |
