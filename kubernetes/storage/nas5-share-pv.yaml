@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nas5-share-pv
+spec:
+  capacity:
+    storage: 13Ti  # Approximately 13.7 TiB
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain  # Or Delete, if you prefer
+  storageClassName: nas5-nfs-storage
+  nfs:
+    server: nas5  # Or the IP address 192.168.0.x
+    path: /share
