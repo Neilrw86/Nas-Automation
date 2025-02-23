@@ -70,7 +70,7 @@ volumes:
 volumeMounts:
   - name: homer-config
     mountPath: /www/assets
-    subPath: configs/homer/www/assets
+    subPath: configs/homer/www
 
 nodeSelector: {}
 tolerations: []
