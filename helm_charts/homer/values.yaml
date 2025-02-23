@@ -48,13 +48,22 @@ ingress:
 resources: {}
 
 livenessProbe:
-  httpGet:
-    path: /
-    port: http
+  # httpGet:
+  #   path: /
+  #   port: http
+  # initialDelaySeconds: 30
+  # timeoutSeconds: 5
+  # periodSeconds: 10
+  # failureThreshold: 3
+
 readinessProbe:
-  httpGet:
-    path: /
-    port: http
+  # httpGet:
+  #   path: /
+  #   port: http
+  # initialDelaySeconds: 30
+  # timeoutSeconds: 5
+  # periodSeconds: 10
+  # failureThreshold: 3
 
 autoscaling:
   enabled: false
@@ -69,7 +78,7 @@ volumes:
 
 volumeMounts:
   - name: homer-config
-    mountPath: /www/assets
+    mountPath: /www2/
     subPath: configs/homer
 
 nodeSelector: {}
