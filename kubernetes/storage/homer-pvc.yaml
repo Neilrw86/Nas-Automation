@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: homer-pvc # A more specific name
+spec:
+  accessModes:
+    - ReadWriteMany # Matches the PV's access mode
+  resources:
+    requests:
+      storage: 246Gi # Matches the PV's storage capacity
+  volumeName: nfs-configs-pv # Binds to your nfs-configs-pv
