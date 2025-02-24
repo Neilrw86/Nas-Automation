@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-configs-pv
+spec:
+  capacity:
+    storage: 246Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: nas5 # Using the hostname "nas5"
+    path: /share/configs
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-films-pv
+spec:
+  capacity:
+    storage: 12Ti
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: nas5 # Using the hostname "nas5"
+    path: /share/Films
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-tv-pv
+spec:
+  capacity:
+    storage: 9Ti
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: nas5 # Using the hostname "nas5"
+    path: /share/TV
