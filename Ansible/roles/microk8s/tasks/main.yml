@@ -19,6 +19,7 @@
 - name: Enable MicroK8s addons
   shell: |
     microk8s enable dns ingress
+  when: ansible_hostname == "nuc.neilwylie.com"
 
 - name: Ensure .kube directory exists
   file:
