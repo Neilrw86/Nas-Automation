@@ -183,6 +183,14 @@ kubectl get ingress --all-namespaces
 
 In the future, this repository will be merged with the `homelab-configs` repository to consolidate automation and configuration tasks. This will streamline the management and deployment of configurations across the home lab environment.
 
+### Apps to migrate to k8s
+homer (done as of Feb 23)
+sabnzb
+sonarr
+readarr
+couchpotato
+plex
+
 ## Contribution Guidelines
 
 [Contribution Guidelines](#contribution-guidelines)
