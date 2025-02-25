@@ -1,3 +1,22 @@
+name: Labeler
+
+on:
+  push:
+    tags:
+      - '*'
+    branches:
+      - main
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Labeler
+        uses: actions/labeler@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          
 ansible:
   - 'ansible/**'
   - '**/playbooks/**'
