@@ -191,6 +191,25 @@ readarr
 couchpotato
 plex
 
+Suggested helm for media-master:
+
+```plaintext
+media-master/
+    Chart.yaml
+    values.yaml
+    templates/
+        sabnzb-deployment.yaml
+        sabnzb-service.yaml
+        sonarr-deployment.yaml
+        sonarr-service.yaml
+        couchpotato-deployment.yaml
+        couchpotato-service.yaml
+        readarr-deployment.yaml
+        readarr-service.yaml
+        calibre-web-deployment.yaml
+        calibre-web-service.yaml
+        network.yaml
+```
 ## Contribution Guidelines
 
 [Contribution Guidelines](#contribution-guidelines)
