@@ -1,18 +1,19 @@
 name: Labeler
 
 on:
+  pull_request:
+    types: [opened, synchronize, reopened]
   push:
-    tags:
-      - '*'
     branches:
       - main
+    tags:
+      - v*
 
 jobs:
   label:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Labeler
-        uses: actions/labeler@v1
+      - uses: actions/labeler@v2
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
