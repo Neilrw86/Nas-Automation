@@ -16,23 +16,3 @@ jobs:
         uses: actions/labeler@v1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          
-ansible:
-  - 'ansible/**'
-  - '**/playbooks/**'
-  - '**/roles/**'
-  - '**/tasks/**'
-  - '**/handlers/**'
-  - '**/vars/**'
-  - '**/defaults/**'
-  - '**/inventory/**'
-  - '**/group_vars/**'
-  - '**/host_vars/**'
-
-kubernetes:
-  - 'k8s/**'
-  - '**/manifests/**'
-  - '**/*.yaml'
-  - '**/*.yml'
-  - '**/charts/**'
-  - '**/helm/**'

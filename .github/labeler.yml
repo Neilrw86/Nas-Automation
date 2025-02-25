@@ -1,0 +1,23 @@
+          
+ansible:
+  - 'ansible/**'
+  - '**/playbooks/**'
+  - '**/roles/**'
+  - '**/tasks/**'
+  - '**/handlers/**'
+  - '**/vars/**'
+  - '**/defaults/**'
+  - '**/inventory/**'
+  - '**/group_vars/**'
+  - '**/host_vars/**'
+
+kubernetes:
+  - 'k8s/**'
+  - '**/manifests/**'
+  - '**/*.yaml'
+  - '**/*.yml'
+  - '**/charts/**'
+  - '**/helm/**'
+
+docs:
+  - '**/*.md'
