@@ -48,22 +48,22 @@ ingress:
 resources: {}
 
 livenessProbe:
-  # httpGet:
-  #   path: /
-  #   port: http
-  # initialDelaySeconds: 30
-  # timeoutSeconds: 5
-  # periodSeconds: 10
-  # failureThreshold: 3
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 30
+  timeoutSeconds: 5
+  periodSeconds: 10
+  failureThreshold: 3
 
 readinessProbe:
-  # httpGet:
-  #   path: /
-  #   port: http
-  # initialDelaySeconds: 30
-  # timeoutSeconds: 5
-  # periodSeconds: 10
-  # failureThreshold: 3
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 30
+  timeoutSeconds: 5
+  periodSeconds: 10
+  failureThreshold: 3
 
 autoscaling:
   enabled: false
