@@ -21,3 +21,7 @@ kubernetes:
 
 docs:
   - '**/*.md'
+
+github:
+  - .github/*
+  - .github/**/*  
