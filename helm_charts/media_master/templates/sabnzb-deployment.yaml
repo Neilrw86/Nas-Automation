@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fullname" . }}-sabnzb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: sabnzb
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: sabnzb
+    spec:
+      containers:
+      - name: sabnzb
+        image: linuxserver/sabnzbd:latest
+        ports:
+        - containerPort: 8080
+        - containerPort: 8085
+        - containerPort: 9090
+        - containerPort: 9095
+        env:
+        - name: PUID
+          value: "1003"
+        - name: PGID
+          value: "1003"
+        volumeMounts:
+        - name: sabnzb-config
+          mountPath: /config
+        - name: temp-downloads
+          mountPath: /downloads
+        - name: incomplete-downloads
+          mountPath: /incomplete-downloads
+        - name: movies
+          mountPath: /movies
+        - name: tv
+          mountPath: /tv
+      volumes:
+      - name: sabnzb-config
+        persistentVolumeClaim:
+          claimName: sabnzb-pvc
+      - name: temp-downloads
+        persistentVolumeClaim:
+          claimName: temp-pvc
+      - name: incomplete-downloads
+        persistentVolumeClaim:
+          claimName: temp-pvc
+          subPath: /temp/incomplete
+      - name: movies
+        persistentVolumeClaim:
+          claimName: nfs-films-pvc
+      - name: tv
+        persistentVolumeClaim:
+          claimName: nfs-tv-pvc

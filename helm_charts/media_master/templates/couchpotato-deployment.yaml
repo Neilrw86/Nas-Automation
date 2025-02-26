@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fullname" . }}-couchpotato
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: couchpotato
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: couchpotato
+    spec:
+      containers:
+      - name: couchpotato
+        image: linuxserver/couchpotato:latest
+        ports:
+        - containerPort: 5050
+        env:
+        - name: PUID
+          value: "1003"
+        - name: PGID
+          value: "1003"
+        volumeMounts:
+        - name: couchpotato-config
+          mountPath: /config
+        - name: temp-downloads
+          mountPath: /downloads
+        - name: movies
+          mountPath: /movies
+      volumes:
+      - name: couchpotato-config
+        persistentVolumeClaim:
+          claimName: couchpotato-pvc
+      - name: temp-downloads
+        persistentVolumeClaim:
+          claimName: temp-pvc
+      - name: movies
+        persistentVolumeClaim:
+          claimName: nfs-films-pvc
