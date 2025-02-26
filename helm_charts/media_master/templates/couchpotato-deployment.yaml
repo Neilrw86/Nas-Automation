@@ -32,10 +32,10 @@ spec:
       volumes:
       - name: couchpotato-config
         persistentVolumeClaim:
-          claimName: couchpotato-pvc
+          claimName: nas5-configs-pvc
       - name: temp-downloads
         persistentVolumeClaim:
-          claimName: temp-pvc
+          claimName: nfs-temp-pvc
       - name: movies
         persistentVolumeClaim:
           claimName: nfs-films-pvc
