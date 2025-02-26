@@ -2,7 +2,7 @@
 
 [![GitHub Super-Linter](https://github.com/Neilrw86/Nas-Automation/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
 ![GitHub private repo](https://img.shields.io/badge/repo-private-green)
-![CI](https://github.com/Neilrw86/Nas-Automation/actions/workflows/ci.yml/badge.svg)
+[![Labeler](https://github.com/Neilrw86/Nas-Automation/actions/workflows/labeler.yaml/badge.svg)](https://github.com/Neilrw86/Nas-Automation/actions/workflows/labeler.yaml)
 ![MicroK8s](https://img.shields.io/badge/MicroK8s-v1.20-blue)
 [![DeepSource](https://app.deepsource.com/gh/Neilrw86/Nas-Automation.svg/?label=active+issues&show_trend=true&token=_uQfCr6BJozslReU1uOTPLO5)](https://app.deepsource.com/gh/Neilrw86/Nas-Automation/)
 [![DeepSource](https://app.deepsource.com/gh/Neilrw86/Nas-Automation.svg/?label=resolved+issues&show_trend=true&token=_uQfCr6BJozslReU1uOTPLO5)](https://app.deepsource.com/gh/Neilrw86/Nas-Automation/)

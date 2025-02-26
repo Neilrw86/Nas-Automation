@@ -1,19 +1,17 @@
-ansible:
-  - 'ansible/**'
-  - '**/playbooks/**'
-  - '**/roles/**'
-  - '**/tasks/**'
-  - '**/handlers/**'
-  - '**/vars/**'
-  - '**/defaults/**'
-  - '**/inventory/**'
-  - '**/group_vars/**'
-  - '**/host_vars/**'
+name: Labeler
 
-kubernetes:
-  - 'k8s/**'
-  - '**/manifests/**'
-  - '**/*.yaml'
-  - '**/*.yml'
-  - '**/charts/**'
-  - '**/helm/**'
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    tags:
+      - v*
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/labeler@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,4 +1,4 @@
-name: Lint & Apply
+name: Ansible site.yml apply - self-hosted runner
 
 on:
   push:
