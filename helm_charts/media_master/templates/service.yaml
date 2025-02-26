@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "media_master.fullname" . }}
+  name: {{ include "media-master.fullname" . }}
   labels:
-    {{- include "media_master.labels" . | nindent 4 }}
+    {{- include "media-master.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -12,4 +12,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "media_master.selectorLabels" . | nindent 4 }}
+    {{- include "media-master.selectorLabels" . | nindent 4 }}

@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "media_master.fullname" . }}
+  name: {{ include "media-master.fullname" . }}
   labels:
-    {{- include "media_master.labels" . | nindent 4 }}
+    {{- include "media-master.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "media_master.fullname" . }}
+    name: {{ include "media-master.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
