@@ -74,7 +74,7 @@ autoscaling:
 volumes:
   - name: homer-config
     persistentVolumeClaim:
-      claimName: homer-pvc
+      claimName: nfs-configs-pvc
 
 volumeMounts:
   - name: homer-config
