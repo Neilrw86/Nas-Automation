@@ -23,9 +23,9 @@ spec:
             pathType: {{ .pathType }}
             backend:
               service:
-                name: {{ .backend.service.name | default $.Values.service.name }}
+                name: {{ $.Values.service.name | default $.Chart.Name }}
                 port:
-                  number: {{ .backend.service.port.number | default $.Values.service.port }}
+                  number: {{ $.Values.service.port }}
           {{- end }}
     {{- end }}
   {{- if .Values.ingress.tls }}

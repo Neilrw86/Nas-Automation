@@ -37,8 +37,9 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
+  name: couchpotato
   type: ClusterIP
-  port: 80
+  port: 5050
 
 ingress:
   enabled: true
