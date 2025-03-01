@@ -35,9 +35,9 @@ spec:
             {{- end }}
             backend:
               service:
-                name: {{ include "media.fullname" $ }}
+                name: {{ $.Values.service.name}}
                 port:
-                name: {{ .serviceName }} # Use the serviceName from values.yaml
+                  number: {{ $.Values.service.port }}
           {{- end }}
     {{- end }}
 {{- end }}
