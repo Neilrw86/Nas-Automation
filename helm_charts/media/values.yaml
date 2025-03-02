@@ -46,14 +46,14 @@ ingress:
   className: ""
   annotations: {}
   hosts:
-    - host: "sabnzb.neilwylie.com"
-      paths:
-      - path: /
-        pathType: Prefix
-    - host: "sonarr.neilwylie.com"
-      paths:
-      - path: /
-        pathType: Prefix
+  #   - host: "sabnzb.neilwylie.com"
+  #     paths:
+  #     - path: /
+  #       pathType: Prefix
+  #   - host: "sonarr.neilwylie.com"
+  #     paths:
+  #     - path: /
+  #       pathType: Prefix
     - host: "couchpotato.neilwylie.com"
       paths:
       - path: /
