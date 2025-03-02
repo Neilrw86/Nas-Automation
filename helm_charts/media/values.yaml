@@ -43,7 +43,7 @@ service:
 
 ingress:
   enabled: true
-  className: ""
+  className: "nginx"
   annotations: {}
   hosts:
   #   - host: "sabnzb.neilwylie.com"
@@ -59,7 +59,11 @@ ingress:
       - path: /
         pathType: Prefix
       serviceName: couchpotato
+      servicePort: 5050
   tls:
+    - secretName: couchpotato-tls
+      hosts:
+        - couchpotato.neilwylie.com
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
