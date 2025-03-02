@@ -37,27 +37,33 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
+  name: couchpotato
   type: ClusterIP
-  port: 80
+  port: 5050
 
 ingress:
   enabled: true
-  className: ""
+  className: "nginx"
   annotations: {}
   hosts:
-    - host: "sabnzb.neilwylie.com"
-      paths:
-      - path: /
-        pathType: Prefix
-    - host: "sonarr.neilwylie.com"
-      paths:
-      - path: /
-        pathType: Prefix
+  #   - host: "sabnzb.neilwylie.com"
+  #     paths:
+  #     - path: /
+  #       pathType: Prefix
+  #   - host: "sonarr.neilwylie.com"
+  #     paths:
+  #     - path: /
+  #       pathType: Prefix
     - host: "couchpotato.neilwylie.com"
       paths:
       - path: /
         pathType: Prefix
+      serviceName: couchpotato
+      servicePort: 5050
   tls:
+    - secretName: couchpotato-tls
+      hosts:
+        - couchpotato.neilwylie.com
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

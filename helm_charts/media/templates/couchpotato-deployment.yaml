@@ -25,7 +25,7 @@ spec:
         volumeMounts:
         - name: couchpotato-config
           mountPath: /config
-          SubPath: couchpotato
+          subPath: couchpotato
         - name: temp-downloads
           mountPath: /downloads
         - name: movies
