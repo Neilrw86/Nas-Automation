@@ -58,6 +58,7 @@ ingress:
       paths:
       - path: /
         pathType: Prefix
+      serviceName: couchpotato
   tls:
 
 resources: {}
