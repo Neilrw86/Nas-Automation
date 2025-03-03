@@ -5,7 +5,7 @@
 [![Labeler](https://github.com/Neilrw86/Nas-Automation/actions/workflows/labeler.yaml/badge.svg)](https://github.com/Neilrw86/Nas-Automation/actions/workflows/labeler.yaml)
 ![MicroK8s](https://img.shields.io/badge/MicroK8s-v1.20-blue)
 [![Active Branch](https://img.shields.io/github/last-commit/Neilrw86/Nas-Automation?label=last%20commit%20to%20branch)](https://github.com/Neilrw86/Nas-Automation/branches)
-
+[![Merge Status](https://img.shields.io/github/commit-status/Neilrw86/Nas-Automation/main/HEAD)](https://github.com/Neilrw86/Nas-Automation/commits/main)
 [![DeepSource](https://app.deepsource.com/gh/Neilrw86/Nas-Automation.svg/?label=active+issues&show_trend=true&token=_uQfCr6BJozslReU1uOTPLO5)](https://app.deepsource.com/gh/Neilrw86/Nas-Automation/)
 [![DeepSource](https://app.deepsource.com/gh/Neilrw86/Nas-Automation.svg/?label=resolved+issues&show_trend=true&token=_uQfCr6BJozslReU1uOTPLO5)](https://app.deepsource.com/gh/Neilrw86/Nas-Automation/)
 
