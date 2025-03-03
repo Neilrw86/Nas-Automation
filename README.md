@@ -124,7 +124,8 @@ This repository uses GitHub Actions for continuous integration. The CI pipeline 
 
 - **Lint Code Base**: Uses [GitHub Super-Linter](https://github.com/marketplace/actions/super-linter) to ensure code quality and consistency.
 - **Run Ansible Playbooks**: Executes Ansible playbooks to validate configurations and roles.
-- **Test Roles**: Runs automated tests for each Ansible role to ensure they work as expected.
+- **jit security**: uses jit for overall security and code posture
+- **Trivy container scanning**: looks in the helm charts dir for containers and scans those
 
 These workflows are defined in the `.github/workflows` directory and are triggered on push and pull request events.
 
