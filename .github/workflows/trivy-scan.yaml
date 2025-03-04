@@ -1,9 +1,9 @@
 name: Trivy Scan
 
 on:
-push:
+  push:
     branches:
-        - all
+      - all
   pull_request:
     branches:
       - main
