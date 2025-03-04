@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   trivy-scan:
@@ -24,7 +25,7 @@ jobs:
       - name: Extract container images from Helm charts
         id: extract-images
         run: |
-          images=$(helm template ./helm_charts/media | grep 'image:' | awk '{print $2}')
+          images=$(helm template ./helm_charts/* | grep 'image:' | awk '{print $2}')
           echo "::set-output name=images::$images"
 
       - name: Run Trivy scan
