@@ -20,6 +20,11 @@ persistence:
     existingClaim: nfs-temp-pvc
     mountPath: /downloads
 
+localtime:
+  hostPath: /etc/localtime
+  mountPath: /etc/localtime
+  readOnly: true
+
 ports:
   http:
     containerPort: 8989
