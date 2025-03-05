@@ -9,7 +9,7 @@ persistence:
   config:
     enabled: true
     existingClaim: nfs-configs-pvc
-    mountPath: /config2
+    mountPath: /configs_bak
     subPath: sonarr
   tv:
     enabled: true
