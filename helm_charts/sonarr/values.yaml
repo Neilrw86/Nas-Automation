@@ -34,7 +34,7 @@ environment:
   PUID: "1003"
   PGID: "1003"
 
-restartPolicy: unless-stopped
+restartPolicy: Always
 
 ingress:
   enabled: true
