@@ -41,3 +41,4 @@ spec:
       - name: movies
         persistentVolumeClaim:
           claimName: {{ .Values.persistentVolumeClaims.movies }}
+          

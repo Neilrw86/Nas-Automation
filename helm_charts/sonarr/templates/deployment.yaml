@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sonarr.fullname" . }}
+  labels:
+    {{- include "sonarr.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }} # Use replicaCount from values.yaml
+  selector:
+    matchLabels:
+      {{- include "sonarr.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "sonarr.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "sonarr.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.ports.http.containerPort }}
+              protocol: TCP
+          volumeMounts:
+            - name: localtime
+              mountPath: {{ .Values.localtime.mountPath }}
+              readOnly: {{ .Values.localtime.readOnly }}
+            - name: config
+              mountPath: {{ .Values.persistence.config.mountPath }}
+              subPath: {{ .Values.persistence.config.subPath }}
+            - name: tv
+              mountPath: {{ .Values.persistence.tv.mountPath }}
+            - name: downloads
+              mountPath: {{ .Values.persistence.downloads.mountPath }}
+          env:
+            - name: PUID
+              value: "{{ .Values.environment.PUID }}"
+            - name: PGID
+              value: "{{ .Values.environment.PGID }}"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: localtime
+          hostPath:
+            path: {{ .Values.localtime.hostPath }}
+        {{- if .Values.persistence.config.enabled }}
+        - name: config
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.config.existingClaim }}
+        {{- end }}
+        {{- if .Values.persistence.tv.enabled }}
+        - name: tv
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.tv.existingClaim }}
+        {{- end }}
+        {{- if .Values.persistence.downloads.enabled }}
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.downloads.existingClaim }}
+        {{- end }}
+      restartPolicy: {{ .Values.restartPolicy }}

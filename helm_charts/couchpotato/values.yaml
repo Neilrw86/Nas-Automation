@@ -23,3 +23,13 @@ persistentVolumeClaims:
   config: nfs-configs-pvc
   downloads: nfs-temp-pvc
   movies: nfs-films-pvc
+
+serviceAccount:
+  create: true
+  name: ""
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
