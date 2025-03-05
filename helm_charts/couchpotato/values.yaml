@@ -23,4 +23,7 @@ persistentVolumeClaims:
   config: nfs-configs-pvc
   downloads: nfs-temp-pvc
   movies: nfs-films-pvc
-  
+
+serviceAccount:
+  create: true
+  name: ""
