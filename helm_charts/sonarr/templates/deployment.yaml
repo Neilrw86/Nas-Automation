@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-sonarr
+  name: {{ include "sonarr.fullname" . }}
   labels:
-    app: sonarr
     {{- include "sonarr.labels" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: sonarr
+      app: {{ include "sonarr.name" . }}
       {{- include "sonarr.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: sonarr
+        app: {{ include "sonarr.name" . }}
         {{- include "sonarr.selectorLabels" . | nindent 8 }}
     spec:
+      serviceAccountName: {{ include "sonarr.serviceAccountName" . }}
       containers:
         - name: {{ .Values.containerName }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -29,15 +29,16 @@ spec:
               readOnly: {{ .Values.localtime.readOnly }}
             - name: config
               mountPath: {{ .Values.persistence.config.mountPath }}
+              subPath: {{ .Values.persistence.config.subPath }}
             - name: tv
               mountPath: {{ .Values.persistence.tv.mountPath }}
             - name: downloads
               mountPath: {{ .Values.persistence.downloads.mountPath }}
           env:
             - name: PUID
-              value: {{ .Values.environment.PUID }}
+              value: "{{ .Values.environment.PUID }}"
             - name: PGID
-              value: {{ .Values.environment.PGID }}
+              value: "{{ .Values.environment.PGID }}"
       volumes:
         - name: localtime
           hostPath:
