@@ -1,0 +1,25 @@
+replicaCount: 1
+
+image:
+  repository: linuxserver/couchpotato
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 5050
+
+ingress:
+  enabled: true
+  className: "nginx"
+  host: "couchpotato.neilwylie.com"
+  path: "/"
+  tlsSecretName: couchpotato-tls
+
+puid: "1003"
+pgid: "1003"
+
+persistentVolumeClaims:
+  config: nfs-configs-pvc
+  downloads: nfs-temp-pvc
+  movies: nfs-films-pvc
