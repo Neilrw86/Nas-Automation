@@ -5,24 +5,32 @@ metadata:
   labels:
     {{- include "sonarr.labels" . | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }} # Use replicaCount from values.yaml
   selector:
     matchLabels:
-      app: {{ include "sonarr.name" . }}
       {{- include "sonarr.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: {{ include "sonarr.name" . }}
         {{- include "sonarr.selectorLabels" . | nindent 8 }}
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ include "sonarr.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Values.containerName }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.ports.http.containerPort }}
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
           volumeMounts:
             - name: localtime
               mountPath: {{ .Values.localtime.mountPath }}
@@ -39,6 +47,8 @@ spec:
               value: "{{ .Values.environment.PUID }}"
             - name: PGID
               value: "{{ .Values.environment.PGID }}"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
       volumes:
         - name: localtime
           hostPath:
