@@ -10,6 +10,7 @@ persistence:
     enabled: true
     existingClaim: nfs-configs-pvc
     mountPath: /config
+    subPath: sonarr
   tv:
     enabled: true
     existingClaim: nfs-tv-pvc
@@ -44,3 +45,9 @@ ingress:
         - path: /
           pathType: Prefix
   tls: [] # Leave empty unless you have TLS certificates
+
+serviceAccount:
+  create: true
+  name: ""
+  automount: true
+  annotations: {}
