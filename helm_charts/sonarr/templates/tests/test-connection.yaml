@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "sonarr.fullname" . }}:{{ .Values.service.port }}']
+      args: ['{{ include "sonarr.fullname" . }}:{{ .Values.ports.http.servicePort }}']
   restartPolicy: Never
