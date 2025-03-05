@@ -1,0 +1,46 @@
+image:
+  repository: linuxserver/sonarr
+  tag: latest
+  pullPolicy: IfNotPresent
+
+containerName: sonarr
+
+persistence:
+  config:
+    enabled: true
+    existingClaim: nfs-configs-pvc
+    mountPath: /config
+  tv:
+    enabled: true
+    existingClaim: nfs-tv-pvc
+    mountPath: /tv
+  downloads:
+    enabled: true
+    existingClaim: nfs-temp-pvc
+    mountPath: /downloads
+
+localtime:
+  hostPath: /etc/localtime
+  mountPath: /etc/localtime
+  readOnly: true
+
+ports:
+  http:
+    containerPort: 8989
+    servicePort: 8989
+
+environment:
+  PUID: "1003"
+  PGID: "1003"
+
+restartPolicy: unless-stopped
+
+ingress:
+  enabled: true
+  className: "nginx" # Or your ingress controller class
+  hosts:
+    - host: sonarr.neilwylie.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: [] # Leave empty unless you have TLS certificates

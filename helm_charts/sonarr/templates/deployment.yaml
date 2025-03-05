@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-sonarr
+  labels:
+    app: sonarr
+    {{- include "sonarr.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonarr
+      {{- include "sonarr.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: sonarr
+        {{- include "sonarr.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Values.containerName }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.ports.http.containerPort }}
+          volumeMounts:
+            - name: localtime
+              mountPath: {{ .Values.localtime.mountPath }}
+              readOnly: {{ .Values.localtime.readOnly }}
+            - name: config
+              mountPath: {{ .Values.persistence.config.mountPath }}
+            - name: tv
+              mountPath: {{ .Values.persistence.tv.mountPath }}
+            - name: downloads
+              mountPath: {{ .Values.persistence.downloads.mountPath }}
+          env:
+            - name: PUID
+              value: {{ .Values.environment.PUID }}
+            - name: PGID
+              value: {{ .Values.environment.PGID }}
+      volumes:
+        - name: localtime
+          hostPath:
+            path: {{ .Values.localtime.hostPath }}
+        {{- if .Values.persistence.config.enabled }}
+        - name: config
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.config.existingClaim }}
+        {{- end }}
+        {{- if .Values.persistence.tv.enabled }}
+        - name: tv
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.tv.existingClaim }}
+        {{- end }}
+        {{- if .Values.persistence.downloads.enabled }}
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.downloads.existingClaim }}
+        {{- end }}
+      restartPolicy: {{ .Values.restartPolicy }}

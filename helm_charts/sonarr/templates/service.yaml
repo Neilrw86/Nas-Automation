@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-sonarr-service
+  labels:
+    app: sonarr
+    {{- include "sonarr.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.ports.http.servicePort }}
+      targetPort: {{ .Values.ports.http.containerPort }}
+      protocol: TCP
+      name: http
+  selector:
+    app: sonarr
+    {{- include "sonarr.selectorLabels" . | nindent 4 }}
