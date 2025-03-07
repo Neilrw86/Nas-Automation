@@ -9,7 +9,7 @@ persistence:
   config:
     enabled: true
     existingClaim: nfs-configs-pvc
-    mountPath: /config
+    mountPath: /config #moving back 
     subPath: sonarr
   tv:
     enabled: true
@@ -59,3 +59,8 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 replicaCount: 1 # Added for replica management
+
+service:
+  name: sonarr
+  type: ClusterIP
+  port: 8989

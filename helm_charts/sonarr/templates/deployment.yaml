@@ -4,15 +4,18 @@ metadata:
   name: {{ include "sonarr.fullname" . }}
   labels:
     {{- include "sonarr.labels" . | nindent 4 }}
+    app: sonarr
 spec:
   replicas: {{ .Values.replicaCount }} # Use replicaCount from values.yaml
   selector:
     matchLabels:
       {{- include "sonarr.selectorLabels" . | nindent 6 }}
+      app: sonarr
   template:
     metadata:
       labels:
         {{- include "sonarr.selectorLabels" . | nindent 8 }}
+        app: sonarr
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

@@ -178,15 +178,6 @@ This process ensures that the `main` branch remains stable and that each release
 kubectl get ingress --all-namespaces
 ```
 
-| NAMESPACE     | NAME                              | CLASS  | HOSTS                        | ADDRESS   | PORTS   | AGE  |
-|---------------|-----------------------------------|--------|------------------------------|-----------|---------|------|
-| argocd        | argo-server-ingress               | public | argo.neilwylie.com           | 127.0.0.1 | 80, 443 | 13d  |
-| default       | openwebui-ingress                 | <none> | ollama.neilwylie.com         |           | 80, 443 | 34h  |
-| observability | alertmanager-ingress              | public | alertmanager.neilwylie.com   | 127.0.0.1 | 80      | 11d  |
-| observability | grafana-ingress                   | public | grafana.neilwylie.com        | 127.0.0.1 | 80      | 11d  |
-| observability | loki-ingress                      | public | loki.neilwylie.com           | 127.0.0.1 | 80      | 11d  |
-| observability | prometheus-ingress                | public | prometheus.neilwylie.com     | 127.0.0.1 | 80      | 11d  |
-| uptime-kuma   | uptime-kuma-ingress               | public | uptime-kuma.neilwylie.com    | 127.0.0.1 | 80      | 7d9h |
 
 ## Future Plans
 
@@ -233,6 +224,11 @@ media-master/
 
 [Contribution Guidelines](#contribution-guidelines)
 
-## License
+## Ingress mapping
 
-[License](#license)
+| Ingress Rule                                      | App Label                                      |
+|---------------------------------------------------|------------------------------------------------|
+| ingress.networking.k8s.io/couchpotato-couchpotato-ingress | app.kubernetes.io/name=couchpotato app.kubernetes.io/instance=homer |
+| ingress.networking.k8s.io/homer                   | app.kubernetes.io/name=couchpotato app.kubernetes.io/instance=homer |
+| ingress.networking.k8s.io/openwebui-ingress       | app.kubernetes.io/name=couchpotato app.kubernetes.io/instance=homer |
+| ingress.networking.k8s.io/sonarr-sonarr-ingress   | app.kubernetes.io/name=couchpotato app.kubernetes.io/instance=homer |
