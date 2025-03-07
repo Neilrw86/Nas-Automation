@@ -17,7 +17,7 @@ spec:
             pathType: {{ .pathType }}
             backend:
               service:
-                name: {{ $.Release.Name }}-sonarr-service
+                name: {{ $.Release.Name }}
                 port:
                   number: {{ $.Values.ports.http.servicePort }}
           {{- end }}
