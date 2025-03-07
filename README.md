@@ -224,11 +224,3 @@ media-master/
 
 [Contribution Guidelines](#contribution-guidelines)
 
-## Ingress mapping
-
-| Ingress Rule                                      | App Label                                      |
-|---------------------------------------------------|------------------------------------------------|
-| ingress.networking.k8s.io/couchpotato-couchpotato-ingress | app.kubernetes.io/name=couchpotato app.kubernetes.io/instance=homer |
-| ingress.networking.k8s.io/homer                   | app.kubernetes.io/name=couchpotato app.kubernetes.io/instance=homer |
-| ingress.networking.k8s.io/openwebui-ingress       | app.kubernetes.io/name=couchpotato app.kubernetes.io/instance=homer |
-| ingress.networking.k8s.io/sonarr-sonarr-ingress   | app.kubernetes.io/name=couchpotato app.kubernetes.io/instance=homer |
