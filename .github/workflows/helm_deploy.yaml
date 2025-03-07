@@ -1,9 +1,9 @@
 name: Publish Helm Charts
 
 on:
-  push:
+  pull_request:
     branches:
-      - main # Trigger on pushes to the main branch
+      - main
     paths:
       - 'helm_charts/**' # Only trigger on changes to the helm charts folder
 
