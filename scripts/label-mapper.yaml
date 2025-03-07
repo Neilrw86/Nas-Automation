@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Get a list of ingresses
+ingresses=$(kubectl get ingresses -o name)
+
+for ingress in $ingresses; do
+  # Get the backend service name
+  service=$(kubectl describe $ingress | grep "Backend:" | awk '{print $2}' | cut -d ':' -f 1)
+
+  # Get the service selector
+  selector=$(kubectl describe svc $service | grep "Selector:" | awk '{print $2}')
+
+  # Extract the app label (assuming it's the "app" label)
+  app_label=$(echo $selector | awk -F ',' '{print $1}')
+
+  # Output the information
+  echo "$ingress - $service - $app_label"
+done
