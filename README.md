@@ -221,6 +221,15 @@ media-master/
 - **CouchPotato Deployment**: YAML files for CouchPotato deployment and service were created.
 - **Ingress Template**: The Go template for ingress was edited to affect ingress service creation.
 
+## April Branch TODO
+
+- [ ] enable MetalLB for ingress service 
+- [x]sonarr
+- [ ]readarr
+- [ ]sabnzb
+- [ ]plex
+
+
 ## Contribution Guidelines
 
 [Contribution Guidelines](#contribution-guidelines)
