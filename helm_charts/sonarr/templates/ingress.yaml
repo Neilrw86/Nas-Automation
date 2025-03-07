@@ -5,8 +5,14 @@ metadata:
   name: {{ .Release.Name }}-sonarr-ingress
   labels:
     {{- include "sonarr.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
+  {{- if .Values.ingress.className }}
   ingressClassName: {{ .Values.ingress.className }}
+  {{- end }}
   rules:
     {{- range .Values.ingress.hosts }}
     - host: {{ .host }}
@@ -19,9 +25,10 @@ spec:
               service:
                 name: {{ $.Release.Name }}-sonarr-service
                 port:
-                  number: {{ $.Values.ports.http.servicePort }}
+                  number: {{ $.Values.service.port }}
           {{- end }}
     {{- end }}
+  {{- if .Values.ingress.tls }}
   tls:
     {{- range .Values.ingress.tls }}
     - hosts:
@@ -30,4 +37,5 @@ spec:
         {{- end }}
       secretName: {{ .secretName }}
     {{- end }}
+  {{- end }}
 {{- end -}}

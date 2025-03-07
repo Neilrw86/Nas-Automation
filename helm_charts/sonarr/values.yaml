@@ -59,3 +59,8 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 replicaCount: 1 # Added for replica management
+
+service:
+  name: sonarr
+  type: ClusterIP
+  port: 8989
