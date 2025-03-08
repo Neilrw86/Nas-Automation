@@ -224,13 +224,8 @@ media-master/
 ## April Branch TODO
 
 - [ ] enable MetalLB for ingress service 
-- [x]sonarr
-- [ ]readarr
-- [ ]sabnzb
-- [ ]plex
-
-
-## Contribution Guidelines
-
-[Contribution Guidelines](#contribution-guidelines)
+- [x] sonarr
+- [ ] readarr
+- [ ] sabnzb
+- [ ] plex
 
