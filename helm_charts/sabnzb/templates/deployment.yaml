@@ -42,6 +42,7 @@ spec:
         - name: config-volume
           persistentVolumeClaim:
             claimName: nfs-configs-pvc
+            subPath: sabnzb
         - name: downloads-volume
           persistentVolumeClaim:
             claimName: nfs-temp-pvc
