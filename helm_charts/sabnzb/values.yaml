@@ -12,3 +12,7 @@ ingress:
 
 puid: "1003"
 pgid: "1003"
+
+service:
+  type: ClusterIP
+  port: 8080
