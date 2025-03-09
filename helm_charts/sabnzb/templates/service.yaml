@@ -5,11 +5,19 @@ metadata:
   labels:
     {{- include "sabnzb.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: ClusterIP
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
+    - port: 8080
+      targetPort: 8080
+      name: web
+    - port: 8085
+      targetPort: 8085
+      name: https
+    - port: 9090
+      targetPort: 9090
+      name: api
+    - port: 9095
+      targetPort: 9095
+      name: https-api
   selector:
     {{- include "sabnzb.selectorLabels" . | nindent 4 }}
