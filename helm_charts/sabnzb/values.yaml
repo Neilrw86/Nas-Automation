@@ -16,3 +16,9 @@ pgid: "1003"
 service:
   type: ClusterIP
   port: 8080
+
+serviceAccount:
+  create: true
+  name: ""
+  automount: true
+  annotations: {}
