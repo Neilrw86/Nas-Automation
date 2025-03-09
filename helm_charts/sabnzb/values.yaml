@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: linuxserver/sabnzbd
   pullPolicy: IfNotPresent
-  tag: "latest"
+  tag: latest
 
 ingress:
   enabled: true
