@@ -12,12 +12,3 @@ ingress:
 
 puid: "1003"
 pgid: "1003"
-
-volumePaths:
-  config: /share/configs/sabnzb/
-  downloads: /share/Temp/
-  incomplete: /share/Temp/incomplete
-  movies: /share/Films/
-  tv: /share/TV/
-  books: /share/books
-  music: /share/Music

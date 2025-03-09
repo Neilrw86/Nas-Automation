@@ -33,10 +33,6 @@ spec:
               name: movies-volume
             - mountPath: /tv
               name: tv-volume
-            - mountPath: /books
-              name: books-volume
-            - mountPath: /music
-              name: music-volume
           env:
             - name: PUID
               value: "{{ .Values.puid }}"
@@ -44,23 +40,18 @@ spec:
               value: "{{ .Values.pgid }}"
       volumes:
         - name: config-volume
-          hostPath:
-            path: {{ .Values.volumePaths.config }}
+          persistentVolumeClaim:
+            claimName: nfs-configs-pvc
         - name: downloads-volume
-          hostPath:
-            path: {{ .Values.volumePaths.downloads }}
+          persistentVolumeClaim:
+            claimName: nfs-temp-pvc
         - name: incomplete-volume
-          hostPath:
-            path: {{ .Values.volumePaths.incomplete }}
+          persistentVolumeClaim:
+            claimName: nfs-temp-pvc
+            subPath: incomplete
         - name: movies-volume
-          hostPath:
-            path: {{ .Values.volumePaths.movies }}
+          persistentVolumeClaim:
+            claimName: nfs-films-pvc
         - name: tv-volume
-          hostPath:
-            path: {{ .Values.volumePaths.tv }}
-        - name: books-volume
-          hostPath:
-            path: {{ .Values.volumePaths.books }}
-        - name: music-volume
-          hostPath:
-            path: {{ .Values.volumePaths.music }}
+          persistentVolumeClaim:
+            claimName: nfs-tv-pvc
