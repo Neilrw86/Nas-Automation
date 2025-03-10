@@ -22,37 +22,37 @@ spec:
             - containerPort: 8085
             - containerPort: 9090
             - containerPort: 9095
-          volumeMounts:
-            - mountPath: /config
-              name: config-volume
-            - mountPath: /downloads
-              name: downloads-volume
-            - mountPath: /incomplete-downloads
-              name: incomplete-volume
-            - mountPath: /movies
-              name: movies-volume
-            - mountPath: /tv
-              name: tv-volume
+            # volumeMounts:
+            #   - mountPath: /config
+            #     name: config-volume
+            #   - mountPath: /downloads
+            #     name: downloads-volume
+            #   - mountPath: /incomplete-downloads
+            #     name: incomplete-volume
+            #   - mountPath: /movies
+            #     name: movies-volume
+            #   - mountPath: /tv
+            #     name: tv-volume
           env:
             - name: PUID
               value: "{{ .Values.puid }}"
             - name: PGID
               value: "{{ .Values.pgid }}"
-      volumes:
-        - name: config-volume
-          persistentVolumeClaim:
-            claimName: nfs-configs-pvc
-            subPath: sabnzb
-        - name: downloads-volume
-          persistentVolumeClaim:
-            claimName: nfs-temp-pvc
-        - name: incomplete-volume
-          persistentVolumeClaim:
-            claimName: nfs-temp-pvc
-            subPath: incomplete
-        - name: movies-volume
-          persistentVolumeClaim:
-            claimName: nfs-films-pvc
-        - name: tv-volume
-          persistentVolumeClaim:
-            claimName: nfs-tv-pvc
+      # volumes:
+      #   - name: config-volume
+      #     persistentVolumeClaim:
+      #       claimName: nfs-configs-pvc
+      #       subPath: sabnzb
+      #   - name: downloads-volume
+      #     persistentVolumeClaim:
+      #       claimName: nfs-temp-pvc
+      #   - name: incomplete-volume
+      #     persistentVolumeClaim:
+      #       claimName: nfs-temp-pvc
+      #       subPath: incomplete
+      #   - name: movies-volume
+      #     persistentVolumeClaim:
+      #       claimName: nfs-films-pvc
+      #   - name: tv-volume
+      #     persistentVolumeClaim:
+      #       claimName: nfs-tv-pvc
