@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sabnzb.fullname" . }}
+  labels:
+    {{- include "sabnzb.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "sabnzb.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "sabnzb.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: sabnzb
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          ports:
+            - containerPort: 8080
+            - containerPort: 8085
+            - containerPort: 9090
+            - containerPort: 9095
+          volumeMounts:
+            - mountPath: /config
+              name: config-volume
+            - mountPath: /downloads
+              name: downloads-volume
+            # - mountPath: /incomplete-downloads
+            #   name: incomplete-volume
+            # - mountPath: /movies
+            #   name: movies-volume
+            # - mountPath: /tv
+            #   name: tv-volume
+          env:
+            - name: PUID
+              value: "{{ .Values.puid }}"
+            - name: PGID
+              value: "{{ .Values.pgid }}"
+      volumes:
+        - name: config-volume
+          persistentVolumeClaim:
+            claimName: nfs-configs-pvc
+            subPath: sabnzb
+        - name: downloads-volume
+           persistentVolumeClaim:
+             claimName: nfs-temp-pvc
+      #   - name: incomplete-volume
+      #     persistentVolumeClaim:
+      #       claimName: nfs-temp-pvc
+      #       subPath: incomplete
+      #   - name: movies-volume
+      #     persistentVolumeClaim:
+      #       claimName: nfs-films-pvc
+      #   - name: tv-volume
+      #     persistentVolumeClaim:
+      #       claimName: nfs-tv-pvc

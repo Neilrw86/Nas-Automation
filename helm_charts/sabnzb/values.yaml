@@ -1,0 +1,30 @@
+replicaCount: 1
+
+image:
+  repository: linuxserver/sabnzbd
+  pullPolicy: IfNotPresent
+  tag: latest
+
+ingress:
+  enabled: true
+  host: sabnzb.neilwylie.com
+  annotations: {}
+
+puid: "1003"
+pgid: "1003"
+
+service:
+  type: ClusterIP
+  port: 8080
+
+serviceAccount:
+  create: true
+  name: ""
+  automount: true
+  annotations: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
