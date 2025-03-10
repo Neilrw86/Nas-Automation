@@ -22,27 +22,27 @@ spec:
             - containerPort: 8085
             - containerPort: 9090
             - containerPort: 9095
-            # volumeMounts:
-            #   - mountPath: /config
-            #     name: config-volume
-            #   - mountPath: /downloads
-            #     name: downloads-volume
-            #   - mountPath: /incomplete-downloads
-            #     name: incomplete-volume
-            #   - mountPath: /movies
-            #     name: movies-volume
-            #   - mountPath: /tv
-            #     name: tv-volume
+          volumeMounts:
+            - mountPath: /config
+              name: config-volume
+            # - mountPath: /downloads
+            #   name: downloads-volume
+            # - mountPath: /incomplete-downloads
+            #   name: incomplete-volume
+            # - mountPath: /movies
+            #   name: movies-volume
+            # - mountPath: /tv
+            #   name: tv-volume
           env:
             - name: PUID
               value: "{{ .Values.puid }}"
             - name: PGID
               value: "{{ .Values.pgid }}"
-      # volumes:
-      #   - name: config-volume
-      #     persistentVolumeClaim:
-      #       claimName: nfs-configs-pvc
-      #       subPath: sabnzb
+      volumes:
+        - name: config-volume
+          persistentVolumeClaim:
+            claimName: nfs-configs-pvc
+            subPath: sabnzb
       #   - name: downloads-volume
       #     persistentVolumeClaim:
       #       claimName: nfs-temp-pvc
