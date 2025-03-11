@@ -27,8 +27,8 @@ spec:
               name: config-volume
             - mountPath: /downloads
               name: downloads-volume
-            # - mountPath: /incomplete-downloads
-            #   name: incomplete-volume
+            - mountPath: /incomplete-downloads
+              name: incomplete-volume
             # - mountPath: /movies
             #   name: movies-volume
             # - mountPath: /tv
@@ -46,10 +46,10 @@ spec:
         - name: downloads-volume
           persistentVolumeClaim:
             claimName: nfs-temp-pvc
-        # - name: incomplete-volume
-        #   persistentVolumeClaim:
-        #     claimName: nfs-temp-pvc
-        #     subPath: incomplete
+        - name: incomplete-volume
+          persistentVolumeClaim:
+            claimName: nfs-temp-pvc
+            subPath: incomplete
         # - name: movies-volume
         #   persistentVolumeClaim:
         #     claimName: nfs-films-pvc
