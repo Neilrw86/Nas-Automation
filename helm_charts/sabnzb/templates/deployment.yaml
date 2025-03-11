@@ -49,7 +49,6 @@ spec:
         - name: incomplete-volume
           persistentVolumeClaim:
             claimName: nfs-temp-pvc
-            subPath: incomplete
         # - name: movies-volume
         #   persistentVolumeClaim:
         #     claimName: nfs-films-pvc
