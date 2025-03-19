@@ -22,7 +22,7 @@ spec:
             - containerPort: 8085
             - containerPort: 9090
             - containerPort: 9095
-            volumeMounts:
+          volumeMounts:
             - mountPath: /config
               name: config-volume
             - mountPath: /downloads
