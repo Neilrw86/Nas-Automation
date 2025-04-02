@@ -9,7 +9,7 @@ ingress:
   enabled: true
   host: sabnzb.neilwylie.com
   annotations: {}
-
+#mapped on nas5
 puid: "1000"
 pgid: "1000"
 
