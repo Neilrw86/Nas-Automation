@@ -10,8 +10,8 @@ ingress:
   host: sabnzb.neilwylie.com
   annotations: {}
 
-puid: "1003"
-pgid: "1003"
+puid: "1001"
+pgid: "1001"
 
 service:
   type: ClusterIP
