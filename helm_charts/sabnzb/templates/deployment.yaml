@@ -25,6 +25,7 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: config-volume
+              subPath: sabnzb
             - mountPath: /downloads
               name: downloads-volume
             - mountPath: /movies
@@ -40,7 +41,6 @@ spec:
         - name: config-volume
           persistentVolumeClaim:
             claimName: nfs-configs-pvc
-            subPath: sabnzb
         - name: downloads-volume
           persistentVolumeClaim:
             claimName: nfs-temp-pvc
