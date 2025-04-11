@@ -227,7 +227,6 @@ media-master/
 - [x] sonarr
 - [ ] readarr
 - [x] sabnzb
-- [ ] plex
 
 ## May branch TODO
 
@@ -235,3 +234,4 @@ media-master/
 - [ ] plex
 - [ ] refine nfs perms
 - [ ] update argo to use main except for those in active dev
+- [ ] troubleshoot sabnzb css on kube
