@@ -9,9 +9,9 @@ ingress:
   enabled: true
   host: sabnzb.neilwylie.com
   annotations: {}
-
-puid: "1003"
-pgid: "1003"
+#mapped on nas5
+puid: "1000"
+pgid: "1000"
 
 service:
   type: ClusterIP
