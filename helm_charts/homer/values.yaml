@@ -87,9 +87,9 @@ affinity: {}
 
 env:
   - name: PUID
-    value: "1003"
+    value: "1000"
   - name: PGID
-    value: "1003"
+    value: "1000"
 
 containerPorts:
   - containerPort: 8080
