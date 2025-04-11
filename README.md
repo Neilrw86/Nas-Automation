@@ -231,7 +231,7 @@ media-master/
 
 ## May branch TODO
 
-- [] metallb
-- [] plex
-- [] refine nfs perms
-- [] update argo to use main except for those in active dev
+- [ ] metallb
+- [ ] plex
+- [ ] refine nfs perms
+- [ ] update argo to use main except for those in active dev
