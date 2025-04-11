@@ -226,6 +226,6 @@ media-master/
 - [ ] enable MetalLB for ingress service 
 - [x] sonarr
 - [ ] readarr
-- [ ] sabnzb
+- [x] sabnzb
 - [ ] plex
 
