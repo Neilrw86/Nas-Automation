@@ -33,3 +33,10 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
+
+extraEnv:
+  - name: SABNZBD__PORT
+    value: "8080"
+  - name: SABNZBD__HOST_WHITELIST_ENTRIES
+    value: >-
+      sabnzb.neilwylie.com, sabnzbd, sabnzbd.default, sabnzbd.default.svc, sabnzbd.default.svc.cluster, sabnzbd.default.svc.cluster.local

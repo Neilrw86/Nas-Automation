@@ -37,6 +37,9 @@ spec:
               value: "{{ .Values.puid }}"
             - name: PGID
               value: "{{ .Values.pgid }}"
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 10 }}
+            {{- end }}
       volumes:
         - name: config-volume
           persistentVolumeClaim:
