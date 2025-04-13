@@ -15,8 +15,8 @@ ingress:
     nginx.ingress.kubernetes.io/x-forwarded-proto: "https"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 #mapped on nas5
-puid: "1000"
-pgid: "1000"
+puid: "1003"
+pgid: "1003"
 
 service:
   type: ClusterIP
