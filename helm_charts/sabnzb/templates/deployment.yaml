@@ -32,6 +32,9 @@ spec:
               name: movies-volume
             - mountPath: /tv
               name: tv-volume
+            - mountPath: /incomplete
+              name: downloads-volume
+              subPath: incomplete
           env:
             - name: PUID
               value: "{{ .Values.puid }}"
