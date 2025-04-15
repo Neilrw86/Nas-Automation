@@ -5,7 +5,7 @@ metadata:
 spec:
   ingressClassName: ngrok
   rules:
-    - host: "your static ngrok domain here"
+    - host: "neilwylie.com"
       http:
         paths:
           - path: /
