@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ngrok-hello-ingress
+spec:
+  ingressClassName: ngrok
+  rules:
+    - host: "your static ngrok domain here"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ngrok-hello
+                port:
+                  number: 80
