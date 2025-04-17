@@ -20,9 +20,9 @@ puid: "1003"
 pgid: "1003"
 
 persistentVolumeClaims:
-  config: nfs-configs-pvc
-  downloads: nfs-temp-pvc
-  movies: nfs-films-pvc
+  config: {{ include "couchpotato.pvcName" (dict "Values" .Values "Release" .Release "pvcSuffix" "config") }}
+  downloads: {{ include "couchpotato.pvcName" (dict "Values" .Values "Release" .Release "pvcSuffix" "downloads") }}
+  movies: {{ include "couchpotato.pvcName" (dict "Values" .Values "Release" .Release "pvcSuffix" "movies") }}
 
 serviceAccount:
   create: true

@@ -2,15 +2,17 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-couchpotato
+  labels:
+    {{- include "couchpotato.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: couchpotato
+      {{- include "couchpotato.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: couchpotato
+        {{- include "couchpotato.labels" . | nindent 8 }}
     spec:
       containers:
       - name: couchpotato
@@ -34,11 +36,10 @@ spec:
       volumes:
       - name: couchpotato-config
         persistentVolumeClaim:
-          claimName: {{ .Values.persistentVolumeClaims.config }}
+          claimName: {{ include "couchpotato.pvcName" (dict "Values" .Values "Release" .Release "pvcSuffix" "config") }}
       - name: temp-downloads
         persistentVolumeClaim:
-          claimName: {{ .Values.persistentVolumeClaims.downloads }}
+          claimName: {{ include "couchpotato.pvcName" (dict "Values" .Values "Release" .Release "pvcSuffix" "downloads") }}
       - name: movies
         persistentVolumeClaim:
-          claimName: {{ .Values.persistentVolumeClaims.movies }}
-          
+          claimName: {{ include "couchpotato.pvcName" (dict "Values" .Values "Release" .Release "pvcSuffix" "movies") }}

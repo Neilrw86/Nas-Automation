@@ -60,3 +60,10 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Generate a unique name for the PVCs
+*/}}
+{{- define "couchpotato.pvcName" -}}
+{{- printf "%s-%s" (include "couchpotato.fullname" .) .Values.pvcSuffix | trunc 63 | trimSuffix "-" }}
+{{- end }}
