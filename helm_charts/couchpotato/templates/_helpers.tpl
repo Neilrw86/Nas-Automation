@@ -65,5 +65,5 @@ Create the name of the service account to use
 Generate a unique name for the PVCs
 */}}
 {{- define "couchpotato.pvcName" -}}
-{{- printf "%s-%s" (include "couchpotato.fullname" .) .Values.pvcSuffix | trunc 63 | trimSuffix "-" }}
+{{- printf "%s-%s" (include "couchpotato.fullname" .) .pvcSuffix | trunc 63 | trimSuffix "-" }}
 {{- end }}
