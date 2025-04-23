@@ -32,7 +32,7 @@ spec:
               name: movies-volume
             - mountPath: /tv
               name: tv-volume
-            - mountPath: /incomplete
+            - mountPath: /incomplete-downloads
               name: downloads-volume
               subPath: incomplete
           env:
