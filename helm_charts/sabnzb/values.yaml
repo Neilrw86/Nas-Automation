@@ -7,6 +7,7 @@ image:
 
 ingress:
   enabled: true
+  ingressClassName: nginx
   host: sabnzb.neilwylie.com
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "10m"
