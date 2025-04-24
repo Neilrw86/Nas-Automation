@@ -22,6 +22,8 @@ pgid: "1003"
 service:
   type: ClusterIP
   port: 8080
+  selector:
+    app: sabnzb
 
 serviceAccount:
   create: true
