@@ -5,7 +5,7 @@ metadata:
 spec:
   ingressClassName: ngrok
   rules:
-    - host: "neilwylie.com"
+    - host: "fast-swan-aware.ngrok-free.app"
       http:
         paths:
           - path: /
