@@ -233,6 +233,6 @@ media-master/
 
 - [ ] metallb
 - [ ] plex
-- [ ] refine nfs perms
+- [x] refine nfs perms
 - [ ] update argo to use main except for those in active development branches
-- [ ] troubleshoot sabnzb css on kube
+- [x] troubleshoot sabnzb css on kube <- fixed in sab-v2 tag - was ingress/rewrite issue>

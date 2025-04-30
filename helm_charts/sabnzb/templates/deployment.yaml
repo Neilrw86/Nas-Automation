@@ -4,6 +4,7 @@ metadata:
   name: {{ include "sabnzb.fullname" . }}
   labels:
     {{- include "sabnzb.labels" . | nindent 4 }}
+    app: sabnzb
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -32,11 +33,17 @@ spec:
               name: movies-volume
             - mountPath: /tv
               name: tv-volume
+            - mountPath: /incomplete-downloads
+              name: downloads-volume
+              subPath: incomplete
           env:
             - name: PUID
               value: "{{ .Values.puid }}"
             - name: PGID
               value: "{{ .Values.pgid }}"
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
       volumes:
         - name: config-volume
           persistentVolumeClaim:

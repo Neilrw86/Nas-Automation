@@ -25,6 +25,13 @@ spec:
           value: "1003"
         - name: PGID
           value: "1003"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
         volumeMounts:
         - name: sabnzb-config
           mountPath: /config
@@ -32,6 +39,7 @@ spec:
           mountPath: /downloads
         - name: incomplete-downloads
           mountPath: /incomplete-downloads
+          subPath: /temp/incomplete
         - name: movies
           mountPath: /movies
         - name: tv
@@ -46,7 +54,6 @@ spec:
       - name: incomplete-downloads
         persistentVolumeClaim:
           claimName: temp-pvc
-          subPath: /temp/incomplete
       - name: movies
         persistentVolumeClaim:
           claimName: nfs-films-pvc

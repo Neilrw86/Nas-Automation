@@ -7,15 +7,23 @@ image:
 
 ingress:
   enabled: true
+  ingressClassName: nginx
   host: sabnzb.neilwylie.com
-  annotations: {}
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/x-forwarded-proto: "https"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 #mapped on nas5
-puid: "1000"
-pgid: "1000"
+puid: "1003"
+pgid: "1003"
 
 service:
   type: ClusterIP
   port: 8080
+  selector:
+    app: sabnzb
 
 serviceAccount:
   create: true
@@ -28,3 +36,10 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
+
+extraEnv:
+  - name: SABNZBD__PORT
+    value: "8080"
+  - name: SABNZBD__HOST_WHITELIST_ENTRIES
+    value: >-
+      sabnzb.neilwylie.com, sabnzbd, sabnzbd.default, sabnzbd.default.svc, sabnzbd.default.svc.cluster, sabnzbd.default.svc.cluster.local
