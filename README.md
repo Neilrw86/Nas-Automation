@@ -230,8 +230,14 @@ media-master/
 
 ## May branch TODO
 
-- [ ] metallb
+- [x] metallb
 - [ ] plex
 - [x] refine nfs perms
-- [ ] update argo to use main except for those in active development branches
+- [x] update argo to use main except for those in active development branches
 - [x] troubleshoot sabnzb css on kube <- fixed in sab-v2 tag - was ingress/rewrite issue>
+
+## June Branch TODO
+- [ ] ngroc
+- [ ] Readarr
+- [ ] cert & cert-manager
+- [ ] Agentic kube? 
