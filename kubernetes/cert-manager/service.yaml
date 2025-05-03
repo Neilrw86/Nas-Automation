@@ -1,0 +1,24 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer 
+metadata:
+  # Consider using letsencrypt-prod-cfdns or similar
+  name: letsencrypt-prod-cfdns 
+spec:
+  acme:
+    email: neilrwylie@gmail.com # Your email
+    server: https://acme-v02.api.letsencrypt.org/directory # Use staging first!
+    privateKeySecretRef:
+      name: letsencrypt-prod-cfdns-account-key 
+    solvers:
+    - dns01:
+        cloudflare:
+          # Email associated with your Cloudflare account
+          email: neilrwylie@gmail.com
+          # Reference the Kubernetes Secret containing your Cloudflare API token
+          apiTokenSecretRef:
+            name: cloudflare-api-token-secret # The secret created earlier
+            key: api-token                    # Key within the secret
+      # Optional: selector for specific zones
+      # selector:
+      #   dnsZones:
+      #     - 'yourdomain.com'
