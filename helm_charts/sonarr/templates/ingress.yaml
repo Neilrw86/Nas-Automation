@@ -5,17 +5,20 @@ metadata:
   name: {{ .Release.Name }}-sonarr-ingress
   labels:
     {{- include "sonarr.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
   annotations:
+    # Add this annotation to tell cert-manager to use your ClusterIssuer
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.clusterIssuer | default "letsencrypt-prod-cfdns" }} 
+    # Include other annotations from values.yaml
+    {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- end }}
 spec:
   {{- if .Values.ingress.className }}
   ingressClassName: {{ .Values.ingress.className }}
   {{- end }}
   rules:
     {{- range .Values.ingress.hosts }}
-    - host: {{ .host }}
+    - host: {{ .host | quote }} # Ensure host is quoted
       http:
         paths:
           {{- range .paths }}
@@ -29,13 +32,18 @@ spec:
           {{- end }}
     {{- end }}
   {{- if .Values.ingress.tls }}
+  # This section tells the Ingress controller AND cert-manager about TLS
   tls:
     {{- range .Values.ingress.tls }}
     - hosts:
         {{- range .hosts }}
-        - {{ . }}
+        # These hosts MUST match the hosts defined in the rules section above
+        # Cert-manager will request a certificate covering these names
+        - {{ . | quote }} 
         {{- end }}
-      secretName: {{ .secretName }}
+      # This is the name of the Kubernetes secret where cert-manager will store
+      # the TLS certificate and key. The Ingress controller will read from it.
+      secretName: {{ .secretName }} 
     {{- end }}
   {{- end }}
 {{- end -}}
