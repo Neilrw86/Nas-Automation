@@ -12,9 +12,17 @@ service:
 ingress:
   enabled: true
   className: "nginx"
-  host: "couchpotato.neilwylie.com"
-  path: "/"
-  tlsSecretName: couchpotato-tls
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod-cfdns
+  hosts:
+    - host: "couchpotato.neilwylie.com" # Hostname
+      paths:
+        - path: "/"                     # Path to match
+          pathType: Prefix              # PathType must be specified
+  tls:
+    - hosts:
+        - couchpotato.neilwylie.com     # This hostname MUST match one in the hosts.host section above
+      secretName: couchpotato-tls-secret # This is the name of the Kubernetes Secret cert-manager will create
 
 puid: "1003"
 pgid: "1003"

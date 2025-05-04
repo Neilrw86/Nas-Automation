@@ -39,12 +39,20 @@ restartPolicy: Always
 ingress:
   enabled: true
   className: "nginx" 
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod-cfdns
   hosts:
     - host: sonarr.neilwylie.com
       paths:
         - path: /
           pathType: Prefix
   tls:
+    - hosts:
+        # This hostname MUST match one in the hosts.host section above
+        - sonarr.neilwylie.com 
+      # This is the name of the Kubernetes Secret cert-manager will create
+      # and the Ingress controller will use.
+      secretName: sonarr-tls-secret # You can choose this name
 
 serviceAccount:
   create: true
