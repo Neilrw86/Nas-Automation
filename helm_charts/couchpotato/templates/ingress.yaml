@@ -33,10 +33,9 @@ spec:
         paths:
           {{- range .paths }}
           - path: {{ .path }}
-            pathType: {{ .pathType | default "Prefix" }} # Default to Prefix if not specified
+            pathType: {{ .pathType | default "Prefix" }}
             backend:
               service:
-                # Consider using a fullname helper: {{ include "couchpotato.fullname" $ }}
                 name: {{ $.Release.Name }}-couchpotato
                 port:
                   number: {{ $.Values.service.port }}
