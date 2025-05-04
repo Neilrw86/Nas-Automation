@@ -14,9 +14,11 @@ ingress:
   className: "nginx"
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod-cfdns
-  host: "couchpotato.neilwylie.com"
-  path: "/"
-  tls:
+hosts:
+    - host: "couchpotato.neilwylie.com" # Hostname
+      paths:                            # List of paths for this host
+        - path: "/"                    
+tls:
     - hosts:
         # This hostname MUST match one in the hosts.host section above
         - couchpotato.neilwylie.com 
