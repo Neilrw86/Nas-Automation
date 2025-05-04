@@ -16,8 +16,9 @@ ingress:
     cert-manager.io/cluster-issuer: letsencrypt-prod-cfdns
   hosts:
     - host: "couchpotato.neilwylie.com" # Hostname
-      paths:                            # List of paths for this host
+      paths:
         - path: "/"                     # Path to match
+          pathType: Prefix              # PathType must be specified
   tls:
     - hosts:
         - couchpotato.neilwylie.com     # This hostname MUST match one in the hosts.host section above
