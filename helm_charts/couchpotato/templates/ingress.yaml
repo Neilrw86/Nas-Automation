@@ -4,8 +4,6 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}-couchpotato-ingress
   labels:
-    # Assuming you have a _helpers.tpl defining couchpotato.labels
-    # {{- include "couchpotato.labels" . | nindent 4 }}
     app.kubernetes.io/name: couchpotato
     app.kubernetes.io/instance: {{ .Release.Name }}
   {{- with .Values.ingress.annotations }}
@@ -26,13 +24,14 @@ spec:
       secretName: {{ .secretName }}
     {{- end }}
   {{- end }}
+  {{- if .Values.ingress.hosts }}
   rules:
     {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
           {{- range .paths }}
-          - path: {{ .path }}
+          - path: {{ .path | default "/" }}
             pathType: {{ .pathType | default "Prefix" }}
             backend:
               service:
@@ -41,4 +40,11 @@ spec:
                   number: {{ $.Values.service.port }}
           {{- end }}
     {{- end }}
-{{- end -}}
+  {{- else }}
+  defaultBackend:
+    service:
+      name: {{ $.Release.Name }}-default-backend
+      port:
+        number: 80
+  {{- end }}
+{{- end }}
