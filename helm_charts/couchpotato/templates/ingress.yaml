@@ -2,17 +2,16 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-couchpotato-ingress
+  name: {{ include "couchpotato.fullname" . }}
   labels:
-    app.kubernetes.io/name: couchpotato
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "couchpotato.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.ingress.className }}
-  ingressClassName: {{ .Values.ingress.className }}
+  {{- with .Values.ingress.className }}
+  ingressClassName: {{ . }}
   {{- end }}
   {{- if .Values.ingress.tls }}
   tls:
@@ -24,27 +23,21 @@ spec:
       secretName: {{ .secretName }}
     {{- end }}
   {{- end }}
-  {{- if .Values.ingress.hosts }}
   rules:
     {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
           {{- range .paths }}
-          - path: {{ .path | default "/" }}
-            pathType: {{ .pathType | default "Prefix" }}
+          - path: {{ .path }}
+            {{- with .pathType }}
+            pathType: {{ . }}
+            {{- end }}
             backend:
               service:
-                name: {{ $.Release.Name }}-couchpotato
+                name: {{ include "couchpotato.fullname" $ }}
                 port:
                   number: {{ $.Values.service.port }}
           {{- end }}
     {{- end }}
-  {{- else }}
-  defaultBackend:
-    service:
-      name: {{ $.Release.Name }}-default-backend
-      port:
-        number: 80
-  {{- end }}
 {{- end }}
