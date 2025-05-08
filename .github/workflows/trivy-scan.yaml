@@ -25,10 +25,14 @@ jobs:
       - name: Extract container images from Helm charts
         id: extract-images
         run: |
-          images=$(helm template ./helm_charts/*/ | grep 'image:' | awk '{print $2}')
-          echo "::set-output name=images::$images"
+          images=""
+          for chart in ./helm_charts/*; do
+            images="$images $(helm template "$chart" | grep 'image:' | awk '{print $2}')"
+          done
+          images=$(echo "$images" | xargs) # Remove extra spaces
+          echo "IMAGES=$images" >> $GITHUB_ENV
 
       - name: Run Trivy scan
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ steps.extract-images.outputs.images }}
+          image-ref: ${{ env.IMAGES }}
