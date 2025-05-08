@@ -25,17 +25,16 @@ jobs:
       - name: Extract container images from Helm charts
         id: extract-images
         run: |
-          images=""
           for chart in ./helm_charts/*; do
-            images="$images $(helm template "$chart" | grep 'image:' | awk '{print $2}')"
+            # Extract image references from Helm templates
+            helm template "$chart" | grep 'image:' | awk '{print $2}' >> images.txt
           done
-          images=$(echo "$images" | xargs -n1) # Format images as a newline-separated list
-          echo "$images" > images.txt          # Save images to a file for iteration
-          echo "IMAGES=$(cat images.txt)" >> $GITHUB_ENV
+          # Remove duplicates and empty lines
+          sort -u images.txt | sed '/^$/d' > unique-images.txt
 
       - name: Run Trivy scan for each image
         run: |
           while IFS= read -r image; do
             echo "Scanning image: $image"
             trivy image "$image"
-          done < images.txt
+          done < unique-images.txt
