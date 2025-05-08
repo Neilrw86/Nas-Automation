@@ -25,16 +25,10 @@ jobs:
       - name: Extract container images from Helm charts
         id: extract-images
         run: |
-          for chart in ./helm_charts/*; do
-            # Extract image references from Helm templates
-            helm template "$chart" | grep 'image:' | awk '{print $2}' >> images.txt
-          done
-          # Remove duplicates and empty lines
-          sort -u images.txt | sed '/^$/d' > unique-images.txt
+          images=$(helm template ./helm_charts/*/ | grep 'image:' | awk '{print $2}')
+          echo "::set-output name=images::$images"
 
-      - name: Run Trivy scan for each image
-        run: |
-          while IFS= read -r image; do
-            echo "Scanning image: $image"
-            trivy image "$image"
-          done < unique-images.txt
+      - name: Run Trivy scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ steps.extract-images.outputs.images }}
