@@ -29,10 +29,13 @@ jobs:
           for chart in ./helm_charts/*; do
             images="$images $(helm template "$chart" | grep 'image:' | awk '{print $2}')"
           done
-          images=$(echo "$images" | xargs) # Remove extra spaces
-          echo "IMAGES=$images" >> $GITHUB_ENV
+          images=$(echo "$images" | xargs -n1) # Format images as a newline-separated list
+          echo "$images" > images.txt          # Save images to a file for iteration
+          echo "IMAGES=$(cat images.txt)" >> $GITHUB_ENV
 
-      - name: Run Trivy scan
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: ${{ env.IMAGES }}
+      - name: Run Trivy scan for each image
+        run: |
+          while IFS= read -r image; do
+            echo "Scanning image: $image"
+            trivy image "$image"
+          done < images.txt
