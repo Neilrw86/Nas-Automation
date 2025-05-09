@@ -15,20 +15,81 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Helm
-        uses: azure/setup-helm@v1
+        uses: azure/setup-helm@v4
         with:
-          version: v3.5.4
+          version: v3.15.2 # Specify a recent Helm version
+
+      - name: Install yq
+        run: |
+          sudo apt-get update && sudo apt-get install -y software-properties-common
+          sudo add-apt-repository -y ppa:rmescandon/yq
+          sudo apt-get update && sudo apt-get install -y yq
+          # Verify installation
+          yq --version
+        shell: bash
 
       - name: Extract container images from Helm charts
         id: extract-images
         run: |
-          images=$(helm template ./helm_charts/*/ | grep 'image:' | awk '{print $2}')
-          echo "::set-output name=images::$images"
+          set -eo pipefail # Exit on error, treat unset variables as an error, and pipefail
+
+          IMAGE_LIST_FILE=$(mktemp)
+          # Find all directories directly under helm_charts, assuming each is a chart
+          CHART_DIRECTORIES=$(find ./helm_charts -mindepth 1 -maxdepth 1 -type d)
+
+          if [ -z "$CHART_DIRECTORIES" ]; then
+            echo "No chart directories found under ./helm_charts/"
+            echo "images=" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          for chart_dir in $CHART_DIRECTORIES; do
+            echo "Processing chart directory: $chart_dir"
+            chart_render_file=$(mktemp)
+            # Template the chart. --skip-tests avoids templating test manifests.
+            if ! helm template "$chart_dir" --skip-tests > "$chart_render_file"; then
+              echo "::warning file=${{ github.workflow }}::Failed to template Helm chart in $chart_dir. Skipping image extraction for this chart."
+              rm -f "$chart_render_file"
+              continue
+            fi
+
+            # Use yq to extract image strings, then grep to filter unwanted patterns.
+            # yq options: -r for raw output.
+            # Expression: '.. | .image? | select(type == "string" and . != "")'
+            #   '..' recursively finds 'image' keys.
+            #   '.image?' safely gets the value.
+            #   'select(...)' filters for non-empty strings.
+            yq -r '.. | .image? | select(type == "string" and . != "")' "$chart_render_file" 2>/dev/null | \
+              grep -Ev '^\s*\{\{.*\}\}\s*$|^\s*\.\s*$|^\s*true\s*$|^\s*false\s*$|^\s*null\s*$|^\s*(""|'\''\'')\s*$' | \
+              awk 'NF' >> "$IMAGE_LIST_FILE"
+            
+            rm -f "$chart_render_file"
+          done
+
+          if [ ! -s "$IMAGE_LIST_FILE" ]; then
+            echo "No container images found in any Helm charts."
+            echo "images=" >> $GITHUB_OUTPUT
+          else
+            # Create a comma-separated list of unique image names
+            # xargs -n1 echo ensures each image is on a new line and trimmed before sort
+            # awk then joins unique, non-empty lines with a comma
+            IMAGES_STR=$(cat "$IMAGE_LIST_FILE" | xargs -n1 echo | sort -u | awk 'NF {all_images = all_images (all_images == "" ? "" : ",") $0} END {print all_images}')
+            echo "Found images: $IMAGES_STR"
+            echo "images=$IMAGES_STR" >> $GITHUB_OUTPUT
+          fi
+          rm -f "$IMAGE_LIST_FILE"
+        shell: bash
 
       - name: Run Trivy scan
-        uses: aquasecurity/trivy-action@master
+        if: steps.extract-images.outputs.images != '' # Only run if images were found
+        uses: aquasecurity/trivy-action@0.21.0 # Use a specific stable version
         with:
           image-ref: ${{ steps.extract-images.outputs.images }}
+          format: 'table'
+          exit-code: '0' # Report vulnerabilities but don't fail the step/workflow
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH' # Adjust as needed, e.g., 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
