@@ -22,65 +22,48 @@ jobs:
         with:
           version: v3.15.2 # Specify a recent Helm version
 
-      - name: Install yq
+      - name: Install Trivy CLI
         run: |
-          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
-          sudo chmod +x /usr/bin/yq
-          yq --version # Verify installation
+          # Install dependencies for adding APT repository
+          sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+          # Add Trivy's GPG key and repository (modern method)
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list
+          # Update package list and install Trivy
+          sudo apt-get update
+          sudo apt-get install -y trivy --no-install-recommends
+          trivy --version # Verify installation
         shell: bash
 
-      - name: Extract container images from Helm charts
-        id: extract-images
+      - name: Install helm-trivy plugin
+        run: helm plugin install https://github.com/aquasecurity/helm-trivy
+        shell: bash
+
+      - name: Scan Helm charts with helm-trivy
         run: |
           set -eo pipefail # Exit on error, treat unset variables as an error, and pipefail
 
-          IMAGE_LIST_FILE=$(mktemp)
           # Find all directories directly under helm_charts, assuming each is a chart
           CHART_DIRECTORIES=$(find ./helm_charts -mindepth 1 -maxdepth 1 -type d)
 
           if [ -z "$CHART_DIRECTORIES" ]; then
             echo "No chart directories found under ./helm_charts/"
-            echo "images=" >> $GITHUB_OUTPUT
             exit 0
           fi
 
           for chart_dir in $CHART_DIRECTORIES; do
-            echo "Processing chart directory: $chart_dir"
-            chart_render_file=$(mktemp)
-            # Template the chart. --skip-tests avoids templating test manifests.
-            if ! helm template "$chart_dir" --skip-tests > "$chart_render_file"; then
-              echo "::warning file=${{ github.workflow }}::Failed to template Helm chart in $chart_dir. Skipping image extraction for this chart."
-              rm -f "$chart_render_file"
-              continue
-            fi
-
-            # Use yq to extract image strings, then grep to filter unwanted patterns.
-            yq -r '.. | .image? | select(type == "string" and . != "")' "$chart_render_file" 2>/dev/null | \
-              grep -Ev '^\s*\{\{.*\}\}\s*$|^\s*\.\s*$|^\s*true\s*$|^\s*false\s*$|^\s*null\s*$|^\s*("")\s*$' | \
-              awk 'NF' >> "$IMAGE_LIST_FILE"
-
-            rm -f "$chart_render_file"
+            echo "--------------------------------------------------"
+            echo "Scanning chart directory: $chart_dir with helm-trivy"
+            echo "--------------------------------------------------"
+            # Run helm trivy on the chart directory
+            # Adjust Trivy flags as needed.
+            # --skip-dirs can be used if you have sub-charts you don't want to scan individually,
+            # but helm-trivy should generally handle dependencies correctly.
+            helm trivy "$chart_dir" \
+              --exit-code 0 \
+              --format table \
+              --ignore-unfixed \
+              --vuln-type os,library \
+              --severity CRITICAL,HIGH
           done
-
-          if [ ! -s "$IMAGE_LIST_FILE" ]; then
-            echo "No container images found in any Helm charts."
-            echo "images=" >> $GITHUB_OUTPUT
-          else:
-            # Create a comma-separated list of unique image names
-            IMAGES_STR=$(cat "$IMAGE_LIST_FILE" | xargs -n1 echo | sort -u | awk 'NF {all_images = all_images (all_images == "" ? "" : ",") $0} END {print all_images}')
-            echo "Found images: $IMAGES_STR"
-            echo "images=$IMAGES_STR" >> $GITHUB_OUTPUT
-          fi
-          rm -f "$IMAGE_LIST_FILE"
         shell: bash
-
-      - name: Run Trivy scan
-        if: steps.extract-images.outputs.images != '' # Only run if images were found
-        uses: aquasecurity/trivy-action@0.21.0 # Use a specific stable version
-        with:
-          image-ref: ${{ steps.extract-images.outputs.images }}
-          format: 'table'
-          exit-code: '0' # Report vulnerabilities but don't fail the step/workflow
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH' # Adjust as needed, e.g., 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
