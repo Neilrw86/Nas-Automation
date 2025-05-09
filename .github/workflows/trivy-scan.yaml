@@ -36,7 +36,10 @@ jobs:
         shell: bash
 
       - name: Install helm-trivy plugin
-        run: helm plugin install https://github.com/aquasecurity/helm-trivy
+        run: |
+          export GIT_TERMINAL_PROMPT=0
+          helm plugin install https://github.com/aquasecurity/helm-trivy
+          helm plugin list # Verify plugin installation
         shell: bash
 
       - name: Scan Helm charts with helm-trivy
