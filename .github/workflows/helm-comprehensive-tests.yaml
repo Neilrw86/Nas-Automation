@@ -19,37 +19,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Helm
-        uses: azure/setup-helm@v4
-        with:
-          version: v3.15.2 # Specify a recent Helm version
-
-      # --- Tool Installations ---
-      - name: Install Trivy CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget apt-transport-https gnupg lsb-release
-          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
-          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list
-          sudo apt-get update
-          sudo apt-get install -y trivy --no-install-recommends
-          trivy --version
-        shell: bash
-
-      - name: Install helm-trivy plugin
-        run: |
-          # Define plugin version and name for clarity and easy updates
-          TRIVY_PLUGIN_VERSION="0.20.0" # Check for the latest version on https://github.com/aquasecurity/helm-trivy/releases
-          TRIVY_PLUGIN_TARBALL="helm-trivy_${TRIVY_PLUGIN_VERSION}_linux_amd64.tar.gz"
-          TRIVY_PLUGIN_URL="https://github.com/aquasecurity/helm-trivy/releases/download/v${TRIVY_PLUGIN_VERSION}/${TRIVY_PLUGIN_TARBALL}"
-          echo "Downloading helm-trivy plugin from ${TRIVY_PLUGIN_URL}..."
-          wget -q "${TRIVY_PLUGIN_URL}" -O "${TRIVY_PLUGIN_TARBALL}"
-          echo "Installing helm-trivy plugin from ${TRIVY_PLUGIN_TARBALL}..."
-          helm plugin install "./${TRIVY_PLUGIN_TARBALL}"
-          echo "Cleaning up downloaded tarball..."
-          rm -f "./${TRIVY_PLUGIN_TARBALL}"
-          helm plugin list
-        shell: bash
 
       - name: Install kubeval
         run: |
