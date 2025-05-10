@@ -1,0 +1,206 @@
+name: Helm Chart Comprehensive Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  helm-tests:
+    runs-on: ubuntu-latest
+    env:
+      HELM_CHARTS_DIR: ./helm_charts # Define the charts directory as an environment variable
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.15.2 # Specify a recent Helm version
+
+      # --- Tool Installations ---
+      - name: Install Trivy CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install -y trivy --no-install-recommends
+          trivy --version
+        shell: bash
+
+      - name: Install helm-trivy plugin
+        run: |
+          # Define plugin version and name for clarity and easy updates
+          TRIVY_PLUGIN_VERSION="0.20.0" # Check for the latest version on https://github.com/aquasecurity/helm-trivy/releases
+          TRIVY_PLUGIN_TARBALL="helm-trivy_${TRIVY_PLUGIN_VERSION}_linux_amd64.tar.gz"
+          TRIVY_PLUGIN_URL="https://github.com/aquasecurity/helm-trivy/releases/download/v${TRIVY_PLUGIN_VERSION}/${TRIVY_PLUGIN_TARBALL}"
+          echo "Downloading helm-trivy plugin from ${TRIVY_PLUGIN_URL}..."
+          wget -q "${TRIVY_PLUGIN_URL}" -O "${TRIVY_PLUGIN_TARBALL}"
+          echo "Installing helm-trivy plugin from ${TRIVY_PLUGIN_TARBALL}..."
+          helm plugin install "./${TRIVY_PLUGIN_TARBALL}"
+          echo "Cleaning up downloaded tarball..."
+          rm -f "./${TRIVY_PLUGIN_TARBALL}"
+          helm plugin list
+        shell: bash
+
+      - name: Install kubeval
+        run: |
+          KUBEVAL_VERSION="0.16.1" # Check for latest: https://github.com/instrumenta/kubeval/releases
+          wget "https://github.com/instrumenta/kubeval/releases/download/v${KUBEVAL_VERSION}/kubeval-linux-amd64.tar.gz"
+          tar xf kubeval-linux-amd64.tar.gz
+          sudo mv kubeval /usr/local/bin
+          rm kubeval-linux-amd64.tar.gz
+          kubeval --version
+        shell: bash
+
+      - name: Install helm-unittest plugin
+        run: |
+          # Check for latest: https://github.com/quintush/helm-unittest/releases
+          helm plugin install https://github.com/quintush/helm-unittest --version 0.4.1
+          helm plugin list
+        shell: bash
+
+      - name: Install Conftest
+        run: |
+          CONFTEST_VERSION="0.52.0" # Check for latest: https://github.com/open-policy-agent/conftest/releases
+          wget "https://github.com/open-policy-agent/conftest/releases/download/v${CONFTEST_VERSION}/conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz"
+          tar xzf "conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz"
+          sudo mv conftest /usr/local/bin
+          rm "conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz"
+          conftest --version
+        shell: bash
+
+      - name: Install KubeLinter
+        run: |
+          KUBELINTER_VERSION="0.6.6" # Check for latest: https://github.com/stackrox/kube-linter/releases
+          wget "https://github.com/stackrox/kube-linter/releases/download/v${KUBELINTER_VERSION}/kube-linter-linux.tar.gz"
+          tar -xzf kube-linter-linux.tar.gz
+          sudo mv kube-linter /usr/local/bin/
+          rm kube-linter-linux.tar.gz
+          kube-linter version
+        shell: bash
+
+      # --- Chart Testing Steps ---
+      - name: Prepare chart list
+        id: list_charts
+        run: |
+          CHART_DIRECTORIES=$(find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print)
+          if [ -z "$CHART_DIRECTORIES" ]; then
+            echo "No chart directories found under ${{ env.HELM_CHARTS_DIR }}."
+            echo "charts_found=false" >> $GITHUB_OUTPUT
+          else
+            echo "Found charts:"
+            echo "$CHART_DIRECTORIES"
+            echo "charts_found=true" >> $GITHUB_OUTPUT
+            # For matrix strategy if desired later, or just for the loop below
+            # echo "charts=$(echo "$CHART_DIRECTORIES" | jq -R . | jq -cs .)" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
+
+      - name: Lint Helm charts (helm lint)
+        if: steps.list_charts.outputs.charts_found == 'true'
+        run: |
+          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d $'\0' chart_dir; do
+            echo "--- Linting chart: $chart_dir ---"
+            helm lint "$chart_dir"
+          done
+        shell: bash
+
+      - name: Scan Helm charts for CVEs (helm-trivy)
+        if: steps.list_charts.outputs.charts_found == 'true'
+        run: |
+          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d $'\0' chart_dir; do
+            echo "--- Scanning chart with helm-trivy: $chart_dir ---"
+            helm trivy "$chart_dir" \
+              --exit-code 0 \
+              --format table \
+              --ignore-unfixed \
+              --vuln-type os,library \
+              --severity CRITICAL,HIGH
+          done
+        shell: bash
+
+      - name: Validate Helm templates (kubeval)
+        if: steps.list_charts.outputs.charts_found == 'true'
+        run: |
+          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d $'\0' chart_dir; do
+            echo "--- Validating template with kubeval: $chart_dir ---"
+            # You might need to specify --kubernetes-version if your CRDs are not found
+            # or if you target a specific K8s version.
+            helm template "$chart_dir" | kubeval --ignore-missing-schemas --strict
+          done
+        shell: bash
+
+      - name: Run Helm chart unit tests (helm-unittest)
+        if: steps.list_charts.outputs.charts_found == 'true'
+        run: |
+          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d $'\0' chart_dir; do
+            # Check if unit test files exist for the chart
+            if [ -d "${chart_dir}/tests/unit" ] || find "${chart_dir}" -name '*_test.yaml' -print -quit | grep -q .; then
+              echo "--- Running unit tests for chart: $chart_dir ---"
+              helm unittest "$chart_dir"
+            else
+              echo "--- No unit tests found for chart: $chart_dir ---"
+            fi
+          done
+        shell: bash
+
+      - name: Test Helm templates against policies (Conftest)
+        if: steps.list_charts.outputs.charts_found == 'true'
+        run: |
+          # Define the directory where your Conftest policies are stored
+          # This could be at the root of your repo, or per-chart.
+          # For this example, assuming a single policy directory at the root.
+          POLICY_DIR="./policy" # Adjust this path to your Conftest policy directory
+
+          if [ ! -d "$POLICY_DIR" ]; then
+            echo "Policy directory $POLICY_DIR not found. Skipping Conftest tests."
+            exit 0 # Or use 'continue' if this step is not critical
+          fi
+
+          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d $'\0' chart_dir; do
+            echo "--- Testing chart $chart_dir against policies in $POLICY_DIR ---"
+            # The '-' tells conftest to read from stdin
+            helm template "$chart_dir" | conftest test -p "$POLICY_DIR" -
+          done
+        shell: bash
+
+      - name: Lint Helm templates for best practices (KubeLinter)
+        if: steps.list_charts.outputs.charts_found == 'true'
+        run: |
+          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d $'\0' chart_dir; do
+            echo "--- Linting chart $chart_dir with KubeLinter ---"
+            # The '-' tells kube-linter to read from stdin
+            # Add --config path/to/kubelinter-config.yaml if you have a custom config
+            helm template "$chart_dir" | kube-linter lint -
+          done
+        shell: bash
+
+      # Conceptual step for Helm Test Hooks (requires a Kubernetes cluster)
+      # - name: Deploy chart and run Helm tests (requires K8s cluster)
+      #   if: false # Set to true and configure if you have a test cluster
+      #   run: |
+      #     echo "This step requires a Kubernetes cluster (e.g., kind, minikube, or a dedicated test cluster)"
+      #     echo "Example for a single chart (adapt as needed):"
+      #     CHART_TO_TEST="${{ env.HELM_CHARTS_DIR }}/my-app" # Replace with actual chart
+      #     RELEASE_NAME="test-$(basename $CHART_TO_TEST)"
+      #     NAMESPACE="helm-test-$(basename $CHART_TO_TEST)"
+      #
+      #     if [ -d "$CHART_TO_TEST" ]; then
+      #       kubectl create namespace "$NAMESPACE" || echo "Namespace $NAMESPACE might already exist"
+      #       helm install "$RELEASE_NAME" "$CHART_TO_TEST" -n "$NAMESPACE" --wait --timeout 5m
+      #       helm test "$RELEASE_NAME" -n "$NAMESPACE" --timeout 3m
+      #       helm uninstall "$RELEASE_NAME" -n "$NAMESPACE"
+      #       kubectl delete namespace "$NAMESPACE" --wait=false
+      #     else
+      #       echo "Chart $CHART_TO_TEST not found for integration testing."
+      #     fi
+      #   shell: bash
