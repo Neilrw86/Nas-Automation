@@ -3,6 +3,11 @@ kind: Ingress
 metadata:
   name: grafana-ingress
   namespace: observability
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns" # Instruct cert-manager to use this issuer
+    kubernetes.io/ingress.class: "nginx" # Specify NGINX as the Ingress controller
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true" # Redirect HTTP to HTTPS
+    # If Grafana itself is serving HTTP on port 80, you might not need backend-protocol: "HTTPS"
 spec:
   rules:
   - host: grafana.neilwylie.com
@@ -15,3 +20,7 @@ spec:
             name: kube-prom-stack-grafana
             port:
               number: 80
+  tls: # TLS configuration
+  - hosts:
+    - grafana.neilwylie.com # Hostname for the TLS certificate
+    secretName: grafana-tls-secret # cert-manager will create/update this Secret with the certificate
