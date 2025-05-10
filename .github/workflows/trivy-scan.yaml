@@ -15,24 +15,58 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Helm
-        uses: azure/setup-helm@v1
+        uses: azure/setup-helm@v4
         with:
-          version: v3.5.4
+          version: v3.15.2 # Specify a recent Helm version
 
-      - name: Extract container images from Helm charts
-        id: extract-images
+      - name: Install Trivy CLI
         run: |
-          images=""
-          for chart in ./helm_charts/*; do
-            images="$images $(helm template "$chart" | grep 'image:' | awk '{print $2}')"
-          done
-          images=$(echo "$images" | xargs) # Remove extra spaces
-          echo "IMAGES=$images" >> $GITHUB_ENV
+          # Install dependencies for adding APT repository
+          sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+          # Add Trivy's GPG key and repository (modern method)
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list
+          # Update package list and install Trivy
+          sudo apt-get update
+          sudo apt-get install -y trivy --no-install-recommends
+          trivy --version # Verify installation
+        shell: bash
 
-      - name: Run Trivy scan
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: ${{ env.IMAGES }}
+      - name: Install helm-trivy plugin
+        run: |
+          export GIT_TERMINAL_PROMPT=0
+          helm plugin install https://github.com/aquasecurity/helm-trivy
+          helm plugin list # Verify plugin installation
+        shell: bash
+
+      - name: Scan Helm charts with helm-trivy
+        run: |
+          set -eo pipefail # Exit on error, treat unset variables as an error, and pipefail
+
+          # Find all directories directly under helm_charts, assuming each is a chart
+          CHART_DIRECTORIES=$(find ./helm_charts -mindepth 1 -maxdepth 1 -type d)
+
+          if [ -z "$CHART_DIRECTORIES" ]; then
+            echo "No chart directories found under ./helm_charts/"
+            exit 0
+          fi
+
+          for chart_dir in $CHART_DIRECTORIES; do
+            echo "--------------------------------------------------"
+            echo "Scanning chart directory: $chart_dir with helm-trivy"
+            echo "--------------------------------------------------"
+            # Run helm trivy on the chart directory
+            # Adjust Trivy flags as needed.
+            # --skip-dirs can be used if you have sub-charts you don't want to scan individually,
+            # but helm-trivy should generally handle dependencies correctly.
+            helm trivy "$chart_dir" \
+              --exit-code 0 \
+              --format table \
+              --ignore-unfixed \
+              --vuln-type os,library \
+              --severity CRITICAL,HIGH
+          done
+        shell: bash
