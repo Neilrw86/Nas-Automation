@@ -183,14 +183,14 @@ kubectl get ingress --all-namespaces
 ## Future Plans
 
 In the future, this repository will be merged with the `homelab-configs` repository to consolidate automation and configuration tasks. This will streamline the management and deployment of configurations across the home lab environment.
-
-### Apps to migrate to k8s
-homer (done as of Feb 23)
-sabnzb
-sonarr
-readarr
-couchpotato
-plex
+ 
+### Apps to migrate to k8s / Enhance in K8s
+- [x] homer (done as of Feb 23)
+- [x] sabnzb (migrated, CSS issue fixed)
+- [x] sonarr (migrated)
+- [ ] readarr
+- [x] couchpotato (migrated)
+- [ ] plex
 
 Suggested helm for media-master:
 
@@ -236,3 +236,12 @@ media-master/
 - [x] refine nfs perms
 - [ ] update argo to use main except for those in active development branches
 - [x] troubleshoot sabnzb css on kube <- fixed in sab-v2 tag - was ingress/rewrite issue>
+
+## June Branch TODO
+
+- [x] enable cert-manager
+- [x] Set up Let's Encrypt (e.g., with cert-manager) for automatic certificate provisioning
+- [x] Configure Cloudflare for DNS and potentially as a reverse proxy for homelab services
+- [x] Secure exposed services with TLS certificates (leveraging Let's Encrypt and Cloudflare)
+- [ ] Review and implement MetalLB if still needed for Ingress controller's external IP allocation
+- [ ] Standardize Helm templates for common application patterns
