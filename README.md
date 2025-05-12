@@ -40,26 +40,16 @@ The goal is to create a self-contained repository for configuring a home lab.
 
 ## Order of Operations
 
-To provision and configure the hosts in your home lab, follow these steps:
+To set up and manage your Kubernetes-based home lab, follow this general order of operations:
 
 1. **Prepare the Environment**:
     - Ensure all necessary hardware is set up and connected.
     - Install the required operating systems on all devices.
+    - Bootstrap your Kubernetes cluster (e.g., MicroK8s). Ansible may be used for this initial bootstrapping phase but is not the primary configuration management tool for ongoing operations.
 
-2. **Set Up Ansible**:
-    - Clone the repository to your control node.
-    - Install Ansible on the control node.
-    - Configure SSH access to all hosts.
-
-3. **Run Initial Ansible Playbooks**:
-    - Execute the `site.yml` playbook to apply the common configurations and roles to all devices.
-    ```sh
-    ansible-playbook site.yml
-    ```
-
-4. **Deploy Kubernetes**:
+2. **Deploy Core Kubernetes Infrastructure**:
     - Navigate to the `kubernetes` folder.
-    - Apply the base configurations and common resources.
+    - Apply Persistent Volume (PV) and Persistent Volume Claim (PVC) definitions from the `kubernetes/base` (or similarly named) directory to set up storage.
     ```sh
     kubectl apply -f base/
     ```
@@ -192,25 +182,7 @@ In the future, this repository will be merged with the `homelab-configs` reposit
 - [x] couchpotato (migrated)
 - [ ] plex
 
-Suggested helm for media-master:
 
-```plaintext
-media-master/
-    Chart.yaml
-    values.yaml
-    templates/
-        sabnzb-deployment.yaml
-        sabnzb-service.yaml
-        sonarr-deployment.yaml
-        sonarr-service.yaml
-        couchpotato-deployment.yaml
-        couchpotato-service.yaml
-        readarr-deployment.yaml
-        readarr-service.yaml
-        calibre-web-deployment.yaml
-        calibre-web-service.yaml
-        network.yaml
-```
 ## March Branch:
 
 ### March Branch Summary
