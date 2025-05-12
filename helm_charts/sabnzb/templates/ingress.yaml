@@ -6,11 +6,13 @@ metadata:
   labels:
     {{- include "sabnzb.labels" . | nindent 4 }}
   annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns" # Instruct cert-manager
     nginx.ingress.kubernetes.io/proxy-body-size: "10m"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
     nginx.ingress.kubernetes.io/x-forwarded-proto: "https"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # kubernetes.io/ingress.class: "nginx" # This is often handled by ingressClassName now
 spec:
   ingressClassName: nginx
   rules:
@@ -24,4 +26,8 @@ spec:
                 name: {{ include "sabnzb.fullname" . }}
                 port:
                   number: 8080
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: {{ .Values.ingress.tlsSecretName | default (printf "%s-tls" (include "sabnzb.fullname" .)) }}
 {{- end }}
