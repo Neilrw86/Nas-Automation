@@ -1,0 +1,97 @@
+# This values.yaml is for your 'jellyfin-wrapper' chart.
+# The keys here will override the default values of the 'k8s-at-home/jellyfin' chart.
+# You can find all available options for the k8s-at-home/jellyfin chart by running:
+# helm show values k8s-at-home/jellyfin
+
+# -- Controller and Pod configuration
+image:
+  repository: jellyfin/jellyfin # Official image, linuxserver/jellyfin is also an option
+  tag: "10.8.13" # Pin to a specific version for stability, matches appVersion in Chart.yaml
+  pullPolicy: IfNotPresent
+
+# -- Environment variables for the Jellyfin container
+env:
+  TZ: "Europe/London" # Set your timezone
+  PUID: "1003"        # Match your user ID that owns media files on the NAS
+  PGID: "1003"        # Match your group ID that owns media files on the NAS
+  # JELLYFIN_PublishedServerUrl: "jellyfin.yourdomain.com" # Optional: If you have external access issues or reverse proxy complexities
+
+# -- Service configuration
+service:
+  main:
+    type: ClusterIP # Or LoadBalancer if you want direct external access without Ingress (less common for this setup)
+    ports:
+      http:
+        port: 8096
+
+# -- Ingress configuration
+ingress:
+  main:
+    enabled: true
+    ingressClassName: "nginx" # Or your specific Ingress controller class
+    annotations:
+      # Common annotations for Nginx Ingress
+      nginx.ingress.kubernetes.io/proxy-body-size: "0" # Allow large file streaming
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+      # If using cert-manager for SSL (recommended)
+      cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns" # Using your Cloudflare DNS issuer
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    hosts:
+      - host: "jellyfin.neilwylie.com" # !!! VERIFY this is your desired domain !!!
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: # cert-manager will automatically create and manage the secret
+      - secretName: jellyfin-tls # cert-manager will use this to store the certificate
+        hosts:
+          - "jellyfin.neilwylie.com" # Must match the host above
+
+# -- Persistence for Jellyfin configuration and cache
+persistence:
+  config:
+    enabled: true
+    existingClaim: "nfs-configs-pvc" # Using your existing PVC for Jellyfin config
+    # Or define storageClass and size for dynamic provisioning
+    # storageClass: "your-nas-storage-class" # Not needed when using existingClaim
+    # accessMode: ReadWriteOnce # Determined by the existing PVC
+    # size: "5Gi" # Determined by the existing PVC
+    mountPath: /config
+  cache:
+    enabled: true
+    # existingClaim: jellyfin-cache-pvc
+    storageClass: "your-nas-storage-class" # !!! REPLACE if you have a specific storage class for cache, or use an existingClaim !!!
+    accessMode: ReadWriteOnce
+    size: "10Gi" # For transcoding cache, adjust based on usage
+    mountPath: /cache
+
+# -- Mount your media libraries
+# You'll need to create PersistentVolume(s) and PersistentVolumeClaim(s)
+# for your media if they are on your NAS and accessible via NFS, SMB, etc.,
+# and then reference the PVC name here.
+additionalVolumeMounts:
+  - name: media-films # A descriptive name for the volume mount
+    mountPath: /media/films # Path inside Jellyfin container where films will be
+  - name: media-tv # A descriptive name for the volume mount
+    mountPath: /media/tvshows # Path inside Jellyfin container where TV shows will be
+
+additionalVolumes:
+  - name: media-films # Must match a name in additionalVolumeMounts
+    persistentVolumeClaim:
+      claimName: "nfs-films-pvc" # Using your existing PVC for films
+  - name: media-tv # Must match a name in additionalVolumeMounts
+    persistentVolumeClaim:
+      claimName: "nfs-tv-pvc" # Using your existing PVC for TV shows
+
+# -- Optional: Hardware Acceleration (requires node setup and device plugins)
+# See k8s-at-home/jellyfin chart values for examples (e.g., intelGpu, nvidiaGpu)
+
+# -- Resource requests and limits (adjust as needed)
+# resources:
+#   limits:
+#     cpu: "2"
+#     memory: "2Gi"
+#   requests:
+#     cpu: "500m"
+#     memory: "1Gi"
