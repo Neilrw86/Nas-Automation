@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: jellyfin
-  namespace: argocd # Namespace where Argo CD is running
+  namespace: default # Namespace where Argo CD is running
   # Optional: Add finalizer for robust cleanup
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -27,7 +27,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc # Target Kubernetes cluster API
-    namespace: media # Or 'default', or any namespace where you want Jellyfin deployed
+    namespace: default # Or 'default', or any namespace where you want Jellyfin deployed
 
   syncPolicy:
     automated: # Optional: Configure automatic synchronization
