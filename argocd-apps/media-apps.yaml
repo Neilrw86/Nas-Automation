@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/Neilrw86/Nas-Automation
     targetRevision: June
-    path: argocd/child-applications # Directory containing child ArgoCD Application manifests
+    path: argocd-apps/apps # Corrected path to child ArgoCD Application manifests
 
   destination:
     server: https://kubernetes.default.svc
