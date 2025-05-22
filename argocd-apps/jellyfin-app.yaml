@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: jellyfin
-  namespace: default # Namespace where Argo CD is running
+  namespace: argocd # Application CRs are typically managed in the argocd namespace
   # Optional: Add finalizer for robust cleanup
   finalizers:
     - resources-finalizer.argocd.argoproj.io
