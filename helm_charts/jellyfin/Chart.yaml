@@ -8,10 +8,10 @@ version: 0.1.0
 
 # The version of Jellyfin app this chart aims to deploy.
 # Align this with the appVersion of the dependency chart or the image tag in your values.
-appVersion: "10.8.13" # Example Jellyfin app version
+appVersion: "10.8.1" # Example Jellyfin app version
 
 dependencies:
   - name: jellyfin # The name of the chart in the k8s-at-home repository
-    version: "18.0.2" # IMPORTANT: Specify the k8s-at-home/jellyfin chart version.
+    version: "9.5.3" # IMPORTANT: Specify the k8s-at-home/jellyfin chart version.
                       # Find the latest stable version by running: helm search repo k8s-at-home/jellyfin
     repository: "https://k8s-at-home.com/charts/"
