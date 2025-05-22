@@ -2,13 +2,13 @@
 # The keys here will be passed to the 'jellyfin/jellyfin' chart (from https://jellyfin.github.io/jellyfin-helm/).
 # All values for the dependency chart must be nested under the 'jellyfin:' key.
 # You can find all available options for the 'jellyfin/jellyfin' chart by running:
-# helm show values jellyfin/jellyfin --repo https://jellyfin.github.io/jellyfin-helm/ --version 0.10.0
+# helm show values jellyfin/jellyfin --repo https://jellyfin.github.io/jellyfin-helm/ --version 2.3.0
 
 jellyfin:
   # -- Controller and Pod configuration
   image:
     repository: jellyfin/jellyfin # Official image
-    tag: "10.8.1" # Pin to a specific version. The underlying chart (jellyfin/jellyfin v0.10.0) defaults to appVersion 10.8.13.
+    tag: "10.10.6" # Align with the appVersion of the chart (2.3.0 -> 10.10.6). You can pin to an older version if needed.
     pullPolicy: IfNotPresent
 
   # -- Configuration for Jellyfin (maps to environment variables)

@@ -6,12 +6,12 @@ type: application
 # Version of this wrapper chart. Increment this when you change this Chart.yaml or your values.yaml.
 version: 0.1.0
 # The version of Jellyfin app this chart aims to deploy.
-# This should align with the appVersion of the new dependency chart.
-appVersion: "10.8.13"
+# This should align with the appVersion of the dependency chart.
+appVersion: "10.10.6"
 
 dependencies:
   - name: jellyfin # The name of the chart from jellyfin.github.io/jellyfin-helm/
-    version: "0.10.0" # IMPORTANT: Specify the jellyfin/jellyfin chart version.
+    version: "2.3.0" # IMPORTANT: Specify the jellyfin/jellyfin chart version.
                       # Find the latest stable version from https://jellyfin.github.io/jellyfin-helm/
                       # or by running: helm search repo jellyfin/jellyfin --devel (if needed)
     repository: "https://jellyfin.github.io/jellyfin-helm/"
