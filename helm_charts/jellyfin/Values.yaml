@@ -55,22 +55,26 @@ jellyfin:
       # subPath: "" # Optional: if using a subpath within the PVC
 
     transcodes: # This is for the transcoding cache (previously your 'cache' volume)
-      enabled: true
+      enabled: false # Disable the PVC-based transcode volume
       # existingClaim: "jellyfin-cache-pvc" # If you have an existing PVC for cache
-      accessModes:
-        - ReadWriteOnce # Note: this is a list now
-      size: "10Gi" # For transcoding cache, adjust based on usage
-      mountPath: /cache # Jellyfin default is /transcodes, but you specified /cache
+      # accessModes:
+      #   - ReadWriteOnce
+      # size: "10Gi"
+      # mountPath: /cache
 
   # -- Mount your media libraries using extraVolumes and extraVolumeMounts
   # These allow you to define additional volumes and their mount points in the Jellyfin container.
   extraVolumeMounts:
+    - name: transcode-cache # Mount for the ephemeral transcode cache
+      mountPath: /cache     # Path inside Jellyfin container for transcodes
     - name: media-films # A descriptive name for the volume mount
       mountPath: /media/films # Path inside Jellyfin container where films will be
     - name: media-tv # A descriptive name for the volume mount
       mountPath: /media/tvshows # Path inside Jellyfin container where TV shows will be
 
   extraVolumes:
+    - name: transcode-cache # Define the ephemeral transcode cache volume
+      emptyDir: {}          # Use an emptyDir volume. You can add sizeLimit: "10Gi" if your K8s supports it.
     - name: media-films # Must match a name in extraVolumeMounts
       persistentVolumeClaim:
         claimName: "nfs-films-pvc" # Using your existing PVC for films
