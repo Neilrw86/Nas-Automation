@@ -62,6 +62,10 @@ jellyfin:
       # size: "10Gi"
       # mountPath: /cache
 
+    media: # Disable the chart's default media persistence as we use extraVolumes
+      enabled: false
+
+
   # -- Mount your media libraries using extraVolumes and extraVolumeMounts
   # These allow you to define additional volumes and their mount points in the Jellyfin container.
   extraVolumeMounts:
