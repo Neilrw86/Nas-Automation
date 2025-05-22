@@ -14,7 +14,7 @@ spec:
     repoURL: "https://github.com/Neilrw86/Nas-Automation.git"
     # This is the path it will monitor for other Application manifests
     path: argocd-apps
-    targetRevision: HEAD # Or your main branch, e.g., 'main'
+    targetRevision: June # Or your main branch, e.g., 'main'
 
     # If you want Argo CD to look for *.yaml files in subdirectories of argocd-apps/
     # directory:
