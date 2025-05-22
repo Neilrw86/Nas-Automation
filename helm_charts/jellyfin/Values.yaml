@@ -66,9 +66,9 @@ jellyfin:
       enabled: false
 
 
-  # -- Mount your media libraries using extraVolumes and extraVolumeMounts
+  # -- Mount your media libraries using the chart's top-level 'volumes' and 'volumeMounts'
   # These allow you to define additional volumes and their mount points in the Jellyfin container.
-  extraVolumeMounts:
+  volumeMounts: # Matches the upstream chart's top-level key
     - name: transcode-cache # Mount for the ephemeral transcode cache
       mountPath: /cache     # Path inside Jellyfin container for transcodes
     - name: media-films # A descriptive name for the volume mount
@@ -76,7 +76,7 @@ jellyfin:
     - name: media-tv # A descriptive name for the volume mount
       mountPath: /media/tvshows # Path inside Jellyfin container where TV shows will be
 
-  extraVolumes:
+  volumes: # Matches the upstream chart's top-level key
     - name: transcode-cache # Define the ephemeral transcode cache volume
       emptyDir: {}          # Use an emptyDir volume. You can add sizeLimit: "10Gi" if your K8s supports it.
     - name: media-films # Must match a name in extraVolumeMounts
