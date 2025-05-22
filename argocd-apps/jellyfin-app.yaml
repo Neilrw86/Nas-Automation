@@ -23,7 +23,7 @@ spec:
       # valueFiles are relative to the 'path' defined above (helm_charts/jellyfin)
       # This tells Argo CD to use your custom values.
       valueFiles:
-        - values.yaml # This will use helm_charts/jellyfin/values.yaml from your Git repo
+        - Values.yaml # This will use helm_charts/jellyfin/values.yaml from your Git repo
 
   destination:
     server: https://kubernetes.default.svc # Target Kubernetes cluster API
