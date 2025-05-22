@@ -16,7 +16,7 @@ spec:
     # Path within your Git repository to the jellyfin wrapper chart
     path: helm_charts/jellyfin
     # Branch, tag, or commit in your Git repository to sync from
-    targetRevision: HEAD # Or 'main', or a specific branch/commit
+    targetRevision: June # Or 'main', or a specific branch/commit
 
     helm:
       releaseName: jellyfin
