@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: media-apps # The name of your root ArgoCD application
+  namespace: argocd # ArgoCD applications typically live in the argocd namespace
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io # Ensures child apps are deleted when this root app is deleted
+spec:
+  project: default # Or the ArgoCD project you want to use
+
+  source:
+    repoURL: https://github.com/Neilrw86/Nas-Automation
+    targetRevision: June
+    path: argocd/child-applications # Directory containing child ArgoCD Application manifests
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd # Child Application CRs will be created in the 'argocd' namespace
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true # Ensures 'argocd' namespace exists if not already

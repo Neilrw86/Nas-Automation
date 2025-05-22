@@ -57,7 +57,6 @@ jellyfin:
     transcodes: # This is for the transcoding cache (previously your 'cache' volume)
       enabled: true
       # existingClaim: "jellyfin-cache-pvc" # If you have an existing PVC for cache
-      storageClass: "your-nas-storage-class" # !!! REPLACE if you have a specific storage class for cache, or use an existingClaim !!!
       accessModes:
         - ReadWriteOnce # Note: this is a list now
       size: "10Gi" # For transcoding cache, adjust based on usage

@@ -1,6 +1,6 @@
 apiVersion: v2
 name: jellyfin-wrapper
-description: A wrapper Helm chart to deploy Jellyfin from k8s-at-home with custom values.
+description: A wrapper Helm chart to deploy Jellyfin from jellyfin helmkubec with custom values.
 type: application
 
 # Version of this wrapper chart. Increment this when you change this Chart.yaml or your values.yaml.
