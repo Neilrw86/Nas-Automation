@@ -6,7 +6,7 @@
 # -- Controller and Pod configuration
 image:
   repository: jellyfin/jellyfin # Official image, linuxserver/jellyfin is also an option
-  tag: "10.8.13" # Pin to a specific version for stability, matches appVersion in Chart.yaml
+  tag: "10.8.1" # Pin to a specific version for stability, matches appVersion in Chart.yaml
   pullPolicy: IfNotPresent
 
 # -- Environment variables for the Jellyfin container
