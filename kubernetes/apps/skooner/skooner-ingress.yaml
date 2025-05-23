@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: skooner-ingress
+  namespace: kube-system # Deploying Ingress in the same namespace as the service
+  annotations:
+    # Nginx Ingress specific annotations
+    nginx.ingress.kubernetes.io/proxy-body-size: "0" # Usually not critical for Skooner, but good default
+    nginx.ingress.kubernetes.io/rewrite-target: / # If Skooner serves from root
+    # Cert-manager annotations for SSL
+    cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns" # Your cert-manager ClusterIssuer
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx # Matches your Jellyfin setup
+  rules:
+    - host: "skooner.neilwylie.com"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: skooner      # Name of your Skooner service
+                port:
+                  number: 80       # Port on the Skooner service (as defined in its Service manifest)
+  tls:
+    - hosts:
+        - "skooner.neilwylie.com"
+      secretName: skooner-tls # cert-manager will create/use this secret for the SSL certificate
