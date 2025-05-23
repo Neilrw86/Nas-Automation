@@ -72,4 +72,4 @@ readarr-dependency:
   # by overriding its definition with an empty map.
   persistentVolumeClaims:
     readarr-config:
-      enabled: false # Attempt to explicitly disable the creation of this default PVC
+      requestStorage: null # Try to make the chart skip creating this PVC by nullifying a required field
