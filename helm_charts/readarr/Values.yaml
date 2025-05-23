@@ -1,0 +1,74 @@
+# This values.yaml is for your 'readarr-wrapper' chart.
+# All configurations for the actual Readarr deployment will be under 'readarr-dependency'
+# (the alias defined in Chart.yaml for the media-servarr/readarr chart).
+#
+# IMPORTANT: You MUST consult the official values.yaml of the media-servarr/readarr chart
+# (version 0.8.11) for the precise structure and available options.
+# The following is a best-effort configuration based on common patterns.
+
+readarr-dependency:
+  # Image configuration - the chart might derive this from its appVersion,
+  # or allow explicit overrides.
+  image:
+    repository: lscr.io/linuxserver/readarr # Standard repository for linuxserver images
+    tag: "nightly-0.4.17.2795-ls397" # Matches the appVersion of the chart
+    pullPolicy: IfNotPresent
+
+  # Configuration for the main deployment
+  deployment:
+    container:
+      # Environment variables should be a list of name/value pairs
+      env:
+        - name: TZ # Timezone
+          value: "Europe/London"
+        - name: PUID # User ID
+          value: "1003"
+        - name: PGID # Group ID
+          value: "1003"
+        # Add any other environment variables Readarr might need as name/value pairs
+      resources:
+        limits:
+          cpu: "2"
+          memory: "2Gi"
+        requests:
+          cpu: "200m"
+          memory: "512Mi"
+    volumes:
+      config:
+        persistentVolumeClaim:
+          claimName: "nfs-readarr-config-specific-pvc" # Use the new, specific PVC for Readarr's config
+      downloads:
+        persistentVolumeClaim:
+          claimName: "nfs-temp-pvc"    # Your existing PVC for /downloads
+      ebooks:
+        persistentVolumeClaim:
+          claimName: "nfs-books-pvc"   # Your existing PVC for /ebooks (or /books)
+
+  # Service port is typically defined under 'application.port' in this chart
+  application:
+    port: 8787 # Overrides the default application port if needed
+ 
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      # Add any other specific annotations supported/needed by the dependency chart
+    hosts:
+      - host: "readarr.neilwylie.com"
+        paths:
+          - path: /
+            pathType: Prefix
+            # The dependency chart might structure path definitions differently.
+    tls:
+      - secretName: readarr-tls
+        hosts:
+          - "readarr.neilwylie.com"
+
+  # Prevent the chart from creating its default 'readarr-config' PVC
+  # by overriding its definition with an empty map.
+  persistentVolumeClaims:
+    readarr-config: null # Set the entire 'readarr-config' entry to null

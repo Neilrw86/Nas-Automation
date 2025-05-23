@@ -91,10 +91,10 @@ jellyfin:
   # and potentially specific device plugin configurations if needed. Refer to its values.
 
   # -- Resource requests and limits (adjust as needed)
-  # resources:
-  #   limits:
-  #     cpu: "2"
-  #     memory: "2Gi"
-  #   requests:
-  #     cpu: "500m"
-  #     memory: "1Gi"
+  resources:
+    limits:
+      cpu: "8"      # Allow up to 8 CPU cores
+      memory: "8Gi"   # Allow up to 8GB of RAM
+    requests:
+      cpu: "2"      # Request at least 2 CPU cores
+      memory: "4Gi"   # Request at least 4GB of RAM

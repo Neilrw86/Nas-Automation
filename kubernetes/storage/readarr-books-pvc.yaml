@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-books-pvc # This is the name you'll reference in Readarr's values
+  namespace: default # Assuming Readarr will be deployed to the 'default' namespace
+  labels:
+    app: readarr
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "" # Important: Use an empty string to bind to a manually provisioned PV without a storage class
+  resources:
+    requests:
+      storage: 100Gi # Must be less than or equal to the PV's capacity
+  # If you want to specifically target the PV created above:
+  # selector:
+  #   matchLabels:
+  #     type: nfs
+  #     app: readarr

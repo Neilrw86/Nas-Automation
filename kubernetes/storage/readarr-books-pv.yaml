@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-books-pv # Unique name for this PV
+  labels:
+    type: nfs
+    app: readarr
+spec:
+  capacity:
+    storage: 3Ti  # Corrected suffix for Tebibytes
+  accessModes:
+    - ReadWriteMany # Suitable for NFS
+  persistentVolumeReclaimPolicy: Retain # Or Delete, depending on your preference
+  nfs:
+    path: /home/neil/Calibre # Path on the NFS server (desktop)
+    server: desktop.neilwylie.com # NFS server hostname or IP (ensure this is resolvable from your K8s nodes)
+    readOnly: false
