@@ -1,0 +1,13 @@
+apiVersion: v2
+name: readarr-wrapper
+description: A wrapper Helm chart to deploy Readarr using the media-servarr/readarr chart.
+type: application
+
+version: 0.1.0
+appVersion: "nightly-0.4.17.2795-ls397" # Matches the appVersion of the chosen dependency chart
+
+dependencies:
+  - name: readarr # The name of the chart in the repository
+    version: "0.8.11" # The specific chart version you want to use
+    repository: "https://media-servarr.shw.al/charts"
+    alias: readarr-dependency # An alias to make the Values.yaml clearer

@@ -1,0 +1,83 @@
+# This values.yaml is for your 'readarr-wrapper' chart.
+# All configurations for the actual Readarr deployment will be under 'readarr-dependency'
+# (the alias defined in Chart.yaml for the media-servarr/readarr chart).
+#
+# IMPORTANT: You MUST consult the official values.yaml of the media-servarr/readarr chart
+# (version 0.8.11) for the precise structure and available options.
+# The following is a best-effort configuration based on common patterns.
+
+readarr-dependency:
+  # Image configuration - the chart might derive this from its appVersion,
+  # or allow explicit overrides.
+  image:
+    repository: lscr.io/linuxserver/readarr # Standard repository for linuxserver images
+    tag: "nightly-0.4.17.2795-ls397" # Matches the appVersion of the chart
+    pullPolicy: IfNotPresent
+
+  # Environment variables, PUID, PGID, Timezone
+  # The dependency chart will have its own way to set these.
+  # Common patterns include an 'env' block or dedicated keys.
+  # Assuming a structure similar to other community charts:
+  env:
+    TZ: "Europe/London" # Your timezone
+    PUID: "1003"        # User ID for file permissions
+    PGID: "1003"        # Group ID for file permissions
+    # Add any other environment variables Readarr might need
+
+  service:
+    type: ClusterIP
+    port: 8787 # Default Readarr port, confirm with dependency chart's values
+
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      # Add any other specific annotations supported/needed by the dependency chart
+    hosts:
+      - host: "readarr.neilwylie.com"
+        paths:
+          - path: /
+            pathType: Prefix
+            # The dependency chart might structure path definitions differently.
+    tls:
+      - secretName: readarr-tls
+        hosts:
+          - "readarr.neilwylie.com"
+
+  # Persistence:
+  # The dependency chart will have a specific structure for defining persistence.
+  # You need to map your PVCs to its expected format.
+  # This is a common pattern; VERIFY with the chart's actual values.yaml.
+  persistence:
+    config: # This key might be 'appdata', 'configuration', etc.
+      enabled: true
+      existingClaim: "nfs-configs-pvc" # Your existing shared configs PVC
+      # mountPath: /config # Usually defined by the chart, but can sometimes be overridden
+      subPath: "readarr" # CRITICAL: Isolates Readarr's config within the shared PVC
+
+    # Additional persistent volumes for media, downloads, etc.
+    # The chart might use a list for 'additionalVolumes' or named persistence blocks.
+    # Assuming named blocks:
+    books: # This key might be 'library', 'media-books', 'calibre-library', etc.
+      enabled: true
+      existingClaim: "nfs-books-pvc" # The new PVC you created for books
+      mountPath: /books # Standard mount path for Readarr's library
+
+    downloads: # This key might be 'completed-downloads', 'data-downloads', etc.
+      enabled: true
+      existingClaim: "nfs-temp-pvc" # Your existing temp/downloads PVC
+      mountPath: /downloads # Standard mount path for downloads
+
+  resources:
+    # The dependency chart will specify how to set resource requests/limits.
+    # This is a common structure:
+    limits:
+      cpu: "2"
+      memory: "2Gi"
+    requests:
+      cpu: "200m"
+      memory: "512Mi"
