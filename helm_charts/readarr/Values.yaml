@@ -60,19 +60,3 @@ readarr-dependency:
       - secretName: readarr-tls
         hosts:
           - "readarr.neilwylie.com"
-
-  # Note: The 'persistence:' block has been replaced by 'deployment.volumes' above
-  # to match the media-servarr/readarr chart structure.
-
-  # Resources are typically defined under deployment.container.resources
-  deployment: # This 'deployment' key was already here, we're adding 'container.resources'
-    container: # This 'container' key was already here
-      # env: ... (your env block is correctly placed)
-      resources:
-        limits:
-          cpu: "2"
-          memory: "2Gi"
-        requests:
-          cpu: "200m"
-          memory: "512Mi"
-    # volumes: ... (your volumes block is correctly placed)
