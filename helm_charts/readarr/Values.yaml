@@ -26,6 +26,13 @@ readarr-dependency:
         - name: PGID # Group ID
           value: "1003"
         # Add any other environment variables Readarr might need as name/value pairs
+      resources:
+        limits:
+          cpu: "2"
+          memory: "2Gi"
+        requests:
+          cpu: "200m"
+          memory: "512Mi"
     volumes:
       config:
         persistentVolumeClaim:
@@ -60,3 +67,8 @@ readarr-dependency:
       - secretName: readarr-tls
         hosts:
           - "readarr.neilwylie.com"
+
+  # Prevent the chart from creating its default 'readarr-config' PVC
+  # by overriding its definition with an empty map.
+  persistentVolumeClaims:
+    readarr-config: {}
