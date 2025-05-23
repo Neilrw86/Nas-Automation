@@ -29,7 +29,7 @@ readarr-dependency:
     volumes:
       config:
         persistentVolumeClaim:
-          claimName: "nfs-configs-pvc" # Your existing PVC for /config
+          claimName: "nfs-readarr-config-specific-pvc" # Use the new, specific PVC for Readarr's config
       downloads:
         persistentVolumeClaim:
           claimName: "nfs-temp-pvc"    # Your existing PVC for /downloads

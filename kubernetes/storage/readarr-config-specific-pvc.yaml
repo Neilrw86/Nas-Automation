@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-readarr-config-specific-pvc # Specific PVC for Readarr config
+  namespace: default # Or the namespace where Readarr runs
+  labels:
+    app: readarr-config
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "" # To bind to manually provisioned PVs
+  resources:
+    requests:
+      storage: 5Gi # Should be <= PV capacity
+  volumeName: nfs-readarr-config-specific-pv # Optionally, bind directly to the PV by name
