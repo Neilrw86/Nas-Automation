@@ -65,12 +65,10 @@ readarr-dependency:
     books: # This key might be 'library', 'media-books', 'calibre-library', etc.
       enabled: true
       existingClaim: "nfs-books-pvc" # The new PVC you created for books
-      mountPath: /books # Standard mount path for Readarr's library
 
     downloads: # This key might be 'completed-downloads', 'data-downloads', etc.
       enabled: true
       existingClaim: "nfs-temp-pvc" # Your existing temp/downloads PVC
-      mountPath: /downloads # Standard mount path for downloads
 
   resources:
     # The dependency chart will specify how to set resource requests/limits.
