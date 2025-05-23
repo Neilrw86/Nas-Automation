@@ -4,13 +4,14 @@ metadata:
   name: grafana-ingress
   namespace: observability
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns" # Instruct cert-manager to use this issuer
-    kubernetes.io/ingress.class: "nginx" # Specify NGINX as the Ingress controller
+    cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true" # Redirect HTTP to HTTPS
     # If Grafana itself is serving HTTP on port 80, you might not need backend-protocol: "HTTPS"
+    # kubernetes.io/ingress.class: "nginx" # This is the older annotation
 spec:
+  ingressClassName: nginx # Modern way to specify the Ingress controller
   rules:
-  - host: grafana.neilwylie.com
+  - host: grafana.neilwylie.com # This was missing
     http:
       paths:
       - path: /

@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kiali-ingress
+  namespace: istio-system # Kiali is in istio-system, so Ingress is co-located
+  annotations:
+    # Nginx Ingress specific annotations
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true" # Optional, but recommended
+    # Add other relevant Nginx annotations if needed, e.g., for proxy timeouts
+    # Cert-manager annotations for SSL
+    cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns" # Your cert-manager ClusterIssuer
+spec:
+  ingressClassName: nginx # Your Ingress controller
+  rules:
+    - host: "kiali.neilwylie.com" # Replace with your desired hostname
+      http:
+        paths:
+          - path: / # Kiali will be accessible at the root of the host
+            pathType: Prefix
+            backend:
+              service:
+                name: kiali      # Kiali service name (default)
+                port:
+                  number: 20001  # Kiali service port (default)
+  tls:
+    - hosts:
+        - "kiali.neilwylie.com" # Must match the host in rules
+      secretName: kiali-tls # cert-manager will create/use this secret for the SSL certificate

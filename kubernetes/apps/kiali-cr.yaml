@@ -1,0 +1,22 @@
+apiVersion: kiali.io/v1alpha1
+kind: Kiali
+metadata:
+  name: kiali
+  namespace: istio-system # Kiali server will be deployed in istio-system
+spec:
+  auth:
+    strategy: anonymous # For easy testing, change to 'login' for production
+  external_services:
+    prometheus:
+      url: http://prometheus-stack-kube-prome-prometheus.monitoring.svc.cluster.local:9090
+    grafana:
+      url: http://prometheus-stack-grafana.monitoring.svc.cluster.local:80
+  server:
+    # Serve Kiali from the root context path for simpler Ingress
+    web_root: /
+  deployment:
+    node_selector:
+      kubernetes.io/arch: amd64 # Adjust if you're not on amd64 (e.g., arm64)
+    # The Kiali operator will pick these up automatically if not set
+    # image_name: quay.io/kiali/kiali
+    # image_version: v1.x.x # The operator typically installs the same version as itself
