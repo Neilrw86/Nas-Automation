@@ -62,7 +62,7 @@ readarr-dependency:
     # Additional persistent volumes for media, downloads, etc.
     # The chart might use a list for 'additionalVolumes' or named persistence blocks.
     # Assuming named blocks:
-    books: # This key might be 'library', 'media-books', 'calibre-library', etc.
+    ebooks: # This key might be 'library', 'media-books', 'calibre-library', etc.
       enabled: true
       existingClaim: "nfs-books-pvc" # The new PVC you created for books
 
