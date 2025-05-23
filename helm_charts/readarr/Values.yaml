@@ -71,4 +71,4 @@ readarr-dependency:
   # Prevent the chart from creating its default 'readarr-config' PVC
   # by overriding its definition with an empty map.
   persistentVolumeClaims:
-    {} # Override the entire persistentVolumeClaims block with an empty map
+    readarr-config: null # Set the entire 'readarr-config' entry to null
