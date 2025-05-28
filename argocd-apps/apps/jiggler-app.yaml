@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: k8s-jiggler
+  namespace: argocd # This is the namespace where Argo CD is running
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default # Your Argo CD project
+
+  source:
+    repoURL: https://github.com/Neilrw86/k8s-jiggler.git # The Git repository URL where your chart is located
+    path: k8s-jiggler # The path to your Helm chart directory within the repository
+    targetRevision: HEAD # Or a specific branch, tag, or commit hash (e.g., main, v0.1.0)
+
+    helm:
+      # You can override values from your chart's values.yaml here if needed.
+      # For example:
+      # values: |
+      #   replicaCount: 2
+      #   jiggler:
+      #     namespace: "my-app-namespace" # Override the namespace k8s-jiggler watches
+      #   ingress:
+      #     hosts:
+      #       - host: "jiggler.my-custom-domain.com"
+      #     tls:
+      #       - secretName: jiggler-my-custom-domain-tls
+      #         hosts:
+      #           - "jiggler.my-custom-domain.com"
+      passCredentials: false # Set to true if your repository is private and credentials are required
+
+  destination:
+    server: https://kubernetes.default.svc # Target Kubernetes cluster (default is the same cluster as Argo CD)
+    namespace: k8s-jiggler # The namespace where k8s-jiggler will be deployed
+
+  syncPolicy:
+    automated:
+      prune: true    # Allows Argo CD to delete resources that are no longer defined in the chart
+      selfHeal: true # Allows Argo CD to correct drift from the desired state
+    syncOptions:
+      - CreateNamespace=true # Ensures the destination namespace is created if it doesn't exist
+      # - ServerSideApply=true # Recommended for Kubernetes 1.16+ to improve apply/sync reliability
