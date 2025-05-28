@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/neilrw86/k8s-jiggler
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # tag is derived from Chart.appVersion by default if left empty
   tag: ""
 
