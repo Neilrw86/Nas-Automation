@@ -14,24 +14,21 @@ spec:
     targetRevision: HEAD # Or a specific branch, tag, or commit hash (e.g., main, v0.1.0)
 
     helm:
-      # You can override values from your chart's values.yaml here if needed.
-      # For example:
-      # values: |
-      #   replicaCount: 2
-      #   jiggler:
-      #     namespace: "my-app-namespace" # Override the namespace k8s-jiggler watches
-      #   ingress:
-      #     hosts:
-      #       - host: "jiggler.my-custom-domain.com"
-      #     tls:
-      #       - secretName: jiggler-my-custom-domain-tls
-      #         hosts:
-      #           - "jiggler.my-custom-domain.com"
+      # Example: To make k8s-jiggler only watch pods within its own deployment namespace ('k8s-jiggler')
+      values: |
+        jiggler:
+          namespace: "default" # Tell the app to watch the 'default' namespace
+        rbac:
+          clusterScoped: false # Create a namespaced Role/RoleBinding instead of ClusterRole/ClusterRoleBinding
+        # ingress: # You might also adjust ingress if it's only for this namespace
+        #   hosts:
+        #     - host: "jiggler.internal.neilwylie.com" # Example for an internal-only jiggler
+        #   # ... other ingress/tls settings ...
       passCredentials: false # Set to true if your repository is private and credentials are required
 
   destination:
     server: https://kubernetes.default.svc # Target Kubernetes cluster (default is the same cluster as Argo CD)
-    namespace: k8s-jiggler # The namespace where k8s-jiggler will be deployed
+    namespace: default # The namespace where k8s-jiggler will be deployed
 
   syncPolicy:
     automated:
