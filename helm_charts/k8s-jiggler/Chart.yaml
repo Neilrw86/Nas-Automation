@@ -1,0 +1,6 @@
+apiVersion: v2
+name: k8s-jiggler
+description: A Helm chart for Kubernetes Jiggler, an application that periodically deletes selected pods.
+type: application
+version: 0.1.0
+appVersion: "main" # Corresponds to the Docker image tag being used

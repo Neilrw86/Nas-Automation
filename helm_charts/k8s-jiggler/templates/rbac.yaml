@@ -1,0 +1,68 @@
+{{- if .Values.rbac.create -}}
+{{- if .Values.rbac.clusterScoped }}
+apiVersion: {{ include "k8s-jiggler.rbac.apiVersion" . }}
+kind: ClusterRole
+metadata:
+  name: {{ include "k8s-jiggler.fullname" . }}-clusterrole
+  labels:
+    {{- include "k8s-jiggler.labels" . | nindent 4 }}
+rules:
+- apiGroups: [""] # Core API group
+  resources: ["pods"]
+  verbs: ["list", "watch", "delete"]
+{{- if .Values.jiggler.markProcessed }}
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["patch"]
+{{- end }}
+---
+apiVersion: {{ include "k8s-jiggler.rbac.apiVersion" . }}
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "k8s-jiggler.fullname" . }}-clusterrolebinding
+  labels:
+    {{- include "k8s-jiggler.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "k8s-jiggler.fullname" . }}-clusterrole
+subjects:
+- kind: ServiceAccount
+  name: {{ include "k8s-jiggler.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+{{- else }}
+# Role and RoleBinding for namespaced operation
+apiVersion: {{ include "k8s-jiggler.rbac.apiVersion" . }}
+kind: Role
+metadata:
+  name: {{ include "k8s-jiggler.fullname" . }}-role
+  namespace: {{ include "k8s-jiggler.rbac.namespace" . }}
+  labels:
+    {{- include "k8s-jiggler.labels" . | nindent 4 }}
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["list", "watch", "delete"]
+{{- if .Values.jiggler.markProcessed }}
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["patch"]
+{{- end }}
+---
+apiVersion: {{ include "k8s-jiggler.rbac.apiVersion" . }}
+kind: RoleBinding
+metadata:
+  name: {{ include "k8s-jiggler.fullname" . }}-rolebinding
+  namespace: {{ include "k8s-jiggler.rbac.namespace" . }}
+  labels:
+    {{- include "k8s-jiggler.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "k8s-jiggler.fullname" . }}-role
+subjects:
+- kind: ServiceAccount
+  name: {{ include "k8s-jiggler.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }} # ServiceAccount is always in the release namespace
+{{- end }}
+{{- end }}
