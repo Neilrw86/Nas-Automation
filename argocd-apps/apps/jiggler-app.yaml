@@ -8,8 +8,8 @@ metadata:
 spec:
   project: default # Your Argo CD project
 
-  source:
-    repoURL: https://github.com/Neilrw86/k8s-jiggler.git # The Git repository URL where your chart is located
+  source: # Source for the k8s-jiggler Helm chart
+    repoURL: https://github.com/Neilrw86/Nas-Automation.git # This should be your Nas-Automation repo
     path: helm_charts/k8s-jiggler # The path to your Helm chart directory within the repository
     targetRevision: June # Or a specific branch, tag, or commit hash (e.g., main, v0.1.0)
 
