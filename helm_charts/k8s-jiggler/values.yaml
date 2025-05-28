@@ -36,7 +36,7 @@ securityContext: {}
 service:
   type: ClusterIP
   port: 80 # External port for the service
-  targetPort: 8080 # Port on the pod k8s-jiggler listens on
+  targetPort: 80 # Port on the pod k8s-jiggler listens on
 
 ingress:
   enabled: true
