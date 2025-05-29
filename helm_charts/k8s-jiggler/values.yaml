@@ -54,10 +54,15 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
+    - host: "summer.neilwylie.com" # Your new desired hostname
+      paths:
+        - path: /
+          pathType: Prefix
   tls:
     - secretName: jiggler-tls # TLS secret for jiggler.neilwylie.com
       hosts:
         - "jiggler.neilwylie.com"
+        - "summer.neilwylie.com"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
