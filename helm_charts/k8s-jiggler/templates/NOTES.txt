@@ -1,0 +1,44 @@
+{{- $fullName := include "k8s-jiggler.fullname" . -}}
+{{- $ingressHost := "" }}
+{{- if and .Values.ingress.enabled (first .Values.ingress.hosts).host }}
+  {{- $ingressHost = (first .Values.ingress.hosts).host }}
+{{- end }}
+{{- $servicePort := .Values.service.port -}}
+{{- $targetPort := .Values.service.targetPort -}}
+
+k8s-jiggler has been deployed.
+
+{{- if .Values.ingress.enabled }}
+  {{- if $ingressHost }}
+To access k8s-jiggler, ensure you have DNS configured for '{{ $ingressHost }}'
+pointing to your Ingress controller's external IP.
+
+You can then access its health endpoint at: http{{ if .Values.ingress.tls }}s{{ end }}://{{ $ingressHost }}/healthz
+  {{- else }}
+Ingress is enabled, but no host is configured. Please check your values.yaml.
+  {{- end }}
+{{- else }}
+k8s-jiggler is not exposed externally via Ingress. You can use port-forwarding to access it:
+
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "k8s-jiggler.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  echo "Forwarding to pod $POD_NAME in namespace {{ .Release.Namespace }}"
+  kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME {{ $servicePort }}:{{ $targetPort }}
+
+Then open http://localhost:{{ $servicePort }}/healthz in your browser.
+{{- end }}
+
+k8s-jiggler is configured to:
+- Watch namespace(s): {{ if .Values.rbac.clusterScoped }}{{ .Values.jiggler.namespace | default "all (cluster-wide)" }}{{ else }}{{ include "k8s-jiggler.rbac.namespace" . }}{{ end }}
+- Jiggle interval: {{ .Values.jiggler.interval }}
+- Label selector for pods: {{ .Values.jiggler.labelSelector }}
+- Mark processed pods with annotation: {{ .Values.jiggler.markProcessed }}
+
+{{- if .Values.rbac.create }}
+Service Account '{{ include "k8s-jiggler.serviceAccountName" . }}' has been created.
+{{- if .Values.rbac.clusterScoped }}
+  - ClusterRole '{{ $fullName }}-clusterrole' and ClusterRoleBinding '{{ $fullName }}-clusterrolebinding' grant cluster-wide access.
+{{- else }}
+  - Role '{{ $fullName }}-role' and RoleBinding '{{ $fullName }}-rolebinding' grant access within namespace '{{ include "k8s-jiggler.rbac.namespace" . }}'.
+{{- end }}
+Permissions include: list, watch, delete pods{{ if .Values.jiggler.markProcessed }}, and patch pods{{ end }}.
+{{- end }}

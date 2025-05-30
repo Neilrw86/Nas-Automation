@@ -1,0 +1,16 @@
+apiVersion: kiali.io/v1alpha1
+kind: Kiali
+metadata:
+  name: kiali
+  namespace: istio-system # Kiali server will be deployed in istio-system
+spec:
+  auth:
+    strategy: anonymous
+  external_services:
+    prometheus:
+      url: http://kube-prom-stack-kube-prome-prometheus.observability.svc.cluster.local:9090 # Corrected Prometheus URL
+    grafana:
+      url: http://kube-prom-stack-grafana.observability.svc.cluster.local:80 # Corrected Grafana URL
+  deployment:
+    node_selector:
+      kubernetes.io/arch: amd64 # Adjust if you're not on amd64 (e.g., arm64)

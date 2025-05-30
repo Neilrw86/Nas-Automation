@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "k8s-jiggler.fullname" . }}
+  labels:
+    {{- include "k8s-jiggler.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http # Refers to the container port name 'http' in deployment
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "k8s-jiggler.selectorLabels" . | nindent 4 }}
