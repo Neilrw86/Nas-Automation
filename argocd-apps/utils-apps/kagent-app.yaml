@@ -9,8 +9,8 @@ spec:
   project: default # Or your desired ArgoCD project
 
   source:
-    repoURL: "oci://ghcr.io/kagent-dev/kagent/helm" # KAgent's OCI Helm repository from GitHub Container Registry
-    chart: kagent # The chart name within the OCI repository path
+    # For OCI, repoURL should be the full path to the chart.
+    repoURL: "oci://ghcr.io/kagent-dev/kagent/helm/kagent" 
     targetRevision: "0.3.11" # Updated to match your deployed version
     helm:
       values: |
