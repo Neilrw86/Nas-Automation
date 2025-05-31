@@ -10,8 +10,12 @@ spec:
 
   source:
     repoURL: https://github.com/Neilrw86/Nas-Automation # Your Git repository URL
-    targetRevision: June # Or your desired branch/tag
+    targetRevision: July # Or your desired branch/tag
     path: argocd-apps/utils-apps # Path to child ArgoCD Application manifests for utils
+
+    # This tells ArgoCD to look for Application manifests in the specified path
+    directory:
+      recurse: true # Set to true if you might have subdirectories with more apps
 
   destination:
     server: https://kubernetes.default.svc
