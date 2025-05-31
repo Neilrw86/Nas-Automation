@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kagent
+  namespace: argocd # Deploy this Application CR into the argocd namespace
+  finalizers:
+    - resources-finalizer.argocd.argocd.argoproj.io
+spec:
+  project: default # Or your desired ArgoCD project
+
+  source:
+    repoURL: "https://charts.kagent.dev" # Replace with the actual Helm repository URL for kagent
+    chart: kagent # Replace with the actual chart name if different
+    targetRevision: "0.1.0" # Replace with the specific chart version you want to deploy
+    helm:
+      values: |
+        # Add any specific kagent Helm values here
+        # replicaCount: 1
+        # serviceAccount:
+        #   create: true
+        #   name: "kagent-service-account"
+        # ingress:
+        #   enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: "utils" # Namespace where kagent will be installed
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true # Ensures the 'utils' namespace is created
