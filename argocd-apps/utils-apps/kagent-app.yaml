@@ -11,6 +11,7 @@ spec:
   source:
     # For OCI, repoURL should be the full path to the chart.
     repoURL: "oci://ghcr.io/kagent-dev/kagent/helm/kagent" 
+    chart: kagent # This field is required by ArgoCD even if the chart name is in the repoURL for OCI
     targetRevision: "0.3.11" # Updated to match your deployed version
     helm:
       values: |
