@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: "https://charts.kagent.dev" # Replace with the actual Helm repository URL for kagent
     chart: kagent # Replace with the actual chart name if different
-    targetRevision: "0.1.0" # Replace with the specific chart version you want to deploy
+    targetRevision: "0.3.11" # Updated to match your deployed version
     helm:
       values: |
         # Add any specific kagent Helm values here
@@ -19,8 +19,23 @@ spec:
         # serviceAccount:
         #   create: true
         #   name: "kagent-service-account"
-        # ingress:
-        #   enabled: false
+        ingress:
+          enabled: true
+          className: "nginx" # Replace with your Ingress controller's class name if not nginx, or remove if using default
+          annotations:
+            # Adjust the cluster-issuer to match your cert-manager setup
+            cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns" # Aligned with sonarr
+            # Add any other annotations required by your Ingress controller or cert-manager
+            # e.g., nginx.ingress.kubernetes.io/rewrite-target: /
+          hosts:
+            - host: kagent.neilwylie.com
+              paths:
+                - path: /
+                  pathType: Prefix # Aligned with sonarr
+          tls:
+            - hosts:
+                - kagent.neilwylie.com
+              secretName: kagent-tls-secret # Consistent naming pattern
   destination:
     server: https://kubernetes.default.svc
     namespace: "utils" # Namespace where kagent will be installed
