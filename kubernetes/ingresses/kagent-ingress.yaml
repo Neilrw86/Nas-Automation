@@ -24,7 +24,7 @@ spec:
               service:
                 name: kagent # Name of your kagent service
                 port:
-                  number: 80 # Port on the service that maps to the UI (container port 80)
+                  number: 8001 # Port on the service that maps to the UI (container port 8001)
   tls:
     - hosts:
         - kagent.neilwylie.com
