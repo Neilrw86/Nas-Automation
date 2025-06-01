@@ -21,8 +21,8 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc # Target Kubernetes cluster
-    namespace: ai-services # Example: Deploy Ollama into an 'ai-services' namespace, or 'default'
-
+    namespace: Ollama
+    
   syncPolicy:
     automated:
       prune: true
