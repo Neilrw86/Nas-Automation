@@ -18,6 +18,10 @@
 - [x]migrate sample app (homer)
 - [x]sonarr
 - [x]couchpotato
-- [ ]readarr
-- [ ]sabnzb
+- [x]readarr
+- [x]sabnzb
 - [ ]plex
+
+## Security
+
+- Periodically review ignored vulnerabilities in Trivy scan to see if fixes have become available.

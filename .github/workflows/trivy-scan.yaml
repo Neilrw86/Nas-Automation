@@ -23,17 +23,7 @@ jobs:
           version: v3.15.2 # Specify a recent Helm version
 
       - name: Install Trivy CLI
-        run: |
-          # Install dependencies for adding APT repository
-          sudo apt-get install -y wget apt-transport-https gnupg lsb-release
-          # Add Trivy's GPG key and repository (modern method)
-          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
-          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list
-          # Update package list and install Trivy
-          sudo apt-get update
-          sudo apt-get install -y trivy --no-install-recommends
-          trivy --version # Verify installation
-        shell: bash
+        uses: aquasecurity/trivy-action@master
 
       - name: Install helm-trivy plugin
         run: |
@@ -67,6 +57,7 @@ jobs:
               --format table \
               --ignore-unfixed \
               --vuln-type os,library \
-              --severity CRITICAL,HIGH
+              --severity CRITICAL,HIGH \
+              --exit-on-policy-failure
           done
         shell: bash
