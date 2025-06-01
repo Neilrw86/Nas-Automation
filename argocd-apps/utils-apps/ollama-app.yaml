@@ -11,8 +11,7 @@ spec:
   source:
     repoURL: "https://github.com/Neilrw86/Nas-Automation.git" # Your Git repository URL
     path: helm_charts/ollama # Path to your ollama wrapper chart
-    targetRevision: June # Or your main branch, e.g., 'main', 'HEAD'
-
+    targetRevision: July
     helm:
       releaseName: ollama
       valueFiles:
