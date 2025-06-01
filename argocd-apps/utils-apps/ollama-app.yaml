@@ -21,8 +21,8 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc # Target Kubernetes cluster
-    namespace: Ollama
-    
+    namespace: ollama
+
   syncPolicy:
     automated:
       prune: true
