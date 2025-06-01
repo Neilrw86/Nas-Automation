@@ -9,9 +9,9 @@ spec:
   project: default # Or your desired ArgoCD project
 
   source:
-    repoURL: "oci://ghcr.io/kagent-dev"  # OCI repository under the kagent-dev organization
-    chart: "kagent/helm/kagent" # Path to the chart artifact within that OCI repository
-    targetRevision: "0.3.11" # Updated to match your deployed version
+    repoURL: "https://github.com/kagent-dev/kagent.git"  # Direct Git repository URL
+    path: "helm/kagent" # Path to the Chart.yaml directory within the Git repository
+    targetRevision: "main" # Or a specific tag/commit from the kagent repo, e.g., v0.3.11 if it exists
     helm:
       values: |
         # replicaCount: 1 # Default is 1, uncomment if you need to change it
