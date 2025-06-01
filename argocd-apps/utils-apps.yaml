@@ -2,6 +2,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: utils-apps # The name of your root ArgoCD application for utils
+  labels:
+    category: root-app
   namespace: argocd # ArgoCD applications typically live in the argocd namespace
   finalizers:
     - resources-finalizer.argocd.argoproj.io # Ensures child apps are deleted when this root app is deleted
