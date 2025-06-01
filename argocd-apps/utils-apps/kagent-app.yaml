@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: "https://github.com/kagent-dev/kagent.git"  # Direct Git repository URL
     path: "helm/kagent" # Path to the Chart.yaml directory within the Git repository
-    targetRevision: "main" # Or a specific tag/commit from the kagent repo, e.g., v0.3.11 if it exists
+    targetRevision: "v0.3.11" # Pin to the tag for chart version 0.3.11
     helm:
       values: |
         # replicaCount: 1 # Default is 1, uncomment if you need to change it
