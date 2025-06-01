@@ -1,76 +1,84 @@
 # This values.yaml is for your 'ollama-wrapper' chart.
-# It overrides values in the 'ollama-community/ollama' chart.
-# Check all available options: helm show values ollama-community/ollama --version <chart-version>
+# It overrides values in the 'otwld/ollama-helm' chart.
+# Check all available options: helm show values otwld/ollama --version <chart-version>
 
+# Image configuration (defaults are usually fine, but you can pin versions)
+image:
+  repository: ollama/ollama
+  # tag: "0.1.41" # Example: Pin to a specific Ollama version, often defaults to chart's appVersion
+  pullPolicy: IfNotPresent
+
+# --- GPU Configuration ---
+# This runtimeClassName must match what MicroK8s' GPU addon configures.
+# For MicroK8s, 'nvidia' is standard after `microk8s enable gpu`.
+runtimeClassName: "nvidia"
+
+nodeSelector:
+  gpu: "true" # Ensure this matches the label on your GPU node
+
+# Specific Ollama application settings
 ollama:
-  # Image configuration (defaults are usually fine, but you can pin versions)
-  image:
-    repository: ollama/ollama
-    # tag: "0.1.40" # Example: Pin to a specific Ollama version
-    pullPolicy: IfNotPresent
+  # For GPU support in otwld/ollama-helm, set numberOfGPUs.
+  # This typically sets NVIDIA_VISIBLE_DEVICES=all and NVIDIA_DRIVER_CAPABILITIES=all.
+  # The actual GPU allocation is then handled by the top-level 'resources' block.
+  numberOfGPUs: 1
+  # You can specify models to download on startup
+  # models:
+  #   - llama3
+  #   - mistral
 
-  # --- GPU Configuration ---
-  # Enable NVIDIA GPU support by specifying the runtime class and GPU resources.
-  # This runtimeClassName must match what MicroK8s' GPU addon configures.
-  # For MicroK8s, 'nvidia' is standard after `microk8s enable gpu`.
-  runtimeClassName: "nvidia"
+resources:
+  limits:
+    nvidia.com/gpu: 1 # Request 1 GPU
+    # memory: "8Gi"   # Optional: Set memory limits if needed
+    # cpu: "2"        # Optional: Set CPU limits
+  requests:
+    nvidia.com/gpu: 1 # Request 1 GPU
+    # memory: "4Gi"   # Optional: Set memory requests
+    # cpu: "1"        # Optional: Set CPU requests
 
-  nodeSelector:
-    gpu: "true" # Ensure this matches the label on your GPU node
+# Tolerations might be needed if your GPU nodes have specific taints.
+# The MicroK8s GPU addon usually handles this, but include if necessary.
+tolerations:
+  - key: "nvidia.com/gpu"
+    operator: "Exists"
+    effect: "NoSchedule" # Or NoExecute, depending on the taint
 
-  resources:
-    limits:
-      nvidia.com/gpu: 1 # Request 1 GPU
-      # memory: "8Gi"   # Optional: Set memory limits if needed
-      # cpu: "2"        # Optional: Set CPU limits
-    requests:
-      nvidia.com/gpu: 1 # Request 1 GPU
-      # memory: "4Gi"   # Optional: Set memory requests
-      # cpu: "1"        # Optional: Set CPU requests
+# --- Persistence for Ollama Models ---
+# This stores downloaded models persistently.
+persistence:
+  enabled: true
+  # If you have a pre-existing PVC, you can use:
+  # existingClaim: "ollama-models-pvc"
+  storageClass: "microk8s-hostpath" # IMPORTANT: Ensure this is your correct StorageClass
+  accessModes:
+    - ReadWriteOnce # This is an array in many charts
+  size: "200Gi" # Adjust based on the number and size of models you plan to store
+  mountPath: "/root/.ollama" # Default model path for Ollama, ensure chart uses this or similar
 
-  # Tolerations might be needed if your GPU nodes have specific taints.
-  # The MicroK8s GPU addon usually handles this, but include if necessary.
-  tolerations:
-    - key: "nvidia.com/gpu"
-      operator: "Exists"
-      effect: "NoSchedule" # Or NoExecute, depending on the taint
+# --- Service Configuration ---
+# Exposes the Ollama API within the cluster.
+service:
+  type: ClusterIP
+  port: 11434 # Default Ollama API port
+  # annotations: {}
 
-  # --- Persistence for Ollama Models ---
-  # This stores downloaded models persistently.
-  persistence:
-    enabled: true
-    # If you have a pre-existing PVC, you can use:
-    # existingClaim: "ollama-models-pvc"
-    storageClass: "microk8s-hostpath" # IMPORTANT: Replace with your StorageClass (e.g., nfs-client, longhorn, microk8s-hostpath)
-    accessMode: ReadWriteOnce
-    size: "200Gi" # Adjust based on the number and size of models you plan to store
-    # The default mountPath for models in the ollama/ollama image is /root/.ollama
-    # The chart's default is usually correct, but verify if needed.
-    # mountPath: "/root/.ollama"
-
-  # --- Service Configuration ---
-  # Exposes the Ollama API within the cluster.
-  service:
-    type: ClusterIP
-    port: 11434 # Default Ollama API port
-    # annotations: {}
-
-  # --- Ingress (Optional) ---
-  # If you want to expose the Ollama API externally via Ingress.
-  ingress:
-    enabled: false # Set to true to enable Ingress
-    # className: "nginx" # Your Ingress controller class
-    # annotations:
-    #   cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns" # Your cert-manager ClusterIssuer
-    #   nginx.ingress.kubernetes.io/proxy-body-size: "0" # Allow large model uploads/requests
-    #   nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-    #   nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
-    # hosts:
-    #   - host: "ollama.neilwylie.com"
-    #     paths:
-    #       - path: /
-    #         pathType: Prefix # Or ImplementationSpecific
-    # tls:
-    #   - secretName: ollama-tls
-    #     hosts:
-    #       - "ollama.neilwylie.com"
+# --- Ingress (Optional) ---
+# If you want to expose the Ollama API externally via Ingress.
+ingress:
+  enabled: false # Set to true to enable Ingress
+  # className: "nginx" # Your Ingress controller class
+  # annotations:
+  #   cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns" # Your cert-manager ClusterIssuer
+  #   nginx.ingress.kubernetes.io/proxy-body-size: "0" # Allow large model uploads/requests
+  #   nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+  #   nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+  # hosts:
+  #   - host: "ollama.neilwylie.com"
+  #     paths:
+  #       - path: /
+  #         pathType: Prefix # Or ImplementationSpecific
+  # tls:
+  #   - secretName: ollama-tls
+  #     hosts:
+  #       - "ollama.neilwylie.com"

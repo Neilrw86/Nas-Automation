@@ -8,10 +8,10 @@ version: 0.1.0
 
 # The version of Ollama app this chart aims to deploy.
 # Check the ollama-community/ollama chart for its appVersion.
-appVersion: "0.1.40" # Example, align with the dependency chart's appVersion
+appVersion: "0.1.41" # Example, align with the dependency chart's appVersion
 
 dependencies:
   - name: ollama # The name of the chart in the ollama-community repository
     # Find the latest stable version: helm search repo ollama-community/ollama
-    version: "0.12.1" # Example, use a current chart version
-    repository: "https://ollama-community.github.io/helm-charts/"
+    version: "0.9.0" # Example, use a current chart version
+    repository: "https://otwld.github.io/ollama-helm/"
