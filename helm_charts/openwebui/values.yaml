@@ -1,15 +1,31 @@
-# Example content for helm_charts/openwebui/values.yaml
+# Default values for openwebui.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
 replicaCount: 1
 
 image:
   repository: ghcr.io/open-webui/open-webui
   pullPolicy: IfNotPresent
+  # tag defaults to Chart.appVersion if not set
   tag: "main"
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
 
 service:
   type: ClusterIP
-  port: 3030      # Service port
-  targetPort: 8080 # Container port for OpenWebUI
+  port: 3030 # Service port
+  targetPort: 8080 # Container port
 
 ingress:
   enabled: true
@@ -24,8 +40,14 @@ ingress:
         - path: /
           pathType: Prefix
   tls:
-    - secretName: openwebui-service-tls
+    - secretName: openwebui-service-tls # Name of the secret for TLS cert
       hosts:
         - "ollama.neilwylie.com"
 
-# Add other values as needed, e.g., resources, serviceAccount
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi

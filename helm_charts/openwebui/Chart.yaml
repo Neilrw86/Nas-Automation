@@ -3,4 +3,4 @@ name: openwebui
 description: A Helm chart for deploying OpenWebUI.
 type: application
 version: 0.1.0 # Version of this chart
-appVersion: "main" # Version of OpenWebUI image being deployed
+appVersion: "main" # Version of OpenWebUI image being deployed (can be tied to .Values.image.tag)
