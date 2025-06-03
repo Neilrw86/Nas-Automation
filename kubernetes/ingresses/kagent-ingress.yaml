@@ -4,16 +4,14 @@ metadata:
   name: kagent-ingress
   namespace: kagent # Should be the same namespace as your kagent service
   annotations:
-    # Specify your Ingress controller (e.g., Nginx)
-    kubernetes.io/ingress.class: "nginx" # Or your specific ingress class name
     # cert-manager annotations to issue a certificate
     cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns" # Your ClusterIssuer
     # Add any other Nginx specific annotations if needed, for example:
     # nginx.ingress.kubernetes.io/rewrite-target: /
-    # nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
-  ingressClassName: "nginx" # Corresponds to kubernetes.io/ingress.class for newer controllers
+  ingressClassName: "nginx" # Specifies the Nginx Ingress controller
   rules:
     - host: kagent.neilwylie.com
       http:
@@ -24,7 +22,7 @@ spec:
               service:
                 name: kagent # Name of your kagent service
                 port:
-                  number: 8001 # Port on the service that maps to the UI (container port 8001)
+                  number: 80 # This should match the service port that serves the UI (e.g., the 'ui' port)
   tls:
     - hosts:
         - kagent.neilwylie.com

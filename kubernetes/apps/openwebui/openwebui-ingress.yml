@@ -4,11 +4,13 @@ metadata:
   name: openwebui-ingress
   namespace: default
   annotations:
-    kubernetes.io/ingress.class: "nginx"
+    # kubernetes.io/ingress.class: "nginx" # Deprecated, use spec.ingressClassName
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-    nginx.ingress.kubernetes.io/service-upstream: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP" # OpenWebUI service listens on HTTP
+    # nginx.ingress.kubernetes.io/service-upstream: "true" # Usually not needed unless specific advanced routing
+    cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns" # Ensure this is present for SSL
 spec:
+  ingressClassName: "nginx" # Correctly specify the Ingress controller
   rules:
   - host: ollama.neilwylie.com
     http:
@@ -19,8 +21,8 @@ spec:
           service:
             name: openwebui-service
             port:
-              number: 443
+              number: 3030 # Match the port defined in openwebui-service.yml
   tls:
   - hosts:
-    - ollama.neilwylie.com.neilwylie.com
+    - ollama.neilwylie.com # Corrected hostname
     secretName: openwebui-service-tls
