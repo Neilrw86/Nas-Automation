@@ -25,3 +25,11 @@ ingress:
     - secretName: kagent-tls-secret # cert-manager will create this secret
       hosts:
         - kagent.neilwylie.com
+
+# providers:
+#   openAI:
+    # apiKey: "YOUR_OPENAI_API_KEY" # This should be configured post-install
+    # Example: You might set this via a Kubernetes secret and environment variable in the kagent deployment,
+    # or directly configure it in the application's UI/config if possible after deployment.
+    # The kagent chart might have options to read this from an existing secret.
+    # Check `helm show values oci://ghcr.io/kagent-dev/kagent/helm/kagent --version 0.3.11` for such options.
