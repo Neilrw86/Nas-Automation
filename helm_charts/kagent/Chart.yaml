@@ -4,7 +4,7 @@ description: A wrapper Helm chart to deploy kagent with custom values.
 type: application
 
 # Version of this wrapper chart.
-version: 0.1.0
+version: 0.1.3
 
 # The appVersion of the kagent chart this wrapper deploys.
 appVersion: "v0.3.11" # Matches the dependency chart's appVersion
