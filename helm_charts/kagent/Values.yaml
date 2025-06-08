@@ -1,0 +1,27 @@
+# This values.yaml is for your 'kagent-wrapper' chart.
+# It overrides values in the 'kagent-dev/kagent' chart.
+# To see all available options for the kagent chart, you can run:
+# helm show values kagent-dev/kagent --version 0.3.11
+
+# replicaCount: 1 # Default is 1, uncomment if you need to change it
+
+# serviceAccount: # The chart likely creates a 'kagent' SA by default.
+#   create: true  # Uncomment and configure if you want Helm to manage it explicitly.
+#   name: "kagent" # Or "kagent-service-account" if you prefer
+
+ingress:
+  enabled: true
+  className: "nginx" # Replace with your Ingress controller's class name if not nginx, or remove if using default
+  annotations:
+    # Adjust the cluster-issuer to match your cert-manager setup
+    cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns" # Aligned with sonarr
+    # nginx.ingress.kubernetes.io/rewrite-target: / # Add if kagent needs a path rewrite
+  hosts:
+    - host: kagent.neilwylie.com
+      paths:
+        - path: /
+          pathType: Prefix # Aligned with sonarr
+  tls:
+    - secretName: kagent-tls-secret # cert-manager will create this secret
+      hosts:
+        - kagent.neilwylie.com

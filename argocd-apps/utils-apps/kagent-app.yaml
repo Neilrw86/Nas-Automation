@@ -11,40 +11,20 @@ spec:
   project: default # Or your desired ArgoCD project
 
   source:
-    repoURL: "https://github.com/kagent-dev/kagent.git"  # Direct Git repository URL
-    path: "helm/kagent" # Path to the Chart.yaml directory within the Git repository
-    targetRevision: "v0.3.11" # Pin to the tag for chart version 0.3.11
+    repoURL: "https://github.com/Neilrw86/Nas-Automation.git" # Your Git repository URL
+    path: helm_charts/kagent # Path to your new kagent wrapper chart
+    targetRevision: July # Or your current working branch (e.g., main)
     helm:
-      values: |
-        # replicaCount: 1 # Default is 1, uncomment if you need to change it
-
-        # serviceAccount: # The chart likely creates a 'kagent' SA by default.
-        #   create: true  # Uncomment and configure if you want Helm to manage it explicitly.
-        #   name: "kagent" # Or "kagent-service-account" if you prefer
-
-        ingress:
-          enabled: true
-          className: "nginx" # Replace with your Ingress controller's class name if not nginx, or remove if using default
-          annotations:
-            # Adjust the cluster-issuer to match your cert-manager setup
-            cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns" # Aligned with sonarr
-            # nginx.ingress.kubernetes.io/rewrite-target: / # Add if kagent needs a path rewrite
-          hosts:
-            - host: kagent.neilwylie.com
-              paths:
-                - path: /
-                  pathType: Prefix # Aligned with sonarr
-          tls:
-            - secretName: kagent-tls-secret # cert-manager will create this secret
-              hosts:
-                - kagent.neilwylie.com
+      releaseName: kagent # This will be the Helm release name in the target namespace
+      valueFiles:
+        - values.yaml # Points to helm_charts/kagent/values.yaml in your repo
   destination:
     server: https://kubernetes.default.svc
-    namespace: "utils" # Namespace where kagent will be installed
+    namespace: "kagent" # Changed to 'kagent' to match the original ingress setup and common practice
 
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=true # Ensures the 'utils' namespace is created
+      - CreateNamespace=true # Ensures the 'kagent' namespace is created
