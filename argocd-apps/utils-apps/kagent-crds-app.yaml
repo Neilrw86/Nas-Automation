@@ -14,8 +14,8 @@ spec:
     # Directly point to the OCI Helm chart for kagent-crds
     # It's good practice to pin to a specific chart version.
     # As of now, 0.3.11 seems to be the latest for kagent-crds as well.
-    chart: kagent-crds
-    repoURL: oci://ghcr.io/kagent-dev/kagent/helm
+    chart: oci://ghcr.io/kagent-dev/kagent/helm/kagent-crds # Full OCI path to the chart
+    # repoURL: oci://ghcr.io/kagent-dev/kagent/helm # This can be omitted when chart is a full OCI URL
     targetRevision: "0.3.11" # Pin to the chart version
 
   destination:
