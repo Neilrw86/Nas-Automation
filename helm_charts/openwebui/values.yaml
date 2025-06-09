@@ -48,6 +48,15 @@ resources: {}
   # limits:
   #   cpu: 100m
   #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+
+# Example of disabling sub-features.
+# You'll need to confirm the exact keys from the official open-webui chart's values.
+# You can inspect the official chart's values using:
+# helm repo add open-webui https://helm.openwebui.com/
+# helm show values open-webui/open-webui --version 6.19.0
+
+pipelines: # Confirmed from official chart values
+  enabled: false
+
+persistence: # Confirmed from official chart values
+  enabled: false
