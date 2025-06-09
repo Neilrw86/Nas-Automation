@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kagent-crds
+  labels:
+    category: utility-app-crd
+  namespace: argocd # Deploy this Application CR into the argocd namespace
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default # Or your desired ArgoCD project
+
+  source:
+    # Directly point to the OCI Helm chart for kagent-crds
+    # It's good practice to pin to a specific chart version.
+    # As of now, 0.3.11 seems to be the latest for kagent-crds as well.
+    chart: kagent-crds
+    repoURL: oci://ghcr.io/kagent-dev/kagent/helm
+    targetRevision: "0.3.11" # Pin to the chart version
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: "kagent" # As specified in your helm install command
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true # Ensures the 'kagent' namespace is created
