@@ -1,10 +1,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: jellyfin # Name of this child application in ArgoCD
+  name: sabnzbd # Name of this child application in ArgoCD
   namespace: argocd # This Application CR itself lives in 'argocd'
   labels:
-    app-group: media-stack # For grouping/filtering in ArgoCD UI/CLI
+    category: media-app # For grouping/filtering
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -13,18 +13,18 @@ spec:
   source:
     repoURL: https://github.com/Neilrw86/Nas-Automation
     targetRevision: June
-    path: helm_charts/jellyfin # Path to your Jellyfin wrapper Helm chart
+    path: helm_charts/sabnzb # Path to your Sabnzbd wrapper Helm chart
     helm:
       valueFiles:
-        - Values.yaml # Use Values.yaml from helm_charts/jellyfin/
+        - values.yaml # Uses values.yaml from helm_charts/sabnzb/
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: default # Jellyfin's resources will be deployed into the 'default' namespace
+    namespace: default # Sabnzbd's resources will be deployed into the 'default' namespace
 
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=true # Ensures 'default' namespace exists
+      - CreateNamespace=true

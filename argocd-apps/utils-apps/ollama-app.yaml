@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ollama
+  labels:
+    category: utility-app
+  namespace: argocd # This Application CR itself lives in the argocd namespace
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default # Or your specific ArgoCD project
+
+  source:
+    repoURL: "https://github.com/Neilrw86/Nas-Automation.git" # Your Git repository URL
+    path: helm_charts/ollama # Path to your ollama wrapper chart
+    targetRevision: July
+    helm:
+      releaseName: ollama
+      valueFiles:
+        - values.yaml # Uses helm_charts/ollama/values.yaml from your Git repo
+
+  destination:
+    server: https://kubernetes.default.svc # Target Kubernetes cluster
+    namespace: ollama
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true # ArgoCD will create the destination namespace if it doesn't exist

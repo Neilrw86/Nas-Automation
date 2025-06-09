@@ -1,10 +1,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: couchpotato # Name of this child application in ArgoCD
+  name: sonarr # Name of this child application in ArgoCD
   namespace: argocd # This Application CR itself lives in 'argocd'
   labels:
-    app-group: media-stack # For grouping/filtering
+    category: media-app # For grouping/filtering
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -13,14 +13,14 @@ spec:
   source:
     repoURL: https://github.com/Neilrw86/Nas-Automation
     targetRevision: June
-    path: helm_charts/couchpotato # Path to your CouchPotato wrapper Helm chart
+    path: helm_charts/sonarr # Path to your Sonarr wrapper Helm chart
     helm:
       valueFiles:
-        - values.yaml # Uses values.yaml from helm_charts/couchpotato/
+        - values.yaml # Uses values.yaml from helm_charts/sonarr/
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: default # CouchPotato's resources will be deployed into the 'default' namespace
+    namespace: default # Sonarr's resources will be deployed into the 'default' namespace
 
   syncPolicy:
     automated:

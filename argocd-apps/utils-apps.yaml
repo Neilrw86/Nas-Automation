@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: media-apps # The name of your root ArgoCD application
+  name: utils-apps # The name of your root ArgoCD application for utils
   labels:
     category: root-app
   namespace: argocd # ArgoCD applications typically live in the argocd namespace
@@ -11,9 +11,13 @@ spec:
   project: default # Or the ArgoCD project you want to use
 
   source:
-    repoURL: https://github.com/Neilrw86/Nas-Automation
-    targetRevision: July
-    path: argocd-apps/media-apps # Corrected path to child ArgoCD Application manifests
+    repoURL: https://github.com/Neilrw86/Nas-Automation # Your Git repository URL
+    targetRevision: July # Or your desired branch/tag
+    path: argocd-apps/utils-apps # Path to child ArgoCD Application manifests for utils
+
+    # This tells ArgoCD to look for Application manifests in the specified path
+    directory:
+      recurse: true # Set to true if you might have subdirectories with more apps
 
   destination:
     server: https://kubernetes.default.svc

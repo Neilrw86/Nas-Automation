@@ -2,6 +2,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: k8s-jiggler
+  labels:
+    category: utility-app
   namespace: argocd # This is the namespace where Argo CD is running
   finalizers:
     - resources-finalizer.argocd.argoproj.io
