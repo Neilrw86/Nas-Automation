@@ -27,3 +27,4 @@ To resolve this issue, the `targetRevision` in the ArgoCD application definition
     -   Added a logging statement to print the chart version.
 -   Modified `helm_charts/readarr/Values.yaml`:
     -   Added `storageClass: null` and `volumeName: nfs-readarr-config-specific-pv` to the PVC configuration.
+    -   Set `persistentVolumeClaims.readarr-config.enabled` to `false` to disable the default PVC creation.
