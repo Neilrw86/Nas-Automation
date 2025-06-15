@@ -26,6 +26,9 @@ readarr-dependency:
         - name: PGID # Group ID
           value: "1003"
         # Add any other environment variables Readarr might need as name/value pairs
+      volumeMounts:
+        - name: config
+          mountPath: /config
       resources:
         limits:
           cpu: "2"
