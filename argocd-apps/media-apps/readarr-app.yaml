@@ -12,7 +12,7 @@ spec:
 
   source:
     repoURL: https://github.com/Neilrw86/Nas-Automation
-    targetRevision: main
+    targetRevision: July
     path: helm_charts/readarr # Path to your new Readarr wrapper Helm chart
     helm:
       valueFiles:
