@@ -37,6 +37,8 @@ readarr-dependency:
       config:
         persistentVolumeClaim:
           claimName: "nfs-readarr-config-specific-pvc" # Use the new, specific PVC for Readarr's config
+          storageClass: null
+          volumeName: nfs-readarr-config-specific-pv
       downloads:
         persistentVolumeClaim:
           claimName: "nfs-temp-pvc"    # Your existing PVC for /downloads

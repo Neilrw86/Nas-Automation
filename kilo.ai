@@ -22,4 +22,8 @@ To resolve this issue, the `targetRevision` in the ArgoCD application definition
 **Changes Made:**
 
 -   Modified `argocd-apps/media-apps/readarr-app.yaml`:
-    -   Updated `targetRevision` from `June` to `main`.
+    -   Updated `targetRevision` from `June` to `July`.
+-   Added `helm_charts/readarr/templates/NOTES.txt`:
+    -   Added a logging statement to print the chart version.
+-   Modified `helm_charts/readarr/Values.yaml`:
+    -   Added `storageClass: null` and `volumeName: nfs-readarr-config-specific-pv` to the PVC configuration.
