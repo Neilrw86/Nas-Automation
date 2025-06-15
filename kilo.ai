@@ -1,0 +1,25 @@
+## Readarr Deployment Error in ArgoCD
+
+**Problem:**
+
+The Readarr deployment in ArgoCD was failing with the following error:
+
+```
+ComparisonError
+rpc error: code = Unknown desc = Manifest generation error (cached): `helm dependency build` failed exit status 1: Error: can't get a valid version for repositories readarr. Try changing the version constraint in Chart.yaml
+```
+
+This error indicated that ArgoCD was unable to find a valid version of the `readarr` Helm chart in the specified repository.
+
+**Root Cause:**
+
+The ArgoCD application definition for `readarr` was pointing to a specific commit (`June`) in the GitOps repository. This commit likely contained an older version of the `helm_charts/readarr/Chart.yaml` file with a strict version constraint (`0.8.11`) that was no longer available in the chart repository.
+
+**Solution:**
+
+To resolve this issue, the `targetRevision` in the ArgoCD application definition (`argocd-apps/media-apps/readarr-app.yaml`) was updated to `main`. This ensures that ArgoCD always uses the latest version of the `Chart.yaml` file from the `main` branch, which now has a broader version constraint (`~0.8.0`).
+
+**Changes Made:**
+
+-   Modified `argocd-apps/media-apps/readarr-app.yaml`:
+    -   Updated `targetRevision` from `June` to `main`.
