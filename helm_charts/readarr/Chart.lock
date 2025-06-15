@@ -1,0 +1,6 @@
+dependencies:
+- name: readarr
+  repository: https://media-servarr.shw.al/charts
+  version: 0.8.0
+digest: sha256:520e9738801dde8d008cf0691a1e9784c573dae8af38006e3de9659e4cccd267
+generated: "2025-06-14T21:23:18.220347487-04:00"
