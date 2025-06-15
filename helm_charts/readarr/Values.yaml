@@ -78,3 +78,4 @@ readarr-dependency:
   persistentVolumeClaims:
     readarr-config:
       enabled: false # Completely disable the default 'readarr-config' PVC
+      storage: 0
