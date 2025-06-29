@@ -32,8 +32,3 @@ jobs:
             exit 0
               fi
   
-      - name: Deploy to Production
-        uses: actions/deployment@v3
-        with:
-          environment: production
-          token: ${{ secrets.GITHUB_TOKEN }}
