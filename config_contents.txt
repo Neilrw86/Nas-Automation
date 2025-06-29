@@ -1,0 +1,20 @@
+total 244616
+drwxrwxrwx    9 1003     1003          4096 Jun  3 06:47 .
+drwxr-xr-x    1 root     root          4096 Jun 15 02:28 ..
+-rwxrwxrwx    1 1003     1003             6 Feb  8  2023 .gitignore
+drwxr-xr-x    3 1003     1003          4096 Feb 15  2023 Backups
+drwxrwxrwx  148 1003     1003          4096 May 12 19:54 MediaCover
+drwxr-xr-x    3 1003     1003          4096 Jan 28 15:56 Sentry
+drwxr-xr-x    2 1003     1003          4096 Apr 27 17:11 asp
+-rwxrwxrwx    1 1003     1003         28672 May 24 03:22 cache.db
+-rwxrwxr-x    1 1003     1003           557 May 18 17:21 config.xml
+drwxrwxrwx    2 1003     1003          4096 Feb  8  2023 custom-cont-init.d
+drwxrwxrwx    2 1003     1003          4096 Feb  8  2023 custom-services.d
+drwxrwxrwx    2 1003     1003         12288 Jun 14 11:50 logs
+-rw-r--r--    1 1003     1003         32768 May 23 18:21 logs.db
+-rw-r--r--    1 1003     1003         32768 Jun  3 06:47 logs.db-shm
+-rw-r--r--    1 1003     1003             0 Jun  3 06:47 logs.db-wal
+-rwxrwxrwx    1 1003     1003     250298368 May 24 05:56 readarr.db
+-rwxrwxrwx    1 1003     1003         32768 Jun 15 02:01 readarr.db-shm
+-rwxrwxrwx    1 1003     1003             0 Jun  2 07:02 readarr.db-wal
+-rwxrwxrwx    1 1003     1003             3 May 23 18:21 readarr.pid

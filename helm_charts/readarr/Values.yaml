@@ -26,6 +26,9 @@ readarr-dependency:
         - name: PGID # Group ID
           value: "1003"
         # Add any other environment variables Readarr might need as name/value pairs
+      volumeMounts:
+        - name: config
+          mountPath: /config
       resources:
         limits:
           cpu: "2"
@@ -37,6 +40,8 @@ readarr-dependency:
       config:
         persistentVolumeClaim:
           claimName: "nfs-readarr-config-specific-pvc" # Use the new, specific PVC for Readarr's config
+          storageClass: null
+          volumeName: nfs-readarr-config-specific-pv
       downloads:
         persistentVolumeClaim:
           claimName: "nfs-temp-pvc"    # Your existing PVC for /downloads
@@ -71,4 +76,6 @@ readarr-dependency:
   # Prevent the chart from creating its default 'readarr-config' PVC
   # by overriding its definition with an empty map.
   persistentVolumeClaims:
-    readarr-config: null # Set the entire 'readarr-config' entry to null
+    readarr-config:
+      enabled: false # Completely disable the default 'readarr-config' PVC
+      storage: 0

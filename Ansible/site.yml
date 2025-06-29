@@ -10,7 +10,8 @@
 
 - hosts: workstations
   roles:
-  - role: workstations 
+  - role: workstations
+  - role: tailscale
 
 - hosts: nuc_cluster
   become: true
@@ -18,6 +19,7 @@
     ansible_user: neil
   roles:
     - microk8s
+    - tailscale
 
 # - hosts: turing
 #   roles:

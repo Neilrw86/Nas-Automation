@@ -8,6 +8,6 @@ appVersion: "nightly-0.4.17.2795-ls397" # Matches the appVersion of the chosen d
 
 dependencies:
   - name: readarr # The name of the chart in the repository
-    version: "0.8.11" # The specific chart version you want to use
+    version: "~0.8.0"
     repository: "https://media-servarr.shw.al/charts"
     alias: readarr-dependency # An alias to make the Values.yaml clearer

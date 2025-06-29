@@ -1,0 +1,17 @@
+---
+- name: Install Tailscale
+  apt:
+    name: tailscale
+    state: present
+  become: true
+
+- name: Enable Tailscale
+  systemd:
+    name: tailscale
+    enabled: true
+    state: started
+  become: true
+
+- name: Accept Tailscale routes
+  command: tailscale up --accept-routes
+  become: true
