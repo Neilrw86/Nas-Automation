@@ -12,7 +12,7 @@ spec:
 
   source:
     repoURL: https://github.com/Neilrw86/Nas-Automation
-    targetRevision: July
+    targetRevision: main
     path: argocd-apps/media-apps # Corrected path to child ArgoCD Application manifests
 
   destination:
