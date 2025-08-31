@@ -8,4 +8,4 @@ appVersion: "5.2.6"
 dependencies:
 - name: app-template
   version: "4.2.0"
-  repository: "https://bjw-s.github.io/helm-charts"
+  repository: "https://bjw-s-labs.github.io/helm-charts"
