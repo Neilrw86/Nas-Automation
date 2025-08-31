@@ -11,6 +11,10 @@ prowlarr-dependency:
     PUID: "1003"
     PGID: "1003"
 
+  podSecurityContext:
+    runAsUser: 1003
+    runAsGroup: 1003
+
   ingress:
     main:
       enabled: true
