@@ -1,5 +1,9 @@
 global: {}
 
+controller:
+  main:
+    type: deployment
+
 image:
   repository: linuxserver/radarr
   pullPolicy: IfNotPresent
