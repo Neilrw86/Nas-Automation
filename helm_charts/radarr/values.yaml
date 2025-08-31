@@ -1,101 +1,43 @@
 image:
-  repository: ghcr.io/home-operations/radarr
+  repository: linuxserver/radarr
   pullPolicy: IfNotPresent
-  tag: 5.27.5.10184@sha256:af67ce80302e21f7228e2da671943c48b27a25faf27e19c4fcb7ad33c1c0e3c0
-exportarrImage:
-  repository: ghcr.io/onedr0p/exportarr
-  pullPolicy: IfNotPresent
-  tag: v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520
-securityContext:
-  container:
-    readOnlyRootFilesystem: false
+  tag: latest
+
+podSecurityContext:
+  runAsUser: 1003
+  runAsGroup: 1003
+
 service:
   main:
     ports:
       main:
         port: 7878
-  metrics:
-    enabled: "{{ .Values.metrics.main.enabled }}"
-    type: ClusterIP
-    ports:
-      metrics:
-        enabled: true
-        port: 7879
-workload:
+
+ingress:
   main:
-    podSpec:
-      containers:
-        main:
-          probes:
-            readiness:
-              enabled: true
-              type: http
-              path: /ping
-            liveness:
-              enabled: true
-              type: http
-              path: /ping
-            startup:
-              enabled: true
-              type: http
-              path: /ping
-          env:
-            RADARR__SERVER__PORT: "{{ .Values.service.main.ports.main.port }}"
-             # External | Basic | Forms
-            RADARR__AUTH__METHOD: ""
-            # DisabledForLocalAddresses | Enabled
-            RADARR__AUTH__REQUIRED: DisabledForLocalAddresses
-            # RADARR__APP__THEME: dark
-            # RADARR__APP__INSTANCENAME: Radarr
-            # RADARR__LOG__LEVEL: info
-            # RADARR__UPDATE__BRANCH: develop
-        exportarr:
-          enabled: "{{ .Values.metrics.main.enabled }}"
-          imageSelector: exportarrImage
-          args:
-            - radarr
-          probes:
-            liveness:
-              enabled: true
-              type: http
-              path: /healthz
-              port: "{{ .Values.service.metrics.ports.metrics.port }}"
-            readiness:
-              enabled: true
-              type: http
-              path: /healthz
-              port: "{{ .Values.service.metrics.ports.metrics.port }}"
-            startup:
-              enabled: true
-              type: http
-              path: /healthz
-              port: "{{ .Values.service.metrics.ports.metrics.port }}"
-          env:
-            INTERFACE: 0.0.0.0
-            PORT: "{{ .Values.service.metrics.ports.metrics.port }}"
-            URL: '{{ printf "http://%v:%v" (include "tc.v1.common.lib.chart.names.fullname" $) .Values.service.main.ports.main.port }}'
-            # additional metrics (slow)
-            # ENABLE_ADDITIONAL_METRICS: false
-            # enable gathering unknown queue items
-            # ENABLE_UNKNOWN_QUEUE_ITEMS: false
-            CONFIG: "/config/config.xml"
+    enabled: true
+    ingressClassName: "nginx"
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod-cfdns
+    hosts:
+      - host: "radarr.neilwylie.com"
+        paths:
+          - path: "/"
+            pathType: Prefix
+    tls:
+      - hosts:
+          - "radarr.neilwylie.com"
+        secretName: "radarr-tls-secret"
+
 persistence:
   config:
     enabled: true
-    targetSelector:
-      main:
-        main:
-          mountPath: /config
-        exportarr:
-          mountPath: /config
-          readOnly: true
-metrics:
-  main:
+    existingClaim: nfs-configs-pvc
+  downloads:
     enabled: true
-    type: "servicemonitor"
-    endpoints:
-      - port: metrics
-        path: /metrics
-    targetSelector: metrics
-    prometheusRule:
-      enabled: false
+    existingClaim: nfs-temp-pvc
+    mountPath: /downloads
+  movies:
+    enabled: true
+    existingClaim: nfs-films-pvc
+    mountPath: /movies
