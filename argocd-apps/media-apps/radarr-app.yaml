@@ -11,12 +11,60 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/Neilrw86/Nas-Automation
-    targetRevision: main
-    path: helm_charts/radarr # Path to your Radarr wrapper Helm chart
+    repoURL: https://k8s-at-home.com/charts/
+    chart: radarr
+    targetRevision: 16.2.2 # Using k8s-at-home chart
     helm:
-      valueFiles:
-        - values.yaml # Uses values.yaml from helm_charts/radarr/
+      values:
+        global: {}
+
+        controller:
+          main:
+            type: deployment
+
+        image:
+          repository: linuxserver/radarr
+          pullPolicy: IfNotPresent
+          tag: latest
+
+        podSecurityContext:
+          runAsUser: 1003
+          runAsGroup: 1003
+
+        service:
+          main:
+            ports:
+              main:
+                port: 7878
+
+        ingress:
+          main:
+            enabled: true
+            ingressClassName: "nginx"
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt-prod-cfdns
+            hosts:
+              - host: "radarr.neilwylie.com"
+                paths:
+                  - path: "/"
+                    pathType: Prefix
+            tls:
+              - hosts:
+                  - "radarr.neilwylie.com"
+                secretName: "radarr-tls-secret"
+
+        persistence:
+          config:
+            enabled: true
+            existingClaim: nfs-configs-pvc
+          downloads:
+            enabled: true
+            existingClaim: nfs-temp-pvc
+            mountPath: /downloads
+          movies:
+            enabled: true
+            existingClaim: nfs-films-pvc
+            mountPath: /movies
 
   destination:
     server: https://kubernetes.default.svc
