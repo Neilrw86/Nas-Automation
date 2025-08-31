@@ -1,0 +1,6 @@
+apiVersion: v2
+name: prowlarr
+description: A Helm chart for Prowlarr
+type: application
+version: 0.1.0 # Initial version of your wrapper chart
+appVersion: "v0.3.0.1710" # Matches the Prowlarr app version

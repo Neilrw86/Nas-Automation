@@ -1,0 +1,39 @@
+global: {}
+
+image:
+  repository: ghcr.io/k8s-at-home/prowlarr
+  tag: v0.3.0.1710
+  pullPolicy: IfNotPresent
+
+env:
+  TZ: "Europe/London"
+  PUID: "1003"
+  PGID: "1003"
+
+ingress:
+  main:
+    enabled: true
+    ingressClassName: "nginx"
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod-cfdns
+    hosts:
+      - host: "prowlarr.neilwylie.com"
+        paths:
+          - path: "/"
+            pathType: Prefix
+    tls:
+      - hosts:
+          - "prowlarr.neilwylie.com"
+        secretName: "prowlarr-tls-secret"
+
+persistence:
+  config:
+    enabled: true
+    existingClaim: nfs-configs-pvc # Assuming this PVC is suitable for Prowlarr config
+    # mountPath: /config # Default mount path for config, usually not needed to specify
+
+service:
+  main:
+    ports:
+      http:
+        port: 9696 # Default Prowlarr port
