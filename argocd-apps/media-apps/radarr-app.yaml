@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: radarr # Name of this child application in ArgoCD
+  namespace: argocd # This Application CR itself lives in 'argocd'
+  labels:
+    category: media-app # For grouping/filtering
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/Neilrw86/Nas-Automation
+    targetRevision: main
+    path: helm_charts/radarr # Path to your Radarr wrapper Helm chart
+    helm:
+      valueFiles:
+        - values.yaml # Uses values.yaml from helm_charts/radarr/
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default # Radarr's resources will be deployed into the 'default' namespace
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

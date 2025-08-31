@@ -57,6 +57,19 @@ jobs:
           kube-linter version
         shell: bash
 
+      - name: Install Trivy CLI
+        uses: aquasecurity/trivy-action@master
+
+      - name: Install helm-trivy plugin
+        run: |
+          export GIT_TERMINAL_PROMPT=0
+          helm plugin install https://github.com/aquasecurity/helm-trivy
+          helm plugin list # Verify plugin installation
+        shell: bash
+
+      - name: Create Kubernetes cluster (kind)
+        uses: helm/kind-action@v1.10.0
+
       # --- Chart Testing Steps ---
       - name: Prepare chart list
         id: list_charts
@@ -77,7 +90,7 @@ jobs:
       - name: Lint Helm charts (helm lint)
         if: steps.list_charts.outputs.charts_found == 'true'
         run: |
-          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d $'\0' chart_dir; do
+          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d \0' chart_dir; do
             echo "--- Linting chart: $chart_dir ---"
             helm lint "$chart_dir"
           done
@@ -86,7 +99,7 @@ jobs:
       - name: Scan Helm charts for CVEs (helm-trivy)
         if: steps.list_charts.outputs.charts_found == 'true'
         run: |
-          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d $'\0' chart_dir; do
+          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d \0' chart_dir; do
             echo "--- Scanning chart with helm-trivy: $chart_dir ---"
             helm trivy "$chart_dir" \
               --exit-code 0 \
@@ -100,7 +113,7 @@ jobs:
       - name: Validate Helm templates (kubeval)
         if: steps.list_charts.outputs.charts_found == 'true'
         run: |
-          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d $'\0' chart_dir; do
+          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d \0' chart_dir; do
             echo "--- Validating template with kubeval: $chart_dir ---"
             # You might need to specify --kubernetes-version if your CRDs are not found
             # or if you target a specific K8s version.
@@ -111,7 +124,7 @@ jobs:
       - name: Run Helm chart unit tests (helm-unittest)
         if: steps.list_charts.outputs.charts_found == 'true'
         run: |
-          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d $'\0' chart_dir; do
+          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d \0' chart_dir; do
             # Check if unit test files exist for the chart
             if [ -d "${chart_dir}/tests/unit" ] || find "${chart_dir}" -name '*_test.yaml' -print -quit | grep -q .; then
               echo "--- Running unit tests for chart: $chart_dir ---"
@@ -135,7 +148,7 @@ jobs:
             exit 0 # Or use 'continue' if this step is not critical
           fi
 
-          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d $'\0' chart_dir; do
+          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d \0' chart_dir; do
             echo "--- Testing chart $chart_dir against policies in $POLICY_DIR ---"
             # The '-' tells conftest to read from stdin
             helm template "$chart_dir" | conftest test -p "$POLICY_DIR" -
@@ -145,7 +158,7 @@ jobs:
       - name: Lint Helm templates for best practices (KubeLinter)
         if: steps.list_charts.outputs.charts_found == 'true'
         run: |
-          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d $'\0' chart_dir; do
+          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d \0' chart_dir; do
             echo "--- Linting chart $chart_dir with KubeLinter ---"
             # The '-' tells kube-linter to read from stdin
             # Add --config path/to/kubelinter-config.yaml if you have a custom config
@@ -153,23 +166,40 @@ jobs:
           done
         shell: bash
 
-      # Conceptual step for Helm Test Hooks (requires a Kubernetes cluster)
-      # - name: Deploy chart and run Helm tests (requires K8s cluster)
-      #   if: false # Set to true and configure if you have a test cluster
-      #   run: |
-      #     echo "This step requires a Kubernetes cluster (e.g., kind, minikube, or a dedicated test cluster)"
-      #     echo "Example for a single chart (adapt as needed):"
-      #     CHART_TO_TEST="${{ env.HELM_CHARTS_DIR }}/my-app" # Replace with actual chart
-      #     RELEASE_NAME="test-$(basename $CHART_TO_TEST)"
-      #     NAMESPACE="helm-test-$(basename $CHART_TO_TEST)"
-      #
-      #     if [ -d "$CHART_TO_TEST" ]; then
-      #       kubectl create namespace "$NAMESPACE" || echo "Namespace $NAMESPACE might already exist"
-      #       helm install "$RELEASE_NAME" "$CHART_TO_TEST" -n "$NAMESPACE" --wait --timeout 5m
-      #       helm test "$RELEASE_NAME" -n "$NAMESPACE" --timeout 3m
-      #       helm uninstall "$RELEASE_NAME" -n "$NAMESPACE"
-      #       kubectl delete namespace "$NAMESPACE" --wait=false
-      #     else
-      #       echo "Chart $CHART_TO_TEST not found for integration testing."
-      #     fi
-      #   shell: bash
+      - name: Scan filesystem for vulnerabilities
+        run: |
+          trivy fs . \
+            --exit-code 0 \
+            --format table \
+            --ignore-unfixed \
+            --vuln-type os,library \
+            --severity CRITICAL,HIGH
+        shell: bash
+
+      - name: Scan for misconfigurations
+        run: |
+          trivy config . \
+            --exit-code 0 \
+            --format table \
+            --severity CRITICAL,HIGH
+        shell: bash
+
+      - name: Deploy chart and run Helm tests (requires K8s cluster)
+        if: steps.list_charts.outputs.charts_found == 'true'
+        run: |
+          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d \0' chart_dir; do
+            echo "--- Deploying and testing chart: $chart_dir ---"
+            RELEASE_NAME="test-$(basename "$chart_dir")"
+            NAMESPACE="helm-test-$(basename "$chart_dir")"
+
+            if [ -d "$chart_dir" ]; then
+              kubectl create namespace "$NAMESPACE" || echo "Namespace $NAMESPACE might already exist"
+              helm install "$RELEASE_NAME" "$chart_dir" -n "$NAMESPACE" --wait --timeout 5m
+              helm test "$RELEASE_NAME" -n "$NAMESPACE" --timeout 3m
+              helm uninstall "$RELEASE_NAME" -n "$NAMESPACE"
+              kubectl delete namespace "$NAMESPACE" --wait=false
+            else
+              echo "Chart $chart_dir not found for integration testing."
+            fi
+          done
+        shell: bash
