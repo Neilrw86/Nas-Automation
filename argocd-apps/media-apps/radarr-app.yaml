@@ -15,7 +15,7 @@ spec:
     chart: radarr
     targetRevision: 16.2.2 # Using k8s-at-home chart
     helm:
-      values:
+      values: |
         global: {}
 
         controller:
