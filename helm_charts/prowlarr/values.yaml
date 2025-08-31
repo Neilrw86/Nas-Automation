@@ -6,23 +6,6 @@ prowlarr-dependency:
     tag: v0.3.0.1710
     pullPolicy: IfNotPresent
 
-  env:
-    TZ: "Europe/London"
-    PUID: "1003"
-    PGID: "1003"
-
-  podSecurityContext:
-    runAsUser: 1003
-    runAsGroup: 1003
-    fsGroup: 1003
-
-  initContainers:
-    volume-permissions:
-      image: busybox:latest
-      command: ["sh", "-c", "chown -R 1003:1003 /config"]
-      volumeMounts:
-        - name: config
-          mountPath: /config
 
   ingress:
     main:
