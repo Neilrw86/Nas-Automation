@@ -4,3 +4,9 @@ description: A Helm chart for Prowlarr
 type: application
 version: 0.1.0 # Initial version of your wrapper chart
 appVersion: "v0.3.0.1710" # Matches the Prowlarr app version
+
+dependencies:
+  - name: prowlarr # Name of the dependency chart
+    version: 4.5.2 # Version of the dependency chart (from helm search repo)
+    repository: https://k8s-at-home.com/charts/ # Repository URL of the dependency chart
+    alias: prowlarr-dependency # Alias to avoid name conflicts, and to scope values
