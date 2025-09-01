@@ -36,7 +36,7 @@ prowlarr-dependency:
     config:
       enabled: true
       existingClaim: nfs-configs-pvc
-      subPath: prowlarr-config # Added this line
+      subPath: prowlarr # Changed this line
       # mountPath: /config # Default mount path for config, usually not needed to specify
 
   service:

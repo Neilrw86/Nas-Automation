@@ -57,6 +57,7 @@ spec:
           config:
             enabled: true
             existingClaim: nfs-configs-pvc
+            subPath: radarr # Added this line
           downloads:
             enabled: true
             existingClaim: nfs-temp-pvc
