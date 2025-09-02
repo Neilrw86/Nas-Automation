@@ -10,196 +10,147 @@ on:
   workflow_dispatch:
 
 jobs:
-  helm-tests:
+  # Job 1: Scan for secrets across the entire repo. Runs in parallel with other jobs.
+  gitleaks:
+    name: "Scan for secrets"
     runs-on: ubuntu-latest
-    env:
-      HELM_CHARTS_DIR: ./helm_charts # Define the charts directory as an environment variable
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Must fetch full history for gitleaks to compare
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+
+  # Job 2: Run general filesystem and config scans. Runs in parallel with other jobs.
+  filesystem-scans:
+    name: "Filesystem & Config Scans"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install Trivy CLI
+        uses: aquasecurity/trivy-action@master
+        with:
+          # Avoid running the default scan, we'll run it manually
+          scan-type: ''
+      - name: Scan filesystem for vulnerabilities
+        run: |
+          trivy fs . --exit-code 1 --format table --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH
+      - name: Scan for misconfigurations
+        run: |
+          trivy config . --exit-code 1 --format table --severity CRITICAL,HIGH
+
+  # Job 3: Identify which charts have changed to build a testing matrix.
+  list-changed-charts:
+    name: "List changed charts"
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.changes.outputs.matrix }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for tj-actions/changed-files to compare against base
+      - name: Identify changed charts
+        id: changes
+        uses: tj-actions/changed-files@v44
+        with:
+          files: helm_charts/**
+          dir_names: true
+          dir_names_max_depth: 2 # Ensures we get 'helm_charts/radarr', not just 'helm_charts'
+
+  # Job 4: Run all tests on the changed charts identified in the previous job.
+  test-charts:
+    name: "Test Helm Chart (${{ matrix.chart }})"
+    needs: list-changed-charts
+    # Only run this job if the matrix from the previous job is not empty
+    if: needs.list-changed-charts.outputs.matrix != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chart: ${{ fromJson(needs.list-changed-charts.outputs.matrix) }}
+      fail-fast: false # Don't cancel other matrix jobs if one fails
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-
-      - name: Install kubeval
+      - name: Install testing tools
         run: |
-          KUBEVAL_VERSION="0.16.1" # Check for latest: https://github.com/instrumenta/kubeval/releases
-          wget "https://github.com/instrumenta/kubeval/releases/download/v${KUBEVAL_VERSION}/kubeval-linux-amd64.tar.gz"
-          tar xf kubeval-linux-amd64.tar.gz
-          sudo mv kubeval /usr/local/bin
-          rm kubeval-linux-amd64.tar.gz
-          kubeval --version
-        shell: bash
+          # Install Kubeval
+          wget "https://github.com/instrumenta/kubeval/releases/download/v0.16.1/kubeval-linux-amd64.tar.gz" && tar xf kubeval-linux-amd64.tar.gz && sudo mv kubeval /usr/local/bin
+          # Install Conftest
+          wget "https://github.com/open-policy-agent/conftest/releases/download/v0.52.0/conftest_0.52.0_Linux_x86_64.tar.gz" && tar xzf "conftest_0.52.0_Linux_x86_64.tar.gz" && sudo mv conftest /usr/local/bin
+          # Install KubeLinter
+          wget "https://github.com/stackrox/kube-linter/releases/download/v0.6.6/kube-linter-linux.tar.gz" && tar -xzf kube-linter-linux.tar.gz && sudo mv kube-linter /usr/local/bin/
 
-      - name: Install helm-unittest plugin
+      - name: Install Helm plugins
         run: |
-          # Check for latest: https://github.com/quintush/helm-unittest/releases
           helm plugin install https://github.com/quintush/helm-unittest --version 0.4.1
-          helm plugin list
-        shell: bash
-
-      - name: Install Conftest
-        run: |
-          CONFTEST_VERSION="0.52.0" # Check for latest: https://github.com/open-policy-agent/conftest/releases
-          wget "https://github.com/open-policy-agent/conftest/releases/download/v${CONFTEST_VERSION}/conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz"
-          tar xzf "conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz"
-          sudo mv conftest /usr/local/bin
-          rm "conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz"
-          conftest --version
-        shell: bash
-
-      - name: Install KubeLinter
-        run: |
-          KUBELINTER_VERSION="0.6.6" # Check for latest: https://github.com/stackrox/kube-linter/releases
-          wget "https://github.com/stackrox/kube-linter/releases/download/v${KUBELINTER_VERSION}/kube-linter-linux.tar.gz"
-          tar -xzf kube-linter-linux.tar.gz
-          sudo mv kube-linter /usr/local/bin/
-          rm kube-linter-linux.tar.gz
-          kube-linter version
-        shell: bash
-
-      - name: Install Trivy CLI
-        uses: aquasecurity/trivy-action@master
-
-      - name: Install helm-trivy plugin
-        run: |
-          export GIT_TERMINAL_PROMPT=0
           helm plugin install https://github.com/aquasecurity/helm-trivy
-          helm plugin list # Verify plugin installation
-        shell: bash
 
       - name: Create Kubernetes cluster (kind)
         uses: helm/kind-action@v1.10.0
 
-      # --- Chart Testing Steps ---
-      - name: Prepare chart list
-        id: list_charts
-        run: |
-          CHART_DIRECTORIES=$(find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print)
-          if [ -z "$CHART_DIRECTORIES" ]; then
-            echo "No chart directories found under ${{ env.HELM_CHARTS_DIR }}."
-            echo "charts_found=false" >> $GITHUB_OUTPUT
-          else
-            echo "Found charts:"
-            echo "$CHART_DIRECTORIES"
-            echo "charts_found=true" >> $GITHUB_OUTPUT
-            # For matrix strategy if desired later, or just for the loop below
-            # echo "charts=$(echo "$CHART_DIRECTORIES" | jq -R . | jq -cs .)" >> $GITHUB_OUTPUT
-          fi
-        shell: bash
+      - name: Lint Helm chart (helm lint)
+        run: helm lint ${{ matrix.chart }}
 
-      - name: Lint Helm charts (helm lint)
-        if: steps.list_charts.outputs.charts_found == 'true'
-        run: |
-          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d \0' chart_dir; do
-            echo "--- Linting chart: $chart_dir ---"
-            helm lint "$chart_dir"
-          done
-        shell: bash
+      - name: Scan Helm chart for CVEs (helm-trivy)
+        run: helm trivy ${{ matrix.chart }} --exit-code 1 --format table --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH
 
-      - name: Scan Helm charts for CVEs (helm-trivy)
-        if: steps.list_charts.outputs.charts_found == 'true'
-        run: |
-          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d \0' chart_dir; do
-            echo "--- Scanning chart with helm-trivy: $chart_dir ---"
-            helm trivy "$chart_dir" \
-              --exit-code 0 \
-              --format table \
-              --ignore-unfixed \
-              --vuln-type os,library \
-              --severity CRITICAL,HIGH
-          done
-        shell: bash
-
-      - name: Validate Helm templates (kubeval)
-        if: steps.list_charts.outputs.charts_found == 'true'
-        run: |
-          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d \0' chart_dir; do
-            echo "--- Validating template with kubeval: $chart_dir ---"
-            # You might need to specify --kubernetes-version if your CRDs are not found
-            # or if you target a specific K8s version.
-            helm template "$chart_dir" | kubeval --ignore-missing-schemas --strict
-          done
-        shell: bash
+      - name: Validate Helm template (kubeval)
+        run: helm template ${{ matrix.chart }} | kubeval --ignore-missing-schemas --strict
 
       - name: Run Helm chart unit tests (helm-unittest)
-        if: steps.list_charts.outputs.charts_found == 'true'
         run: |
-          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d \0' chart_dir; do
-            # Check if unit test files exist for the chart
-            if [ -d "${chart_dir}/tests/unit" ] || find "${chart_dir}" -name '*_test.yaml' -print -quit | grep -q .; then
-              echo "--- Running unit tests for chart: $chart_dir ---"
-              helm unittest "$chart_dir"
-            else
-              echo "--- No unit tests found for chart: $chart_dir ---"
-            fi
-          done
-        shell: bash
-
-      - name: Test Helm templates against policies (Conftest)
-        if: steps.list_charts.outputs.charts_found == 'true'
-        run: |
-          # Define the directory where your Conftest policies are stored
-          # This could be at the root of your repo, or per-chart.
-          # For this example, assuming a single policy directory at the root.
-          POLICY_DIR="./policy" # Adjust this path to your Conftest policy directory
-
-          if [ ! -d "$POLICY_DIR" ]; then
-            echo "Policy directory $POLICY_DIR not found. Skipping Conftest tests."
-            exit 0 # Or use 'continue' if this step is not critical
+          if [ -d "${{ matrix.chart }}/tests/unit" ] || find "${{ matrix.chart }}" -name '*_test.yaml' -print -quit | grep -q .; then
+            echo "--- Running unit tests for chart: ${{ matrix.chart }} ---"
+            helm unittest "${{ matrix.chart }}"
+          else
+            echo "--- No unit tests found for chart: ${{ matrix.chart }} ---"
           fi
 
-          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d \0' chart_dir; do
-            echo "--- Testing chart $chart_dir against policies in $POLICY_DIR ---"
-            # The '-' tells conftest to read from stdin
-            helm template "$chart_dir" | conftest test -p "$POLICY_DIR" -
-          done
-        shell: bash
-
-      - name: Lint Helm templates for best practices (KubeLinter)
-        if: steps.list_charts.outputs.charts_found == 'true'
+      - name: Test Helm template against policies (Conftest)
         run: |
-          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d \0' chart_dir; do
-            echo "--- Linting chart $chart_dir with KubeLinter ---"
-            # The '-' tells kube-linter to read from stdin
-            # Add --config path/to/kubelinter-config.yaml if you have a custom config
-            helm template "$chart_dir" | kube-linter lint -
-          done
-        shell: bash
+          POLICY_DIR="./policy"
+          if [ ! -d "$POLICY_DIR" ]; then
+            echo "Policy directory $POLICY_DIR not found. Skipping Conftest tests."
+            exit 0
+          fi
+          helm template ${{ matrix.chart }} | conftest test -p "$POLICY_DIR" -
 
-      - name: Scan filesystem for vulnerabilities
+      - name: Lint Helm template for best practices (KubeLinter)
+        run: helm template ${{ matrix.chart }} | kube-linter lint -
+
+      - name: Deploy chart and run Helm tests (helm test)
         run: |
-          trivy fs . \
-            --exit-code 0 \
-            --format table \
-            --ignore-unfixed \
-            --vuln-type os,library \
-            --severity CRITICAL,HIGH
-        shell: bash
+          RELEASE_NAME="test-$(basename ${{ matrix.chart }})"
+          NAMESPACE="helm-test-$(basename ${{ matrix.chart }})"
+          kubectl create namespace "$NAMESPACE"
+          helm install "$RELEASE_NAME" "${{ matrix.chart }}" -n "$NAMESPACE" --wait --timeout 5m
+          helm test "$RELEASE_NAME" -n "$NAMESPACE" --timeout 3m
+          helm uninstall "$RELEASE_NAME" -n "$NAMESPACE"
+          kubectl delete namespace "$NAMESPACE" --wait=false
 
-      - name: Scan for misconfigurations
+  # Job 5: A final job to provide a clear success status for branch protection rules.
+  all-tests-passed:
+    name: "All Tests Passed"
+    runs-on: ubuntu-latest
+    needs:
+      - gitleaks
+      - filesystem-scans
+      - list-changed-charts
+      - test-charts
+    # This 'if' condition ensures this job runs only if:
+    # - All upstream jobs succeeded, OR
+    # - An upstream job was skipped (like test-charts when no charts changed)
+    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+    steps:
+      - name: Report success
         run: |
-          trivy config . \
-            --exit-code 0 \
-            --format table \
-            --severity CRITICAL,HIGH
-        shell: bash
-
-      - name: Deploy chart and run Helm tests (requires K8s cluster)
-        if: steps.list_charts.outputs.charts_found == 'true'
-        run: |
-          find ${{ env.HELM_CHARTS_DIR }} -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d \0' chart_dir; do
-            echo "--- Deploying and testing chart: $chart_dir ---"
-            RELEASE_NAME="test-$(basename "$chart_dir")"
-            NAMESPACE="helm-test-$(basename "$chart_dir")"
-
-            if [ -d "$chart_dir" ]; then
-              kubectl create namespace "$NAMESPACE" || echo "Namespace $NAMESPACE might already exist"
-              helm install "$RELEASE_NAME" "$chart_dir" -n "$NAMESPACE" --wait --timeout 5m
-              helm test "$RELEASE_NAME" -n "$NAMESPACE" --timeout 3m
-              helm uninstall "$RELEASE_NAME" -n "$NAMESPACE"
-              kubectl delete namespace "$NAMESPACE" --wait=false
-            else
-              echo "Chart $chart_dir not found for integration testing."
-            fi
-          done
-        shell: bash
+          if [[ "${{ needs.list-changed-charts.outputs.matrix }}" == "[]" ]]; then
+            echo "No chart changes detected. All other checks passed."
+          else
+            echo "All chart tests and other checks passed successfully."
+          fi

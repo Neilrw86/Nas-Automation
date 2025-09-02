@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-config
+  namespace: argocd
+  labels:
+    category: cluster-infra
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Neilrw86/Nas-Automation.git # Your repo URL
+    targetRevision: main
+    path: kube-config # Point directly to your directory of raw manifests
+  destination:
+    server: https://kubernetes.default.svc
+    # The namespace here is less critical since the manifests likely have their own namespaces defined
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
