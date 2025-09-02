@@ -32,8 +32,7 @@ jobs:
       - name: Install Trivy CLI
         uses: aquasecurity/trivy-action@master
         with:
-          # Avoid running the default scan, we'll run it manually
-          scan-type: ''
+          install-only: true
       - name: Scan filesystem for vulnerabilities
         run: |
           trivy fs . --exit-code 1 --format table --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH
