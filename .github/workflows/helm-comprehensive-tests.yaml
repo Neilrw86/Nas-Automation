@@ -29,16 +29,24 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Install Trivy CLI
-        uses: aquasecurity/trivy-action@master
-        with:
-          install-only: true
       - name: Scan filesystem for vulnerabilities
-        run: |
-          trivy fs . --exit-code 1 --format table --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH
+        uses: aquasecurity/trivy-action@0.24.0 # Pinned to a specific version
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          exit-code: 1
+          format: 'table'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
       - name: Scan for misconfigurations
-        run: |
-          trivy config . --exit-code 1 --format table --severity CRITICAL,HIGH
+        uses: aquasecurity/trivy-action@0.24.0 # Pinned to a specific version
+        with:
+          scan-type: 'config'
+          scan-ref: '.'
+          exit-code: 1
+          format: 'table'
+          severity: 'CRITICAL,HIGH'
 
   # Job 3: Identify which charts have changed to build a testing matrix.
   list-changed-charts:
