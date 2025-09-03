@@ -4,7 +4,7 @@ overseerr-dependency:
   # An initContainer is used to fix permissions on the subPath volume mount.
   # This is a common workaround for NFS volumes where fsGroup is not applied correctly.
   initContainers:
-    - name: fix-permissions
+    fix-permissions:
       image: busybox:latest
       command: ["sh", "-c", "chown -R 1003:1003 /config"]
       volumeMounts:
