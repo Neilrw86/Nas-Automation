@@ -6,7 +6,7 @@ overseerr-dependency:
   initContainers:
     fix-permissions:
       # Pinning to a specific digest ensures reproducible builds
-      image: busybox:1.36.1@sha256:f3b9bfd73672143533954349164b614b3d859a1aaa4b728a74e382321301241a
+            image: busybox:1.36.1@sha256:31f3955f475e40c62c6d4209f09fd9738cf6cadfc0f4aa76ba2d4d86f061c5b5
       command: ["sh", "-c", "chmod -R g+w /config"]
       volumeMounts:
         - name: config
