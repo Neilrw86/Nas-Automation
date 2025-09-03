@@ -2,7 +2,7 @@ apiVersion: v2
 name: overseerr
 description: A Helm chart for Overseerr
 type: application
-version: 0.1.1 # Initial version of your wrapper chart
+version: 0.1.2 # Bump version to trigger ArgoCD sync
 appVersion: "1.26.1" # Matches the Overseerr app version
 
 dependencies:
