@@ -1,20 +1,9 @@
 overseerr-dependency:
   global: {}
 
-  # An initContainer is used to fix permissions on the subPath volume mount,
-  # which is a common workaround for NFS volumes where fsGroup is not applied correctly.
-  initContainers:
-    fix-permissions:
-      # Pinning to a specific digest ensures reproducible builds
-      image: busybox:1.36.1@sha256:31f3955f475e40c62c6d4209f09fd9738cf6cadfc0f4aa76ba2d4d86f061c5b5
-      command: ["sh", "-c", "chown -R 1003:1003 /config && echo 'chown finished' || echo 'chown failed'"]
-      securityContext:
-        runAsUser: 0
-      volumeMounts:
-        - name: config
-          mountPath: /config
-  # This security context is crucial for NFS with subPath.
-  # It ensures the mounted /config directory is owned by the correct group.
+  # The initContainer previously used for subPath permission fixing is no longer required.
+  # podSecurityContext may still be needed depending on your storage provisioner,
+  # but fsGroup is typically handled correctly by modern CSI drivers.
   podSecurityContext:
     runAsUser: 1003
     fsGroup: 1003
@@ -48,8 +37,15 @@ overseerr-dependency:
   persistence:
     config:
       enabled: true
-      existingClaim: nfs-configs-pvc # Revert to your shared PVC
-      subPath: overseerr # Isolate this app's data within the shared PVC
+      # existingClaim and subPath are now disabled in favor of dynamic provisioning.
+      # existingClaim: nfs-configs-pvc
+      # subPath: overseerr
+
+      # -- Dynamically provision a new Persistent Volume for Overseerr's config.
+      # -- IMPORTANT: You must specify a storageClassName that your cluster supports.
+      size: 1Gi
+      accessMode: ReadWriteOnce
+      # storageClassName: "nfs-csi" # Example: Uncomment and set to your NFS storage class name.
 
   service:
     main:
