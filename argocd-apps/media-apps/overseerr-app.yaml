@@ -16,7 +16,15 @@ spec:
     path: helm_charts/overseerr # Path to your Overseerr wrapper Helm chart
     helm:
       valueFiles:
-        - values.yaml # Uses values.yaml from helm_charts/overseerr/
+        - values.yaml
+      values: |
+        overseerr-dependency:
+          persistence:
+            config:
+              enabled: true
+              size: 1Gi
+              accessMode: ReadWriteOnce
+              storageClassName: "nfs-client"
 
   destination:
     server: https://kubernetes.default.svc
