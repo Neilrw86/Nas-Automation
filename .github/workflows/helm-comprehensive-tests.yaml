@@ -35,7 +35,7 @@ jobs:
           fetch-depth: 0 # Required for tj-actions/changed-files to compare against base
       - name: Identify changed charts
         id: changes
-        uses: tj-actions/changed-files@v44 # Using a slightly older but stable version
+        uses: tj-actions/changed-files@v46 # Using a slightly older but stable version
         with:
           files: helm_charts/**
           dir_names: true
