@@ -1,6 +1,8 @@
 overseerr-dependency:
   global: {}
 
+  # This security context is crucial for NFS with subPath.
+  # It ensures the mounted /config directory is owned by the correct group.
   podSecurityContext:
     runAsUser: 1003
     fsGroup: 1003
@@ -34,8 +36,8 @@ overseerr-dependency:
   persistence:
     config:
       enabled: true
-      existingClaim: nfs-configs-pvc # Assuming this PVC is suitable for Overseerr config
-      subPath: overseerr # Subpath for Overseerr config
+      existingClaim: nfs-configs-pvc # Revert to your shared PVC
+      subPath: overseerr # Isolate this app's data within the shared PVC
 
   service:
     main:
