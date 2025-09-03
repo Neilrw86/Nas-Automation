@@ -45,7 +45,7 @@ overseerr-dependency:
       # -- IMPORTANT: You must specify a storageClassName that your cluster supports.
       size: 1Gi
       accessMode: ReadWriteOnce
-      storageClassName: "microk8s-hostpath"
+      storageClassName: "nfs-client"
 
   service:
     main:
