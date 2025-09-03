@@ -1,6 +1,10 @@
 overseerr-dependency:
   global: {}
 
+  podSecurityContext:
+    runAsUser: 1003
+    fsGroup: 1003
+
   image:
     repository: lscr.io/linuxserver/overseerr
     tag: latest
