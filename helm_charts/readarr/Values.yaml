@@ -49,9 +49,8 @@ readarr-dependency:
     config:
       enabled: true # Enable the chart's built-in PVC for config
       type: pvc # Explicitly state we are using a PVC
-      storageClass: "nfs-client" # Use the same NFS CSI storage class as Overseerr
-      accessMode: ReadWriteOnce
-      size: 1Gi
+      # Switch from dynamic provisioning to using your existing static PVC.
+      existingClaim: "nfs-readarr-config-specific-pvc"
     downloads:
       enabled: true
       type: pvc
