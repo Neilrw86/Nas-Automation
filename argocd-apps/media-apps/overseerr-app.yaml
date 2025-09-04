@@ -19,6 +19,16 @@ spec:
         - values.yaml
       values: |
         overseerr-dependency:
+          initContainers:
+            create-dirs:
+              image: busybox:1.36.1
+              command: ["sh", "-c", "mkdir -p /config/logs /config/.cache"]
+              securityContext:
+                runAsUser: 1003
+                runAsGroup: 1003
+              volumeMounts:
+                - name: config
+                  mountPath: /config
           persistence:
             config:
               enabled: true
