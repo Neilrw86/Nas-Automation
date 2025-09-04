@@ -19,21 +19,11 @@ spec:
         - values.yaml
       values: |
         overseerr-dependency:
-          initContainers:
-            create-dirs:
-              image: busybox:1.36.1
-              command: ["sh", "-c", "echo 'Creating directories...'; mkdir -p -v /config/logs /config/.cache; echo 'Directory listing after creation:'; ls -l /config; echo 'Init container finished.'"]
-              securityContext:
-                runAsUser: 1003
-                runAsGroup: 1003
-              volumeMounts:
-                - name: config
-                  mountPath: /config
           persistence:
             config:
               enabled: true
-              size: 1Gi
-              accessMode: ReadWriteOnce
+              type: pvc
+              mountPath: /config
               storageClass: "nfs-client"
 
   destination:
