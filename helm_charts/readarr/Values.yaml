@@ -53,11 +53,20 @@ readarr-dependency:
       storageClassName: "nfs-client"
       accessMode: ReadWriteMany # Best practice for NFS volumes
       size: 1Gi
-    downloads:
-      enabled: true
-      type: pvc
-      existingClaim: "nfs-temp-pvc" # Reference your existing PVC for downloads
-    ebooks:
-      enabled: true
-      type: pvc
-      existingClaim: "nfs-books-pvc" # Reference your existing PVC for ebooks
+
+  # Manually define additional volumes to ensure they are correctly added to the pod spec.
+  # This bypasses any complex logic in the persistence template that may be causing issues.
+  additionalVolumes:
+    - name: downloads
+      persistentVolumeClaim:
+        claimName: "nfs-temp-pvc"
+    - name: ebooks
+      persistentVolumeClaim:
+        claimName: "nfs-books-pvc"
+
+  # Manually define the corresponding volume mounts for the container.
+  additionalVolumeMounts:
+    - name: downloads
+      mountPath: /downloads
+    - name: ebooks
+      mountPath: /books
