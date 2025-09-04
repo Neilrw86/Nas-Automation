@@ -24,7 +24,7 @@ spec:
               enabled: true
               size: 1Gi
               accessMode: ReadWriteOnce
-              storageClassName: "nfs-client"
+              storageClass: "nfs-client"
 
   destination:
     server: https://kubernetes.default.svc
