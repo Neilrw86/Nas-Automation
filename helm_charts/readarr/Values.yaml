@@ -51,23 +51,20 @@ readarr-dependency:
       type: pvc # Explicitly state we are using a PVC
       storageClassName: "nfs-client" # Explicitly set the storage class for this volume
       accessMode: ReadWriteMany # Best practice for NFS volumes
-      size: 1Gi
-    downloads:
+      size: 1Gi # Size for the config volume
+  
+  # Use additionalPersistence for other volumes to bypass complex template logic.
+  # This is a common pattern in servarr charts.
+  additionalPersistence:
+    - name: downloads
       enabled: true
       type: pvc
       mountPath: /downloads
-      storageClassName: "nfs-client" # Dynamically provision a new volume for downloads
+      storageClassName: "nfs-client"
       accessMode: ReadWriteMany
-      size: 50Gi # A reasonable size for a new downloads volume
-
-  # Use additionalVolumes and additionalVolumeMounts for static PVCs.
-  # This is a robust way to bypass complex chart logic that may have issues
-  # mixing dynamic and static volumes in the main persistence block.
-  additionalVolumes:
+      size: 50Gi
     - name: ebooks
-      persistentVolumeClaim:
-        claimName: "nfs-books-pvc"
-
-  additionalVolumeMounts:
-    - name: ebooks
+      enabled: true
+      type: pvc
       mountPath: /books
+      existingClaim: "nfs-books-pvc"
