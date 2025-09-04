@@ -7,75 +7,56 @@
 # The following is a best-effort configuration based on common patterns.
 
 readarr-dependency:
-  # Image configuration - the chart might derive this from its appVersion,
-  # or allow explicit overrides.
   image:
     repository: lscr.io/linuxserver/readarr # Standard repository for linuxserver images
     tag: "nightly-0.4.17.2795-ls397" # Matches the appVersion of the chart
     pullPolicy: IfNotPresent
 
-  # Configuration for the main deployment
-  deployment:
-    container:
-      # Environment variables should be a list of name/value pairs
-      env:
-        - name: TZ # Timezone
-          value: "Europe/London"
-        - name: PUID # User ID
-          value: "1003"
-        - name: PGID # Group ID
-          value: "1003"
-        # Add any other environment variables Readarr might need as name/value pairs
-      volumeMounts:
-        - name: config
-          mountPath: /config
-      resources:
-        limits:
-          cpu: "2"
-          memory: "2Gi"
-        requests:
-          cpu: "200m"
-          memory: "512Mi"
-    volumes:
-      config:
-        persistentVolumeClaim:
-          claimName: "nfs-readarr-config-specific-pvc" # Use the new, specific PVC for Readarr's config
-          storageClass: null
-          volumeName: nfs-readarr-config-specific-pv
-      downloads:
-        persistentVolumeClaim:
-          claimName: "nfs-temp-pvc"    # Your existing PVC for /downloads
-      ebooks:
-        persistentVolumeClaim:
-          claimName: "nfs-books-pvc"   # Your existing PVC for /ebooks (or /books)
+  # Environment variables are typically a map (key: value) in these charts.
+  env:
+    TZ: "Europe/London"
+    PUID: "1003"
+    PGID: "1003"
 
-  # Service port is typically defined under 'application.port' in this chart
-  application:
-    port: 8787 # Overrides the default application port if needed
- 
+  # Service configuration. The chart uses this to create the Service object
+  # and correctly link the Ingress to it.
+  service:
+    main:
+      ports:
+        http:
+          port: 8787
+
   ingress:
-    enabled: true
-    className: "nginx"
-    annotations:
-      nginx.ingress.kubernetes.io/proxy-body-size: "0"
-      cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns"
-      nginx.ingress.kubernetes.io/ssl-redirect: "true"
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-      # Add any other specific annotations supported/needed by the dependency chart
-    hosts:
-      - host: "readarr.neilwylie.com"
-        paths:
-          - path: /
-            pathType: Prefix
-            # The dependency chart might structure path definitions differently.
-    tls:
-      - secretName: readarr-tls
-        hosts:
-          - "readarr.neilwylie.com"
+    main:
+      enabled: true
+      ingressClassName: "nginx"
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-body-size: "0"
+        cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns"
+      hosts:
+        - host: "readarr.neilwylie.com"
+          paths:
+            - path: /
+              pathType: Prefix
+              # The chart will now automatically route this to the 'http' port of the 'main' service.
+      tls:
+        - secretName: readarr-tls
+          hosts:
+            - "readarr.neilwylie.com"
 
-  # Prevent the chart from creating its default 'readarr-config' PVC
-  # by overriding its definition with an empty map.
-  persistentVolumeClaims:
-    readarr-config:
-      enabled: false # Completely disable the default 'readarr-config' PVC
-      storage: 0
+  # Persistence configuration. This is the standard way to define volumes.
+  persistence:
+    config:
+      enabled: true # Enable the chart's built-in PVC for config
+      type: pvc # Explicitly state we are using a PVC
+      storageClass: "nfs-client" # Use the same NFS CSI storage class as Overseerr
+      accessMode: ReadWriteOnce
+      size: 1Gi
+    downloads:
+      enabled: true
+      type: pvc
+      existingClaim: "nfs-temp-pvc" # Reference your existing PVC for downloads
+    ebooks:
+      enabled: true
+      type: pvc
+      existingClaim: "nfs-books-pvc" # Reference your existing PVC for ebooks
