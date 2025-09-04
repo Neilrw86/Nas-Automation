@@ -33,13 +33,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Required for tj-actions/changed-files to compare against base
-      - name: Identify changed charts
-        id: changes
-        uses: tj-actions/changed-files@v44 # Using a slightly older but stable version
-        with:
-          files: helm_charts/**
-          dir_names: true
-          dir_names_max_depth: 2 # Ensures we get 'helm_charts/radarr', not just 'helm_charts'
 
   # Job 4: Run all tests on the changed charts identified in the previous job.
   test-charts:
