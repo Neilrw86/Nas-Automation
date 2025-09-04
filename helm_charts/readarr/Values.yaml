@@ -49,8 +49,10 @@ readarr-dependency:
     config:
       enabled: true # Enable the chart's built-in PVC for config
       type: pvc # Explicitly state we are using a PVC
-      # Switch from dynamic provisioning to using your existing static PVC.
-      existingClaim: "nfs-readarr-config-specific-pvc"
+      # Configure dynamic provisioning using your NFS CSI driver.
+      storageClassName: "nfs-client"
+      accessMode: ReadWriteMany # Best practice for NFS volumes
+      size: 1Gi
     downloads:
       enabled: true
       type: pvc
