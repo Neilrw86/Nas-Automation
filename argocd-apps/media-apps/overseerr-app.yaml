@@ -22,7 +22,7 @@ spec:
           initContainers:
             create-dirs:
               image: busybox:1.36.1
-              command: ["sh", "-c", "mkdir -p /config/logs /config/.cache"]
+              command: ["sh", "-c", "echo 'Creating directories...'; mkdir -p -v /config/logs /config/.cache; echo 'Directory listing after creation:'; ls -l /config; echo 'Init container finished.'"]
               securityContext:
                 runAsUser: 1003
                 runAsGroup: 1003
