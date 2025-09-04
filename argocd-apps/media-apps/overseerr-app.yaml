@@ -20,9 +20,9 @@ spec:
       values: |
         overseerr-dependency:
           initContainers:
-            test-mkdir:
+            create-dirs:
               image: busybox:1.36.1
-              command: ["sh", "-c", "echo 'Running as:' && id && echo 'Attempting to create directory...' && mkdir /config/logs && echo 'Success!' || echo 'Failure!'"]
+              command: ["sh", "-c", "mkdir -p /config/logs /config/.cache"]
               securityContext:
                 runAsUser: 1003
                 runAsGroup: 1003
