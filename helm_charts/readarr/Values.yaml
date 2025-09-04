@@ -12,10 +12,6 @@ readarr-dependency:
     tag: "nightly-0.4.17.2795-ls397" # Matches the appVersion of the chart
     pullPolicy: IfNotPresent
 
-  # Define a global storage class that will be applied to all dynamically provisioned PVCs.
-  global:
-    storageClass: "nfs-client"
-
   # Environment variables are typically a map (key: value) in these charts.
   env:
     TZ: "Europe/London"
@@ -53,23 +49,19 @@ readarr-dependency:
     config:
       enabled: true # Enable the chart's built-in PVC for config
       type: pvc # Explicitly state we are using a PVC
-      # Configure dynamic provisioning using your NFS CSI driver.
+      storageClassName: "nfs-client" # Explicitly set the storage class for this volume
       accessMode: ReadWriteMany # Best practice for NFS volumes
       size: 1Gi
-
-  # Manually define additional volumes to ensure they are correctly added to the pod spec.
-  # This bypasses any complex logic in the persistence template that may be causing issues.
-  additionalVolumes:
-    - name: downloads
-      persistentVolumeClaim:
-        claimName: "nfs-temp-pvc"
-    - name: ebooks
-      persistentVolumeClaim:
-        claimName: "nfs-books-pvc"
-
-  # Manually define the corresponding volume mounts for the container.
-  additionalVolumeMounts:
-    - name: downloads
+    downloads:
+      enabled: true
+      type: pvc
       mountPath: /downloads
-    - name: ebooks
-      mountPath: /books
+      storageClassName: "nfs-client" # Dynamically provision a new volume for downloads
+      accessMode: ReadWriteMany
+      size: 5Gi # A reasonable size for a new downloads volume
+    ebooks:
+      enabled: true
+      type: pvc
+      mountPath: /downloads
+      # Continue using your existing, statically provisioned volume for books.
+      existingClaim: "nfs-books-pvc"
