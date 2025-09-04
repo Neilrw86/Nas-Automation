@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        chart: ${{ fromJson(needs.list-changed-charts.outputs.matrix) }}
+        chart: ${{ fromJson(needs.list-changed-charts.outputs.matrix || '[]') }}
       fail-fast: false # Don't cancel other matrix jobs if one fails
 
     steps:
