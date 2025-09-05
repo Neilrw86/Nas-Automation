@@ -49,19 +49,18 @@ readarr-dependency:
     config:
       enabled: true # Enable the chart's built-in PVC for config
       existingClaim: "nfs-readarr-config-specific-pvc" # Use existing PVC for config
-  
-  # Use additionalPersistence for other volumes to bypass complex template logic.
-  # This is a common pattern in servarr charts.
-  additionalPersistence:
-    - name: downloads
-      enabled: true
-      type: pvc
-      mountPath: /downloads
-      storageClassName: "nfs-client"
-      accessMode: ReadWriteMany
-      size: 50Gi
-    - name: ebooks
-      enabled: true
-      type: pvc
-      mountPath: /books
-      existingClaim: "nfs-books-pvc"
+
+  deployment:
+    volumes:
+      downloads:
+        persistentVolumeClaim:
+          claimName: "readarr-downloads-pvc" # This will be the name of the PVC created by the chart
+      ebooks:
+        persistentVolumeClaim:
+          claimName: "nfs-books-pvc" # This is the existingClaim from additionalPersistence
+
+    persistentVolumeClaims:
+      readarr-downloads-pvc: # Define the PVC for downloads
+        accessMode: ReadWriteMany
+        requestStorage: 50Gi
+        storageClassName: "nfs-client"
