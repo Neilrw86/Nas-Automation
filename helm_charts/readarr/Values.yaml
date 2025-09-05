@@ -46,34 +46,15 @@ readarr-dependency:
 
   # Persistence configuration. This is the standard way to define volumes.
   persistence:
-    config: null # Change this to null
+    config:
+      accessMode: ReadWriteOnce
+      requestStorage: 10Gi
+      storageClassName: "nfs-client"
 
-  deployment:
-    volumes:
-      downloads:
-        persistentVolumeClaim:
-          claimName: "readarr-downloads-pvc" # This will be the name of the PVC created by the chart
-      ebooks:
-        persistentVolumeClaim:
-          claimName: "nfs-books-pvc" # This is the existingClaim from additionalPersistence
+    downloads:
+      accessMode: ReadWriteMany
+      requestStorage: 5Gi
+      storageClassName: "nfs-client"
 
-    persistentVolumeClaims:
-      readarr-downloads-pvc: # Define the PVC for downloads
-        accessMode: ReadWriteMany
-        requestStorage: 50Gi
-        storageClassName: "nfs-client"
-
-  deployment:
-    volumes:
-      downloads:
-        persistentVolumeClaim:
-          claimName: "readarr-downloads-pvc" # This will be the name of the PVC created by the chart
-      ebooks:
-        persistentVolumeClaim:
-          claimName: "nfs-books-pvc" # This is the existingClaim from additionalPersistence
-
-    persistentVolumeClaims:
-      readarr-downloads-pvc: # Define the PVC for downloads
-        accessMode: ReadWriteMany
-        requestStorage: 5Gi
-        storageClassName: "nfs-client"
+    ebooks:
+      existingClaim: "nfs-books-pvc"
