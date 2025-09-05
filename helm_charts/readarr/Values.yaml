@@ -47,14 +47,24 @@ readarr-dependency:
   # Persistence configuration. This is the standard way to define volumes.
   persistence:
     config:
+      enabled: true
+      type: pvc
+      # Mirror the working overseerr config for the primary volume
+      storageClassName: "nfs-client"
       accessMode: ReadWriteOnce
-      requestStorage: 10Gi
-      storageClassName: "nfs-client"
+      size: 10Gi
 
-    downloads:
-      accessMode: ReadWriteMany
-      requestStorage: 5Gi
-      storageClassName: "nfs-client"
-
-    ebooks:
+  # Use additionalPersistence for other volumes to bypass complex template logic.
+  additionalPersistence:
+    - name: downloads
+      enabled: true
+      type: pvc
+      mountPath: /downloads
+      storageClass: "nfs-client" # Note: using 'storageClass' here as it's a common key in this block
+      accessMode: ReadWriteOnce # Match the working RWO mode
+      size: 50Gi
+    - name: ebooks
+      enabled: true
+      type: pvc
+      mountPath: /books
       existingClaim: "nfs-books-pvc"
