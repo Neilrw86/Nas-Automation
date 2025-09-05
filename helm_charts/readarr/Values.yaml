@@ -52,7 +52,6 @@ readarr-dependency:
       accessMode: ReadWriteOnce
       size: 10Gi
       storageClass: "nfs-client" # Use 'storageClass' as this is the expected key
-    - name: downloads
     downloads:
       enabled: true
       type: pvc
