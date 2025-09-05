@@ -49,6 +49,23 @@ readarr-dependency:
     config:
       enabled: true # Enable the chart's built-in PVC for config
       existingClaim: "nfs-readarr-config-specific-pvc" # Use existing PVC for config
+      storageClassName: "nfs-client" # Explicitly set storage class
+      accessMode: ReadWriteMany # Explicitly set access mode
+
+  deployment:
+    volumes:
+      downloads:
+        persistentVolumeClaim:
+          claimName: "readarr-downloads-pvc" # This will be the name of the PVC created by the chart
+      ebooks:
+        persistentVolumeClaim:
+          claimName: "nfs-books-pvc" # This is the existingClaim from additionalPersistence
+
+    persistentVolumeClaims:
+      readarr-downloads-pvc: # Define the PVC for downloads
+        accessMode: ReadWriteMany
+        requestStorage: 50Gi
+        storageClassName: "nfs-client"
 
   deployment:
     volumes:
