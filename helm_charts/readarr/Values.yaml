@@ -48,10 +48,7 @@ readarr-dependency:
   persistence:
     config:
       enabled: true # Enable the chart's built-in PVC for config
-      type: pvc # Explicitly state we are using a PVC
-      storageClassName: "nfs-client" # Explicitly set the storage class for this volume
-      accessMode: ReadWriteMany # Best practice for NFS volumes
-      size: 1Gi # Size for the config volume
+      existingClaim: "nfs-readarr-config-specific-pvc" # Use existing PVC for config
   
   # Use additionalPersistence for other volumes to bypass complex template logic.
   # This is a common pattern in servarr charts.
