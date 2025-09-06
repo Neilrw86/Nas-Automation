@@ -42,6 +42,15 @@ lazylibrarian-dependency:
       subPath: "lazylibrarian"
       mountPath: "/config" # Explicitly set mountPath
 
+  extraVolumes: # Add this block
+    - name: books # Name of the volume
+      persistentVolumeClaim:
+        claimName: "nfs-books-pvc" # Your existing books PVC
+
+  extraVolumeMounts: # Add this block
+    - name: books # Must match the volume name
+      mountPath: "/books" # Standard mount path for books in Lazylibrarian
+
   persistence:
     config:
       enabled: true
