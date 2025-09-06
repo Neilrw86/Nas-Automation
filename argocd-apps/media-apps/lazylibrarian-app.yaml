@@ -16,7 +16,7 @@ spec:
     path: helm_charts/lazylibrarian # Path to your Lazylibrarian wrapper Helm chart
     helm:
       valueFiles:
-        - values.yaml # Uses values.yaml from helm_charts/lazylibrarian/
+        - Values.yaml # Correct casing
 
   destination:
     server: https://kubernetes.default.svc
