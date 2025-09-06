@@ -5,3 +5,9 @@
 lazylibrarian-dependency:
   # Add your Lazylibrarian specific configurations here.
   # Refer to the k8s-at-home/lazylibrarian chart's values.yaml for available options.
+
+  persistence:
+    config:
+      enabled: true
+      existingClaim: "nfs-configs-pvc" # Use the general configs PVC
+      subPath: "lazylibrarian" # Use subPath for Lazylibrarian's config
