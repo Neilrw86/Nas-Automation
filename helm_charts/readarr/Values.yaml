@@ -18,13 +18,66 @@ readarr-dependency:
     PUID: "1003"
     PGID: "1003"
 
-  # Service configuration. The chart uses this to create the Service object
-  # and correctly link the Ingress to it.
+  # This values.yaml is for your 'readarr-wrapper' chart.
+# All configurations for the actual Readarr deployment will be under 'readarr-dependency'
+# (the alias defined in Chart.yaml for the media-servarr/readarr chart).
+#
+# IMPORTANT: You MUST consult the official values.yaml of the media-servarr/readarr chart
+# (version 0.8.11) for the precise structure and available options.
+# The following is a best-effort configuration based on common patterns.
+
+readarr-dependency:
+  image:
+    repository: lscr.io/linuxserver/readarr # Standard repository for linuxserver images
+    tag: "nightly-0.4.17.2795-ls397" # Matches the appVersion of the chart
+    pullPolicy: IfNotPresent
+
+  # Environment variables are typically a map (key: value) in these charts.
+  env:
+    TZ: "Europe/London"
+    PUID: "1003"
+    PGID: "1003"
+
+  # Service configuration. This is the standard way to define volumes.
   service:
     main:
       ports:
         http:
           port: 8787
+
+  ingress:
+    main:
+      enabled: true
+      ingressClassName: "nginx"
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-body-size: "0"
+        cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns"
+      hosts:
+        - host: "readarr.neilwylie.com"
+          paths:
+            - path: /
+              pathType: Prefix
+              # The chart will now automatically route this to the 'http' port of the 'main' service.
+      tls:
+        - secretName: readarr-tls
+          hosts:
+            - "readarr.neilwylie.com"
+
+  # Persistence configuration. This is the standard way to define volumes.
+  persistence:
+    config:
+      enabled: true
+      existingClaim: "nfs-configs-pvc" # Use the general configs PVC
+      subPath: "readarr" # Use subPath for Readarr's config
+    downloads:
+      enabled: true
+      existingClaim: "nfs-temp-pvc" # Use the general temp PVC
+      mountPath: "/downloads" # Explicitly set mountPath
+    books:
+      enabled: true
+      existingClaim: "nfs-books-pvc"
+      mountPath: "/books" # Explicitly set mountPath
+
 
   ingress:
     main:

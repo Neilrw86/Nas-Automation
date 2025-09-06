@@ -1,6 +1,6 @@
 dependencies:
 - name: readarr
-  repository: https://media-servarr.shw.al/charts
-  version: 0.8.0
-digest: sha256:520e9738801dde8d008cf0691a1e9784c573dae8af38006e3de9659e4cccd267
-generated: "2025-06-14T21:23:18.220347487-04:00"
+  repository: https://k8s-at-home.com/charts/
+  version: 6.4.2
+digest: sha256:959f3c49f00eb418a0f772b484035ed5dc67512d2f0a22772b8d6b946472e67c
+generated: "2025-09-05T20:15:12.76585717-04:00"

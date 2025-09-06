@@ -8,6 +8,6 @@ appVersion: "nightly-0.4.17.2795-ls397" # Matches the appVersion of the chosen d
 
 dependencies:
   - name: readarr # The name of the chart in the repository
-    version: "10.0.17"
-    repository: "https://charts.truecharts.org/"
+    version: "6.4.2"
+    repository: "https://k8s-at-home.com/charts/"
     alias: readarr-dependency # An alias to make the Values.yaml clearer
