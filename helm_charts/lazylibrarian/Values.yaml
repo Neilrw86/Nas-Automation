@@ -1,0 +1,7 @@
+# This values.yaml is for your 'lazylibrarian-wrapper' chart.
+# All configurations for the actual Lazylibrarian deployment will be under 'lazylibrarian-dependency'
+# (the alias defined in Chart.yaml for the k8s-at-home/lazylibrarian chart).
+
+lazylibrarian-dependency:
+  # Add your Lazylibrarian specific configurations here.
+  # Refer to the k8s-at-home/lazylibrarian chart's values.yaml for available options.

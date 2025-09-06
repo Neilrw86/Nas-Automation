@@ -1,0 +1,13 @@
+apiVersion: v2
+name: lazylibrarian-wrapper
+description: A wrapper Helm chart to deploy Lazylibrarian using the k8s-at-home/lazylibrarian chart.
+type: application
+
+version: 0.1.0
+appVersion: "7.4.2" # Matches the appVersion of the chosen dependency chart
+
+dependencies:
+  - name: lazylibrarian # The name of the chart in the repository
+    version: "7.4.2"
+    repository: "https://k8s-at-home.com/charts/"
+    alias: lazylibrarian-dependency # An alias to make the Values.yaml clearer
