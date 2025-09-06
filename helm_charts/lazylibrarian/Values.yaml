@@ -3,8 +3,44 @@
 # (the alias defined in Chart.yaml for the k8s-at-home/lazylibrarian chart).
 
 lazylibrarian-dependency:
-  # Add your Lazylibrarian specific configurations here.
-  # Refer to the k8s-at-home/lazylibrarian chart's values.yaml for available options.
+  image:
+    repository: "linuxserver/lazylibrarian"
+    tag: "version-1152df82" # Or "latest"
+    pullPolicy: "IfNotPresent"
+
+  env:
+    TZ: "Europe/London" # Adjust as needed
+    PGID: "1003" # Adjust as needed
+    PUID: "1003" # Adjust as needed
+
+  service:
+    main:
+      ports:
+        http:
+          port: 5299 # Default port for Lazylibrarian
+
+  ingress:
+    main:
+      enabled: true
+      ingressClassName: "nginx"
+      annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns" # Assuming this is your issuer
+      hosts:
+        - host: "lazylibrarian.neilwylie.com" # Adjust as needed
+          paths:
+            - path: "/"
+              pathType: Prefix
+      tls:
+        - hosts:
+            - "lazylibrarian.neilwylie.com" # Adjust as needed
+          secretName: "lazylibrarian-tls" # Adjust as needed
+
+  persistence:
+    config:
+      enabled: true
+      existingClaim: "nfs-configs-pvc"
+      subPath: "lazylibrarian"
+      mountPath: "/config" # Explicitly set mountPath
 
   persistence:
     config:
