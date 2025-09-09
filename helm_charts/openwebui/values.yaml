@@ -1,0 +1,13 @@
+ingress:
+  enabled: true
+  className: "nginx"
+  hosts:
+    - host: ollama.neilwylie.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+  tls:
+    - secretName: letsencrypt-ssl
+      hosts:
+        - ollama.neilwylie.com

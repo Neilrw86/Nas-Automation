@@ -1,0 +1,14 @@
+apiVersion: v2
+name: openwebui
+description: A Helm chart for OpenWebUI
+
+type: application
+
+version: 0.1.0
+
+appVersion: "latest"
+
+dependencies:
+  - name: openwebui
+    version: "0.1.0" # Replace with the actual chart version
+    repository: "https://helm.openwebui.io" # Replace with the actual chart repository

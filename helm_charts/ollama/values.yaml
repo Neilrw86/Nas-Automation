@@ -22,10 +22,10 @@ ollama:
   # This typically sets NVIDIA_VISIBLE_DEVICES=all and NVIDIA_DRIVER_CAPABILITIES=all.
   # The actual GPU allocation is then handled by the top-level 'resources' block.
   numberOfGPUs: 1
-  # You can specify models to download on startup
-  # models:
-  #   - llama3
-  #   - mistral
+  # Specify models to download on startup for a declarative setup
+  models:
+    - llama3
+    - mistral
 
 resources:
   limits:
