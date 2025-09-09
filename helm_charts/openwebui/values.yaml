@@ -1,13 +1,41 @@
-ingress:
-  enabled: true
-  className: "nginx"
-  hosts:
-    - host: ollama.neilwylie.com
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
+# This values.yaml is for your 'openwebui' wrapper chart.
+# It overrides values in the 'open-webui/open-webui' chart via the alias.
 
-  tls:
-    - secretName: letsencrypt-ssl
-      hosts:
-        - ollama.neilwylie.com
+openwebui-dependency:
+  # --- Connection to Ollama ---
+  # This is the most important part. We are telling Open WebUI
+  # the internal Kubernetes DNS address of your Ollama service.
+  config:
+    env:
+      - name: OLLAMA_BASE_URL
+        value: "http://ollama.ollama.svc.cluster.local:11434"
+
+  # --- Ingress Configuration ---
+  # This exposes Open WebUI to the outside world.
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod-cfdns"
+    hosts:
+      - host: "ollama.neilwylie.com"
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: ollama-webui-tls
+        hosts:
+          - "ollama.neilwylie.com"
+
+  # --- Persistence for WebUI Data ---
+  # This stores user accounts, chat history, etc.
+  persistence:
+    enabled: true
+    storageClass: "nfs-client" # Use your dynamic NFS provisioner
+    accessMode: ReadWriteOnce
+    size: 5Gi
+
+  # --- Service Configuration ---
+  service:
+    type: ClusterIP
+    port: 8080

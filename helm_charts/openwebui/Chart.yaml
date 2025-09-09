@@ -1,14 +1,12 @@
 apiVersion: v2
 name: openwebui
-description: A Helm chart for OpenWebUI
-
+description: A wrapper Helm chart to deploy Open WebUI with custom values.
 type: application
-
 version: 0.1.0
-
-appVersion: "latest"
+appVersion: "v0.1.124" # Corresponds to the Open WebUI application version
 
 dependencies:
-  - name: openwebui
-    version: "0.1.0" # Replace with the actual chart version
-    repository: "https://open-webui.github.io/helm-chart" # Replace with the actual chart repository
+  - name: open-webui
+    version: "1.2.1" # Use a specific, stable version of the chart
+    repository: "https://helm.open-webui.com/"
+    alias: openwebui-dependency
