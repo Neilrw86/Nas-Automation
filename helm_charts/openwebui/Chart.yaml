@@ -8,5 +8,5 @@ appVersion: "v0.1.124" # Corresponds to the Open WebUI application version
 dependencies:
   - name: open-webui
     version: "1.2.1" # Use a specific, stable version of the chart
-    repository: "https://helm.open-webui.com/"
+    repository: "https://open-webui.github.io/helm-charts/"
     alias: openwebui-dependency
