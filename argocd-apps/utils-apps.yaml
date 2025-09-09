@@ -12,7 +12,7 @@ spec:
 
   source:
     repoURL: https://github.com/Neilrw86/Nas-Automation # Your Git repository URL
-    targetRevision: July # Or your desired branch/tag
+    targetRevision: main # Or your desired branch/tag
     path: argocd-apps/utils-apps # Path to child ArgoCD Application manifests for utils
 
     # This tells ArgoCD to look for Application manifests in the specified path

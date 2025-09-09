@@ -11,4 +11,4 @@ appVersion: "latest"
 dependencies:
   - name: openwebui
     version: "0.1.0" # Replace with the actual chart version
-    repository: "https://helm.openwebui.io" # Replace with the actual chart repository
+    repository: "https://open-webui.github.io/helm-chart" # Replace with the actual chart repository
