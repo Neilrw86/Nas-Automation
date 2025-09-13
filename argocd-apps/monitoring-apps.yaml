@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring-apps # The name of your root ArgoCD application for monitoring
+  labels:
+    category: root-app
+  namespace: argocd # ArgoCD applications typically live in the argocd namespace
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io # Ensures child apps are deleted when this root app is deleted
+spec:
+  project: default # Or the ArgoCD project you want to use
+
+  source:
+    repoURL: https://github.com/Neilrw86/Nas-Automation
+    targetRevision: main
+    path: argocd-apps/monitoring # Path to child ArgoCD Application manifests for monitoring
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd # Child Application CRs will be created in the 'argocd' namespace
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true # Ensures 'argocd' namespace exists if not already

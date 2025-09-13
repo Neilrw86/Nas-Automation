@@ -7,8 +7,8 @@
 - [ ] Set up automated backups for configuration files
 - [ ] Implement monitoring and alerting for critical services
 - [ ] Review and update security policies for the home lab
-- [ ] Ensure all dependencies are documented and version-controlled
-- [ ] enable MetalLB for ingress service 
+- [x] Ensure all dependencies are documented and version-controlled
+- [x] enable MetalLB for ingress service 
 
 
 ## Media migration
