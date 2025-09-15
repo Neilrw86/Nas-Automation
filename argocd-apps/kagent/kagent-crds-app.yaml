@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kagent-crds
+  namespace: argocd # Lives in argocd namespace
+  labels:
+    category: kagent-app
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  source:
+    repoURL: oci://ghcr.io/kagent-dev/kagent/helm/kagent-crds
+    chart: kagent-crds
+    targetRevision: 0.3.12
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kagent # Deploys to kagent namespace
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

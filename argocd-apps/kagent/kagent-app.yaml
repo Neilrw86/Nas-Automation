@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kagent
+  namespace: argocd # Lives in argocd namespace
+  labels:
+    category: kagent-app
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  source:
+    repoURL: oci://ghcr.io/kagent-dev/kagent/helm/kagent
+    chart: kagent
+    targetRevision: 0.3.12
+    helm:
+      values: |
+        providers:
+          openAI:
+            apiKey: "" # This should be replaced with a real API key, perhaps from a Secret
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kagent # Deploys to kagent namespace
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
